@@ -50,6 +50,7 @@ public class LoginAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String account=request.getParameter("account");
 		String password=request.getParameter("password");
+		System.out.println(account+"---------------------"+password);
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> requestMap=(Map)ctx.get("request");
 		if(account==null){
@@ -193,14 +194,14 @@ public class LoginAction {
 			return "loginError";
 		}
 		String lastLoginDate=suiService.getLastLoginDate(account);
-		System.out.println(lastLoginDate+"===================================");
+		
 		if(lastLoginDate==null){
 			suiService.updateLastLoginDate(sdf.format(new Date()), account);
 		}else{
 			try {
 				
 				int d=diffDate(new Date(),sdf.parse(lastLoginDate));
-				System.out.println(PasswdRuleUtil.isPasswdTimeout+"----------------------------"+d+"  "+PasswdRuleUtil.passwdTimeout*30);
+				
 				if(PasswdRuleUtil.isPasswdTimeout.equals("1")&&d>(PasswdRuleUtil.passwdTimeout*30)){				
 					Log log=new Log();
 				 	log.setAccount(account);
@@ -364,7 +365,7 @@ public class LoginAction {
 			
 	}
 	public boolean isDigit(String strNum) {  
-		 return strNum.matches(".+?\\d.+?"); 
+		 return strNum.matches(".*?\\d.*?"); 
 	}
 	public boolean isYing(String str) {  
 		 return str.matches(".*\\p{Alpha}.*"); 

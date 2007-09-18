@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0"
+  metadata-complete="true">
 
   <display-name></display-name>	
   <welcome-file-list>
@@ -19,18 +23,7 @@
 	<error-page>  
 	<error-code>500</error-code>  
 	<location>/500.jsp</location>  
-	</error-page>  
-	   
-  <filter>
-        <filter-name>AdminFilter</filter-name>
-        <filter-class>com.secpro.platform.monitoring.manage.servlet.LoginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-        <filter-name>AdminFilter</filter-name>
-        <url-pattern>/*</url-pattern>
- </filter-mapping>
-
-
+	</error-page> 
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -46,14 +39,46 @@
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> 
+<!--  -->
+  <filter>
+  <filter-name>IllegalCharacterFilter</filter-name>
+  <filter-class>
+   com.secpro.platform.monitoring.manage.servlet.KzFilter
+  </filter-class>
+ </filter>
+ <filter-mapping>
+  <filter-name>IllegalCharacterFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+ </filter-mapping>
+ 
+  <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>com.secpro.platform.monitoring.manage.servlet.LoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+ </filter-mapping>
 
+
+	
+<!-- 
 	<filter>
 		<filter-name>StrutsCleanUpFilter</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>StrutsCleanUpFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	 -->
+	<filter> 
+   		<filter-name>StrutsPrepareFilter</filter-name> 
+  		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter</filter-class> 
+	</filter>
+	<filter-mapping>
+		<filter-name>StrutsPrepareFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<servlet>
@@ -79,6 +104,10 @@
 			<param-name>maxWaitAfterWrite</param-name>
 			<param-value>500</param-value>
 		</init-param>
+		 <init-param>   
+            <param-name>crossDomainSessionSecurity</param-name>   
+            <param-value>false</param-value>   
+    	</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -129,6 +158,14 @@
 		<url-pattern>/topology/topologyservlet</url-pattern>
 	</servlet-mapping>
 	<session-config>
-        <session-timeout>2</session-timeout>
+        <session-timeout>15</session-timeout>
+       	<cookie-config>
+ 
+    <http-only>true</http-only>
+    
+ 	<secure>true</secure>
+   
+ 
+  </cookie-config>
     </session-config>
 </web-app>

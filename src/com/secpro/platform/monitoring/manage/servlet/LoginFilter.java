@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
@@ -25,9 +26,12 @@ public class LoginFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpSession s;
 		s=((HttpServletRequest)request).getSession();
+		
 		String nexturl=((HttpServletRequest)request).getServletPath();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
-		
+		//add HTTPOlny属性 20140228
+		HttpServletResponse res=(HttpServletResponse)response;
+		res.addHeader("Set-Cookie",  "__wsidd=hhghgh;Path=/;Domain=wap.domain.cn;Max-Age=36000;HTTPOnly");
 		if(nexturl.equals("/dwr")||nexturl.equals("/topology/topologyservlet")){
 			chain.doFilter(request,response);
 			return;

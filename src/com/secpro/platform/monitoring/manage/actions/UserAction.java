@@ -245,6 +245,12 @@ public class UserAction {
 			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
+		if(muser.getDeleted().equals("1")){
+			returnMsg = "用户不存在，跳转页面失败！";
+			logger.info("fetch user failed from database !");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
 		SysOrg org=(SysOrg)orgService.getObj(SysOrg.class, muser.getOrgId());
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
@@ -757,7 +763,7 @@ public class UserAction {
 			
 	}
 	public boolean isDigit(String strNum) {  
-		 return strNum.matches(".+?\\d.+?"); 
+		 return strNum.matches(".*?\\d.*?"); 
 	}
 	public boolean isYing(String str) {  
 		 return str.matches(".*\\p{Alpha}.*"); 
@@ -770,4 +776,10 @@ public class UserAction {
 		  }
 		  return true;
 	 }
+	public static void main(String[] args){
+		UserAction i=new UserAction();
+		System.out.println(i.isDigit("SjzFw@TES1T"));
+		String passwd=MD5Builder.getMD5("SjzFw@TEST");
+		System.out.println(passwd);
+	}
 }
