@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/service
+END
+ServiceHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/service/ServiceHelper.java
+END
+ServiceHelperRes.properties
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/service/ServiceHelperRes.properties
+END
+IService.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/service/IService.java
+END
+ServiceInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/service/ServiceInfo.java
+END

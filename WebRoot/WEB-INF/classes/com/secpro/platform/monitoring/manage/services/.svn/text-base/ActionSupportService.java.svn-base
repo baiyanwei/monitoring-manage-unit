@@ -1,0 +1,43 @@
+package com.ultrapower.project.bomc.he.cmdb.resif.services;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.ultrapower.project.bomc.he.cmdb.resif.action.IAction;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.service.IService;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.service.ServiceInfo;
+
+/**
+ * @author baiyanwei
+ * 
+ */
+@ServiceInfo(description = "provide the ActionSupportService ability")
+public class ActionSupportService implements IService {
+	private ApplicationContext _ctx = null;
+
+	public void start() throws Exception {
+		try {
+			_ctx = new ClassPathXmlApplicationContext("if_action_cfg.xml");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void stop() throws Exception {
+		_ctx = null;
+	}
+
+	/**
+	 * 查询动作
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public IAction fineAction(String actionType) {
+		if (actionType == null || actionType.length() == 0) {
+			return null;
+		}
+		return _ctx.getBean(actionType, IAction.class);
+	}
+
+}

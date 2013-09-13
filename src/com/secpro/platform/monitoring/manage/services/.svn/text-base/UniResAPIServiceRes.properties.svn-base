@@ -1,0 +1,3 @@
+initAPISucceed=initialized Ultra-CMDB API succeed, API type {0} using {1} ms. 
+initAPIFault=initialized Ultra-CMDB API fault, API type {0} message {1} using {2} ms.
+clearAPI=clear Ultra-CMDB API type {0}

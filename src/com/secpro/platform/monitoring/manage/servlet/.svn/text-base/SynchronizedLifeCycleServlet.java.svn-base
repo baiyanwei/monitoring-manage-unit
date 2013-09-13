@@ -1,0 +1,141 @@
+package com.ultrapower.project.bomc.he.cmdb.resif.servlet;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import com.ultrapower.project.bomc.he.cmdb.resif.action.IAction;
+import com.ultrapower.project.bomc.he.cmdb.resif.lifecycle.DeviceLifeCycle;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ActionSupportService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.InterfaceParameterTransformService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ModelService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ResourceService;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.HttpStatusCode;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.service.ServiceHelper;
+import com.ultrapower.ultracmdb.cmdb.client.UniResTools;
+import com.ultrapower.ultracmdb.cmdb.model.UniResConstants;
+import com.ultrapower.ultracmdb.nresource.common.ResExtObject;
+import com.ultrapower.ultracmdb.nresource.value.ResDefClass;
+
+public class SynchronizedLifeCycleServlet extends ResIFSlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5445456609861517839L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 取得动作类别
+		String actionType = req.getParameter("actionType");
+		if (actionType == null || actionType.length() == 0) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, "invalid actionType in request");
+			return;
+		}
+		// 检查动作参数是否完整
+		InterfaceParameterTransformService ifParameterService = ServiceHelper.findService(InterfaceParameterTransformService.class);
+		String checkParameter = ifParameterService.checkActionTypeParameter(req);
+		if (checkParameter != null) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, checkParameter);
+			return;
+		}
+		// 封装REQUEST的参数
+		HashMap<String, String> parameterMap = ifParameterService.transformActionParameterByRequest(req);
+		if (parameterMap == null || parameterMap.isEmpty()) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR,
+					"The parameter of action is empty, PLS check your HTTP request content or configuration XML file in conf/actionResource.xml");
+			return;
+		}
+		// 按动作，找到指定的查询属性名，并进行查询
+		ResourceService resourceService = ServiceHelper.findService(ResourceService.class);
+		String[] queryDetails = ifParameterService.getQueryPpNameAndValue(req, actionType);
+		if (queryDetails == null) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, "No query deatils");
+			return;
+		}
+		//
+		// 根据与田江涛的商定的结果分区服务器可以不检查上一环节，进行多次上线。
+		boolean isPRSTarget = false;
+		if ("分区服务器".equals(parameterMap.get("equipmentType")) == true) {
+			isPRSTarget = true;
+		}
+		List<ResExtObject> resObjectList = resourceService.getResObjectsByCondition("ResNode", queryDetails[0], queryDetails[1], UniResConstants.WHOLEWORD_CASEINSENSITIVE, 100, 1);
+		ResExtObject targetDeviceObj = null;
+		// 如果在A003时是分区服务器，在这步的时间查询的资源对象为承载服务器
+		if (actionType.equals("A003") == true && "分区服务器".equals(parameterMap.get("equipmentType")) == true) {
+			targetDeviceObj = resourceService.checkResHostNode("小型机", resObjectList);
+		} else {
+			targetDeviceObj = resourceService.checkResHostNode(parameterMap.get("equipmentType"), resObjectList);
+		}
+
+		if (targetDeviceObj == null) {
+			// 上架动作的资源对象来源是新设备或旧设备
+			if (actionType.equals("A001") == true || (actionType.equals("A003") == true && "分区服务器".equals(parameterMap.get("equipmentType")) == true)) {
+				String categoryName = parameterMap.get("equipmentType");
+				ModelService modelService = ServiceHelper.findService(ModelService.class);
+				ResDefClass equipementClassDef = modelService.getResDefClassByClassName(modelService.getClassTitleByCategory(categoryName));
+				HashMap<Object, Object> newObjectMap = new HashMap<Object, Object>();
+				if ("分区服务器".equals(parameterMap.get("equipmentType"))) {
+					newObjectMap.put("phase", DeviceLifeCycle.UNUSED);
+					newObjectMap.put("resName", equipementClassDef.getClassTitle() + "_" + parameterMap.get("serialNO") + "_" + parameterMap.get("ip"));
+				} else {
+					newObjectMap.put("phase", DeviceLifeCycle.IN_STOCK);
+					newObjectMap.put("resName", equipementClassDef.getClassTitle() + "_" + parameterMap.get("itAssetLabelNo") + "_" + parameterMap.get("serialNO"));
+				}
+				ResExtObject newDeviceObj = UniResTools.packagingResExtObject(equipementClassDef, newObjectMap);
+				newDeviceObj.setId(0);
+				targetDeviceObj = newDeviceObj;
+				// 如果实际资源对象中也有以L开的资源则忽略。
+			}
+			if (actionType.equals("A008") == true && parameterMap.get("itAssetLabelNo") != null && parameterMap.get("itAssetLabelNo").toUpperCase().startsWith("L")) {
+				ModelService modelService = ServiceHelper.findService(ModelService.class);
+				ResDefClass resObjectClassDef = modelService.getResDefClassByClassName(modelService.getClassTitleByCategory("ResObject"));
+				HashMap<Object, Object> newObjectMap = new HashMap<Object, Object>();
+				newObjectMap.put("phase", DeviceLifeCycle.IN_STOCK);
+				ResExtObject newDeviceObj = UniResTools.packagingResExtObject(resObjectClassDef, newObjectMap);
+				newDeviceObj.setId(0);
+				targetDeviceObj = newDeviceObj;
+			} else {
+				writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, "Cann't find a ResExtObject like " + queryDetails[0] + ":" + queryDetails[1]);
+				return;
+			}
+		}
+
+		// 检查是否可以进行当前动作
+		if (isPRSTarget == false && ifParameterService.checkNextLifeCycleReadyByResExtObject(targetDeviceObj, actionType) == false) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, "Device Object change Life cycle fail. Change refused.");
+			return;
+		}
+		// 执行动作
+		ActionSupportService actionService = ServiceHelper.findService(ActionSupportService.class);
+		IAction action = actionService.fineAction(actionType);
+		if (action == null) {
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, "actionType[" + actionType + "] is invaild,does't support.");
+			return;
+		}
+		try {
+			HashMap<String, JSONObject> ppDefineMap = ifParameterService.getActionParameterDefineByRequest(req);
+			HashMap<String, Object> messageMap = new HashMap<String, Object>();
+			messageMap.put("targetResObject", targetDeviceObj);
+			messageMap.put("parameterMap", parameterMap);
+			messageMap.put("ppDefineMap", ppDefineMap);
+			String reMessage = action.doAction(messageMap);
+			writeMessage(resp, HttpStatusCode.OK, reMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+			writeMessage(resp, HttpStatusCode.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
+			return;
+		}
+	}
+}

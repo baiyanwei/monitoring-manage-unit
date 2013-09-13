@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util
+END
+ApplictionActivator.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ApplictionActivator.java
+END
+StringFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/StringFormat.java
+END
+ParameterHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ParameterHelper.java
+END
+ApplicationLaunchingRes.properties
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ApplicationLaunchingRes.properties
+END
+ApplictionActivatorRes.properties
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ApplictionActivatorRes.properties
+END
+ApplicationConfiguration.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ApplicationConfiguration.java
+END
+ApplicationLaunching.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/ApplicationLaunching.java
+END
+HttpStatusCode.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/code_resource/!svn/ver/1634/BOMC/code/trunk/lifecycle/src/com/ultrapower/project/bomc/he/cmdb/resif/util/HttpStatusCode.java
+END

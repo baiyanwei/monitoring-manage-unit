@@ -1,0 +1,49 @@
+package com.ultrapower.project.bomc.he.cmdb.resif.util;
+
+import java.util.ArrayList;
+
+import com.ultrapower.project.bomc.he.cmdb.resif.services.AuthenticationService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.DataBaseOperationService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.InterfaceParameterTransformService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ModelService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ActionSupportService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.ResourceService;
+import com.ultrapower.project.bomc.he.cmdb.resif.services.UniResAPIService;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.log.PlatformLogger;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.service.IService;
+import com.ultrapower.project.bomc.he.cmdb.resif.util.service.ServiceHelper;
+
+public class ApplictionActivator implements IService {
+	private static PlatformLogger _logger = PlatformLogger.getLogger(ApplictionActivator.class);
+	ArrayList<IService> startUpServices = new ArrayList<IService>();
+
+	public void start() throws Exception {
+		_logger.info("StartService");
+		// #1 鉴权服务
+		startUpServices.add(ServiceHelper.registerService(new AuthenticationService()));
+		// #2 CMDB资源操作API 服务
+		startUpServices.add(ServiceHelper.registerService(new UniResAPIService()));
+		// #3 CMDBU资源模块缓存服务
+		startUpServices.add(ServiceHelper.registerService(new ModelService()));
+		// #5 数据库操作服务
+		startUpServices.add(ServiceHelper.registerService(new DataBaseOperationService()));
+		// #6 CMDB资源查询支持服务
+		startUpServices.add(ServiceHelper.registerService(new ResourceService()));
+		// #7 HTTP同步方式支持服务
+		startUpServices.add(ServiceHelper.registerService(new ActionSupportService()));
+		// #7 HTTP同步方式支持服务
+		startUpServices.add(ServiceHelper.registerService(new InterfaceParameterTransformService()));
+	}
+
+	public void stop() throws Exception {
+		for (int i = 0; i < startUpServices.size(); i++) {
+			try {
+				startUpServices.get(i).stop();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}
