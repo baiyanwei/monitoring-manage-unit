@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="厂商管理》添加设备型号";
+		adiv.innerText="厂商管理>添加设备型号";
 	</script>
 </head>
 <body>

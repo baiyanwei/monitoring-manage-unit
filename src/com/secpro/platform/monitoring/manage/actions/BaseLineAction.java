@@ -2,7 +2,11 @@ package com.secpro.platform.monitoring.manage.actions;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -115,6 +119,103 @@ public class BaseLineAction {
 	
 					}
 				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public String saveBaseLineTemplate(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		String companyCode =request.getParameter("companyCode");
+		String templateName = request.getParameter("templateName");
+		String templateDesc = request.getParameter("templateDesc");
+		String[] baselineIds= request.getParameterValues("baselineId");
+		if (companyCode == null) {
+			returnMsg = "模板保存失败！";
+			logger.info("fetch companyCode failed ,companyCode is null");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		if (companyCode.trim().equals("")) {
+			returnMsg = "模板保存失败！";
+			logger.info("fetch companyCode failed ,companyCode is ''");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		if (templateName == null) {
+			returnMsg = "模板保存失败！";
+			logger.info("fetch templateName failed ,templateName is null");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		if (templateName.trim().equals("")) {
+			returnMsg = "模板保存失败！";
+			logger.info("fetch templateName failed ,templateName is ''");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		if (baselineIds == null) {
+			returnMsg = "模板保存失败！";
+			logger.info("fetch baselineIds failed ,baselineIds is null");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		BaselineTemplate bt=new BaselineTemplate();
+		bt.setCompanyCode(companyCode);
+		bt.setTemplateName(templateName);
+		bt.setTemplateDesc(templateDesc);
+		bt.setCdate(sdf.format(new Date()));
+		Map<String,String> map=new HashMap<String,String>();
+		for(int i=0;i<baselineIds.length;i++){
+			String score=request.getParameter("score"+baselineIds[i]);
+			map.put(baselineIds[i], score);	
+		}
+		btService.save(bt);
+		boolean flag=btService.saveBaseLineTemplete(bt.getId(), baselineIds, map);
+		if(!flag){
+			btService.delete(bt);
+			returnMsg = "模板保存失败！";
+			logger.info("save baseline_template_mapping failed");
+			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			return "failed";
+		}
+		return "success";
+	}
+	public void getAllBaseline(){
+		List baselineList=sbService.queryAll("from SysBaseline");
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(baselineList!=null&&!baselineList.isEmpty()){
+				sb.append("{\"total\":" + baselineList.size() + ",\"rows\":[");
+				for(int i=0;i<baselineList.size();i++){
+					SysBaseline baseline=(SysBaseline)baselineList.get(i);
+					sb.append("{\"baselineId\":" + baseline.getId() + ",");
+					sb.append("\"baselineType\":\"" + (baseline.getBaselineType().equals("0") ? "配置基线":"策略基线") + "\",");
+					sb.append("\"blackWhite\":\"" + (baseline.getBaselineType().equals("0") ? "白名单":"黑名单") + "\",");
+					if(i==(baselineList.size()-1)){
+						sb.append("\"baselineDesc\":\"" + baseline.getBaselineDesc()
+								+ "\"}");
+					}else{
+						sb.append("\"baselineDesc\":\"" + baseline.getBaselineDesc()
+								+ "\"},");
+					}
+				}
+			}else{
+				sb.append("{\"total\":0,\"rows\":[]}");
 			}
 			sb.append("]}");
 			System.out.println(sb.toString());

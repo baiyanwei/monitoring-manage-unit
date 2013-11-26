@@ -69,7 +69,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             text: '创建基线模板',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addMca.jsp";
+               window.location.href="addBaseLineTemplate.jsp";
             }   
         }, '-', {   
             text: '删除基线模板',   

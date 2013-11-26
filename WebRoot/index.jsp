@@ -47,9 +47,9 @@
 									<td class="page_bar_bg">
 										<div align="left" style="padding-left: 10px;">
 											<a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a>
-											<a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线管理</a>
+											<a href="#" class="easyui-linkbutton" data-options="plain:true">基线管理</a>
 											<a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a>
-											<a href="#" class="easyui-linkbutton" data-options="plain:true">模板管理</a>
+											<a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">模板管理</a>
 											<a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
 											<a href="#" class="easyui-linkbutton" data-options="plain:true">告警策略管理</a>
 											<a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商管理</a>

@@ -29,6 +29,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
 	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
+	<script>
+		var adiv= window.parent.document.getElementById("operation");
+		adiv.innerText="资源管理>创建资源";
+	</script>
   </head>
   
   <body>

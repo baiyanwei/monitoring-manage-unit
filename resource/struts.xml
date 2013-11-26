@@ -123,8 +123,13 @@
 			<result name="success">/resobj/viewMca.jsp</result>
 		</action>
 		<!-- 基线类 -->
-		<action name="getAllBaseLinetemplate" class="BaseLineAction" method="getAllBaseLinetemplate">
-			
+		<action name="getAllBaseLinetemplate" class="BaseLineAction" method="getAllBaseLinetemplate">		
+		</action>
+		<action name="saveBaseLineTemplate" class="BaseLineAction" method="saveBaseLineTemplate">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/baseline/viewBaseLineTemplate.jsp</result>
+		</action>
+		<action name="getAllBaseline" class="BaseLineAction" method="getAllBaseline">		
 		</action>
     </package>
     <constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />

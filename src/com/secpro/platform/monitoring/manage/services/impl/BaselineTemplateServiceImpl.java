@@ -1,6 +1,7 @@
 package com.secpro.platform.monitoring.manage.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -22,5 +23,8 @@ public class BaselineTemplateServiceImpl extends BaseService implements Baseline
 	}
 	public List getAllBaseLineTemplate(List templateList){
 		return dao.getAllBaseLineTemplate(templateList);
+	}
+	public boolean saveBaseLineTemplete(Long BaselineTemplateId,String[] baselineIds,Map<String,String> scores){
+		return dao.saveBaseLineTemplete(BaselineTemplateId, baselineIds, scores);
 	}
 }
