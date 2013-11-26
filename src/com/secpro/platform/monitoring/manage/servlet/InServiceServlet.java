@@ -3,6 +3,7 @@ package com.secpro.platform.monitoring.manage.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import com.secpro.platform.monitoring.manage.util.service.ServiceHelper;
  * 
  *         测试接口是否可用
  */
+@Entity
 public class InServiceServlet extends ResIFSlet {
 	private static final ArrayList<Class<?>> NEED_SERVICE_LIST = new ArrayList<Class<?>>();
 	static {

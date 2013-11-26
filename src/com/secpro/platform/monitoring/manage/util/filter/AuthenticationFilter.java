@@ -2,6 +2,7 @@ package com.secpro.platform.monitoring.manage.util.filter;
 
 import java.io.IOException;
 
+import javax.persistence.Entity;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,6 +19,7 @@ import com.secpro.platform.monitoring.manage.util.service.ServiceHelper;
 /**
  * @author baiyanwei 权限验证
  */
+@Entity
 public class AuthenticationFilter implements Filter {
 	protected FilterConfig config;
 	

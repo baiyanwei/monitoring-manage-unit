@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
 
+import javax.persistence.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * logger OSGI interface for platform ,shit long. 
  * May 30,2012
  */
+@Entity
 final public class PlatformLogger {
 	// The static define attributes for high performance
 	final public static String RES_FILE_STR = "Res.properties";
@@ -26,6 +28,9 @@ final public class PlatformLogger {
 	// the cache in RES
 	private Properties pp4Format = new Properties();
 	private Properties pp4Logging = new Properties();
+
+	protected PlatformLogger() {
+	}
 
 	private PlatformLogger(Class<?> clazz) {
 		logger = LoggerFactory.getLogger(clazz);

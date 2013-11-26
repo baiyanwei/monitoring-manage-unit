@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@page import="com.byw.platform.flow.web.util.ApplicationConfiguration"%>
+<%@page import="com.secpro.platform.monitoring.manage.util.ApplicationConfiguration"%>
 <%
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -7,7 +7,7 @@
 <HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title><%=ApplicationConfiguration.APPLCATION_NAME%></title>
+		<title><%=ApplicationConfiguration.APPLICATION_NAME%></title>
 	</head>
 
 	<FRAMESET COLS="210,*" border="4" framespacing="4">

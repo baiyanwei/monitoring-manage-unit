@@ -1,5 +1,131 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
+<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
 
+    <package name="default" extends="struts-default,json-default,jfreechart-default,spring-default">
+
+        <default-action-ref name="index" />
+
+        <global-results>
+            <result name="error">/demo/error.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+        <!-- 资源类 -->
+		<action name="ResObjectDelete" class="ResObjectAction" method="removeResObj">
+			<result name="success" type="redirect">/tree/treeViewFrame.jsp</result>
+		</action>
+        <action name="findAllCompany" class="SysDevAction" method="getAllCompany">
+		</action>
+        <action name="findDevTypeByCompanyCode" class="SysDevAction" method="getDevTypeByCompanyCode">
+		</action>
+		<action name="toAddSysObj" class="ResObjectAction" method="toAddResObj">
+			<result name="toAddSysObj">/resobj/addResObj.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="saveSysObj" class="ResObjectAction" method="saveResObj">
+			<result name="success">/resobj/addResObj.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="toViewSysObj" class="ResObjectAction" method="getResObjInof">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewResObj.jsp</result>
+		</action>
+		<action name="modifySysObj" class="ResObjectAction" method="modifyResObj">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewResObj.jsp</result>
+		</action>
+		<!-- 设备厂商 -->
+		<action name="toViewAllCompany" class="SysDevAction" method="toViewAllCompany">
+		</action>
+		<action name="saveCompany" class="SysDevAction" method="saveCompany">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+		</action>
+		<action name="deleteCompany" class="SysDevAction" method="deleteCompany">
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="getCompanyById" class="SysDevAction" method="getCompanyById">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/modifyCompany.jsp</result>
+		</action>
+		<action name="modifyCompany" class="SysDevAction" method="modifyCompany">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+		</action>
+		<action name="toAddType" class="SysDevAction" method="toAddType">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/addType.jsp</result>
+		</action>
+		<action name="saveDevType" class="SysDevAction" method="saveDevType">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+		</action>
+		<action name="viewDevTypeByCompanyCode" class="SysDevAction" method="viewDevTypeByCompanyCode">
+		</action>
+		<action name="deleteDevType" class="SysDevAction" method="deleteDevType">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+		</action>
+		<action name="toModifyType" class="SysDevAction" method="toModifyType">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/modifyType.jsp</result>
+		</action>
+		<action name="modifyType" class="SysDevAction" method="modifyType">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
+		</action>
+		<!-- 采集端 -->
+		<action name="viewAllMca" class="ResObjectAction" method="viewAllMca">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		<action name="saveMca" class="ResObjectAction" method="saveMca">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		
+		<action name="updateMcaPaused" class="ResObjectAction" method="updateMcaPaused">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		<action name="deleteMca" class="ResObjectAction" method="deleteMca">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		<action name="toModifyMca" class="ResObjectAction" method="toModifyMca">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/modifyMca.jsp</result>
+		</action>
+		<action name="modifyMca" class="ResObjectAction" method="modifyMca">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		
+		<!-- 城市架构 -->
+		<action name="getAllCity" class="CityTreeAction" method="getAllCity">			
+		</action>
+		<!-- 指标类 -->
+		<action name="toViewMcaRaw" class="SysKpiInfoAction" method="toViewMcaRaw">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/mcaKpiValue.jsp</result>
+		</action>
+		<action name="queryMcaRaw" class="SysKpiInfoAction" method="queryMcaRaw">
+		</action>
+		<!-- watchdog任务 -->
+		<action name="mcaOperation" class="SysKpiInfoAction" method="mcaOperation">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewMca.jsp</result>
+		</action>
+		<!-- 基线类 -->
+		<action name="getAllBaseLinetemplate" class="BaseLineAction" method="getAllBaseLinetemplate">
+			
+		</action>
+    </package>
+    <constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />
 </struts>    

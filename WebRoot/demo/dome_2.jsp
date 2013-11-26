@@ -23,17 +23,9 @@
 			<div class="content_title">demo</div>
 		</div>
 		<div class="about_title">demo</div>
-		<div>
-			<table class="page_bar" align="center">
-				<tr>
-					<td class="page_bar_bg">
-						<div align="left" style="padding-left: 10px;">page tool bar</div>
-					</td>
-				</tr>
-			</table>
-		</div>
+		
 		<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
-			1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
+			<iframe id="SYS02" name="sys_02" src="../help/help_content_frame.jsp"  width="100%" height="100%" scrolling="auto" frameborder="0" ></iframe>
 		</div>
 	</div>
 </body>

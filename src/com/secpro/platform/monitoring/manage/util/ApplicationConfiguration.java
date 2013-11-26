@@ -1,11 +1,14 @@
 package com.secpro.platform.monitoring.manage.util;
 
+import javax.persistence.Entity;
+
 /**
  * @author baiyanwei 应用配置
  */
+@Entity
 public class ApplicationConfiguration {
 	final static public String LOGGING_CONFIG_NAME = "logging_cfg.xml";
-	static public String APPLICATION_NAME = "inventory";
+	public static String APPLCATION_NAME = "inventory";
 	//
 	final static public String SAMPLE_DATE_FORMAT = "yyyy-MM-DD HH:mm:ss";
 

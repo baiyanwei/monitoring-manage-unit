@@ -4,15 +4,15 @@ function changeFrameleft(){
 	if(parent.document.getElementById("ContentFrm").getAttribute("cols")=='24,*'){
 	   parent.document.getElementById("ContentFrm").cols='210,*';
 	   document.getElementById('showtree').style.display="";
-	   document.getElementById('notree').style.display="none";
-	    parent.leftFrame.noResize = false;
+	  document.getElementById('notree').style.display="none";
+	//    parent.leftFrame.noResize = false;
 		}
    else{
 	   parent.document.getElementById("ContentFrm").cols='24,*';
 	   document.getElementById('showtree').style.display="none"
 	   document.getElementById('notree').style.display="";
 
-	   parent.leftFrame.noResize = true;
+	//   parent.leftFrame.noResize = true;
 	  
 	   
 	}

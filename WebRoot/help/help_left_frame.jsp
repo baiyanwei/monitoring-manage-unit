@@ -51,7 +51,7 @@
 		<form id="hrefForm" name="hrefForm" method="get" action="#"></form>
 		<tr>
 			<td id="td0" class="tree_title_bg1" valign="top">
-				<div class="showtree" id="hideleft" onClick="changeFrameleft()" title="隐藏左侧菜单"></div> <span class="data_objshow" onClick="showSubmenu(0);changeColor(0,'help_description.jsp');">帮助</span></td>
+				<div class="showtree" id="hideleft" onClick="changeFrameleft()" title="隐藏左侧菜单"></div> <span class="data_objshow" onClick="showSubmenu(0);changeColor(0,'help_description.jsp');">资源树</span></td>
 		</tr>
 		<tr class=submunuTbody id=submunuTbody>
 			<td valign="top"><iframe src="help_tree.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe></td>

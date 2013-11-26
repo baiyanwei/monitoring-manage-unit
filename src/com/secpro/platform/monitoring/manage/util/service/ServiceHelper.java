@@ -3,6 +3,8 @@ package com.secpro.platform.monitoring.manage.util.service;
 import java.util.HashMap;
 
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 
 /**
@@ -10,8 +12,10 @@ import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
  * @author Martin
  * 
  */
+@Entity
 public class ServiceHelper<T extends IService> {
-    private static PlatformLogger _logger = PlatformLogger.getLogger(ServiceHelper.class);
+    @ManyToOne
+	private static PlatformLogger _logger = PlatformLogger.getLogger(ServiceHelper.class);
     private static HashMap<String, IService> _registationMap = new HashMap<String, IService>();
 
     /**

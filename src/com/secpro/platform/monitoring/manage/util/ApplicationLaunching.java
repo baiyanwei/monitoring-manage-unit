@@ -1,5 +1,7 @@
 package com.secpro.platform.monitoring.manage.util;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -15,8 +17,11 @@ import ch.qos.logback.core.joran.spi.JoranException;
 /**
  * @author baiyanwei 启动应用
  */
+@Entity
 public class ApplicationLaunching implements ServletContextListener {
+	@ManyToOne
 	private static IService applictionActivator = null;
+	@ManyToOne
 	private static PlatformLogger _logger = null;
 
 	public void contextDestroyed(ServletContextEvent arg0) {
@@ -45,13 +50,13 @@ public class ApplicationLaunching implements ServletContextListener {
 				_logger = PlatformLogger.getLogger(ApplicationLaunching.class);
 				_logger.info("startApplication");
 				//
-				ApplicationConfiguration.APPLICATION_NAME = arg0.getServletContext().getInitParameter("appName");
+				ApplicationConfiguration.APPLCATION_NAME = arg0.getServletContext().getInitParameter("appName");
 				ApplicationConfiguration.ULTRA_CMDB_IP = arg0.getServletContext().getInitParameter("UltraCMDB.ip");
 				ApplicationConfiguration.ULTRA_CMDB_PORT = arg0.getServletContext().getInitParameter("UltraCMDB.port");
 				ApplicationConfiguration.SYNCHRONIZED_ACCOUNT = arg0.getServletContext().getInitParameter("UltraCMDB.synchronized_account");
 				//
 				_logger.info("startWithParameter", ApplicationConfiguration.ULTRA_CMDB_IP, ApplicationConfiguration.ULTRA_CMDB_PORT, ApplicationConfiguration.SYNCHRONIZED_ACCOUNT,
-						ApplicationConfiguration.APPLICATION_NAME);
+						ApplicationConfiguration.APPLCATION_NAME);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(-1);

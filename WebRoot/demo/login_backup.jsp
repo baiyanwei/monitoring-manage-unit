@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@page import="com.byw.platform.flow.web.util.ApplicationConfiguration"%>
+<%@page import="com.secpro.platform.monitoring.manage.util.ApplicationConfiguration"%>
 <%
 	String loginError = "";
 	if (request

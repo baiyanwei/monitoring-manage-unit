@@ -2,6 +2,7 @@ package com.secpro.platform.monitoring.manage.util.filter;
 
 import java.io.IOException;
 
+import javax.persistence.Entity;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -13,6 +14,7 @@ import javax.servlet.ServletResponse;
  * @author baiyanwei
  * 处理整个WEBAPP的编码问题
  */
+@Entity
 public class EncodingFilter implements Filter {
     protected String encoding = null;
     protected FilterConfig config;

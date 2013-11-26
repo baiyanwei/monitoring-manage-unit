@@ -9,8 +9,12 @@ import com.secpro.platform.monitoring.manage.services.ResourceService;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.secpro.platform.monitoring.manage.util.service.IService;
 import com.secpro.platform.monitoring.manage.util.service.ServiceHelper;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
+@Entity
 public class ApplictionActivator implements IService {
+	@ManyToOne
 	private static PlatformLogger _logger = PlatformLogger.getLogger(ApplictionActivator.class);
 	ArrayList<IService> startUpServices = new ArrayList<IService>();
 

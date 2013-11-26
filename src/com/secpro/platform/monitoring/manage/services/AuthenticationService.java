@@ -1,5 +1,6 @@
 package com.secpro.platform.monitoring.manage.services;
 
+import javax.persistence.Entity;
 import javax.servlet.http.HttpServletRequest;
 
 import com.secpro.platform.monitoring.manage.util.service.IService;
@@ -10,6 +11,7 @@ import com.secpro.platform.monitoring.manage.util.service.ServiceInfo;
  * @author baiyanwei
  * 鉴权服务
  */
+@Entity
 @ServiceInfo(description = "provide the authentication ability")
 public class AuthenticationService implements IService {
 

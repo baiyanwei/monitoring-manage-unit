@@ -4,14 +4,50 @@
 	<classpathentry kind="src" path="resource"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.lib.spring31.MYECLIPSE_SPRING31_CORE"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.struts2.MYECLIPSE_STRUTS21_CORE"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.lib.hibernate41.MYECLIPSE_HIBERNATE_4_1_CORE"/>
+	<classpathentry kind="lib" path="lib/db/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/db/c3p0-0.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/log/logback-classic-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/log/logback-core-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/log/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/web/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/web/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-io-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/web/commons-pool-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/web/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/web/freemarker-2.3.18.jar"/>
+	<classpathentry kind="lib" path="lib/web/hibernate-c3p0-4.1.2.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/hibernate-commons-annotations-4.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/hibernate-core-4.1.2.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/hibernate-entitymanager-4.1.2.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/hibernate-jpa-2.0-api-1.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/javassist-3.11.0.GA.jar"/>
+	<classpathentry kind="lib" path="lib/web/javassist-3.15.0-GA.jar"/>
+	<classpathentry kind="lib" path="lib/web/jboss-logging-3.1.0.GA.jar"/>
+	<classpathentry kind="lib" path="lib/web/jboss-transaction-api_1.1_spec-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="lib/web/ognl-3.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.aop-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.asm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.beans-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.context-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.core-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.expression-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.jdbc-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.orm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.transaction-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.web-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/web/struts2-core-2.3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/web/struts2-spring-plugin-2.3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/web/xwork-core-2.3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/web/common.jar"/>
+	<classpathentry kind="lib" path="lib/web/dwr.jar"/>
+	<classpathentry kind="lib" path="lib/web/jdom.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.springframework.web.servlet-3.1.0.M2.jar"/>
+	<classpathentry kind="lib" path="lib/web/org.json.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

@@ -1,5 +1,6 @@
 package com.secpro.platform.monitoring.manage.util.db.session;
 
+import javax.persistence.Entity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -9,6 +10,7 @@ import org.hibernate.cfg.Configuration;
  * current thread of execution.  Follows the Thread Local Session
  * pattern, see {@link http://hibernate.org/42.html }.
  */
+@Entity
 public class HibernateSessionFactory {
 
     /** 

@@ -12,13 +12,17 @@ import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.secpro.platform.monitoring.manage.util.service.IService;
 import com.secpro.platform.monitoring.manage.util.service.ServiceHelper;
 import com.secpro.platform.monitoring.manage.util.service.ServiceInfo;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 
 /**
  * @author baiyanwei 负责支持名种数据查询
  */
+@Entity
 @ServiceInfo(description = "lookup resource from cmdb")
 public class ResourceService implements IService {
+	@ManyToOne
 	private static PlatformLogger _logger = PlatformLogger.getLogger(ResourceService.class);
 
 	public void start() throws Exception {

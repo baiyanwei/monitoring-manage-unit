@@ -11,13 +11,17 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.secpro.platform.monitoring.manage.util.service.IService;
 import com.secpro.platform.monitoring.manage.util.service.ServiceInfo;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * @author baiyanwei
  * @date 2013-4-1 负责支持名种数据查询
  */
+@Entity
 @ServiceInfo(description = "lookup resource from cmdb")
 public class DataBaseOperationService implements IService {
+	@ManyToOne
 	private static PlatformLogger _logger = PlatformLogger.getLogger(DataBaseOperationService.class);
 	// 数据库连接池
 	private ComboPooledDataSource cpds = null;

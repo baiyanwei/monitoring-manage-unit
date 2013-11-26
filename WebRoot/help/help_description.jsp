@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@page import="com.byw.platform.flow.web.util.ApplicationConfiguration"%>
+<%@page import="com.secpro.platform.monitoring.manage.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -19,10 +19,18 @@
 </head>
 <body>
 	<div class="content">
-		<div class="content_title_bg">
-			<div class="content_title">帮助>描述</div>
+		<div>
+			<table class="page_bar" align="center">
+				<tr>
+					<td class="page_bar_bg">
+						<div align="left" style="padding-left: 10px;">page tool bar</div>
+					</td>
+				</tr>
+			</table>
 		</div>
-		<div class="about_title">关于</div>
+		<div class="content_title_bg">
+			<div class="content_title">河北>防火墙1</div>
+		</div>
 		<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 				<tr>
