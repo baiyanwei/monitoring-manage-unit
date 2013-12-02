@@ -5,7 +5,19 @@
     <constant name="struts.devMode" value="true" />
 
     <package name="default" extends="struts-default,json-default,jfreechart-default,spring-default">
-
+		<!-- 
+		 <interceptors>
+		   <interceptor name="loginedCheck"
+		    	class="com.secpro.platform.monitoring.manage.interceptor.LoginInterceptor" />
+		   <interceptor-stack name="mystack">
+		    <interceptor-ref name="loginedCheck" />
+		    <interceptor-ref name="defaultStack" />
+		   </interceptor-stack>
+		  </interceptors>
+		 
+		  
+		 <default-interceptor-ref name="mystack"></default-interceptor-ref>
+	 --> 
         <default-action-ref name="index" />
 
         <global-results>
@@ -80,6 +92,24 @@
 			<result name="failed">/error.jsp</result>
 			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
 		</action>
+		<action name="toAddCommand" class="SysDevAction" method="toAddCommand">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/addCommand.jsp</result>
+		</action>
+		<action name="saveCommand" class="SysDevAction" method="saveCommand">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewCommand.jsp</result>
+		</action>
+		<action name="modifyCommand" class="SysDevAction" method="modifyCommand">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewCommand.jsp</result>
+		</action>
+		<action name="toViewCommand" class="SysDevAction" method="toViewCommand">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/devcompany/viewCommand.jsp</result>
+		</action>
+		<action name="getAllType" class="SysDevAction" method="getAllType">
+		</action>
 		<!-- 采集端 -->
 		<action name="viewAllMca" class="ResObjectAction" method="viewAllMca">
 			<result name="failed">/error.jsp</result>
@@ -106,9 +136,14 @@
 			<result name="failed">/error.jsp</result>
 			<result name="success">/resobj/viewMca.jsp</result>
 		</action>
-		
+		<action name="getResObjByCity" class="ResObjectAction" method="getResObjByCity">
+		</action>
+		<action name="getMcaByCity" class="ResObjectAction" method="getMcaByCity">
+		</action>
 		<!-- 城市架构 -->
 		<action name="getAllCity" class="CityTreeAction" method="getAllCity">			
+		</action>
+		<action name="getCityByParent" class="CityTreeAction" method="getCityByParent">			
 		</action>
 		<!-- 指标类 -->
 		<action name="toViewMcaRaw" class="SysKpiInfoAction" method="toViewMcaRaw">
@@ -117,19 +152,248 @@
 		</action>
 		<action name="queryMcaRaw" class="SysKpiInfoAction" method="queryMcaRaw">
 		</action>
+		<action name="viewKpiInfo" class="SysKpiInfoAction" method="viewKpiInfo">
+		</action>
+		<action name="deleteKpi" class="SysKpiInfoAction" method="deleteKpi">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewKpiInfo.jsp</result>
+		</action>
+		<action name="modifyKpiInfo" class="SysKpiInfoAction" method="modifyKpiInfo">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewKpiInfo.jsp</result>
+		</action>
+		<action name="toModifyKpi" class="SysKpiInfoAction" method="toModifyKpi">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/modifyKpi.jsp</result>
+		</action>
+		<action name="saveKpiInfo" class="SysKpiInfoAction" method="saveKpiInfo">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewKpiInfo.jsp</result>
+		</action>
+		<action name="findAllResClass" class="SysKpiInfoAction" method="findAllResClass">
+		</action>
 		<!-- watchdog任务 -->
 		<action name="mcaOperation" class="SysKpiInfoAction" method="mcaOperation">
 			<result name="failed">/error.jsp</result>
 			<result name="success">/resobj/viewMca.jsp</result>
 		</action>
-		<!-- 基线类 -->
-		<action name="getAllBaseLinetemplate" class="BaseLineAction" method="getAllBaseLinetemplate">		
+		<!-- 基线模板类 -->
+		<action name="getAllBaseLinetemplate" class="BaseLineTemplateAction" method="getAllBaseLinetemplate">		
 		</action>
-		<action name="saveBaseLineTemplate" class="BaseLineAction" method="saveBaseLineTemplate">		
+		<action name="saveBaseLineTemplate" class="BaseLineTemplateAction" method="saveBaseLineTemplate">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLineTemplate.jsp</result>
+		</action>
+		<action name="getAllBaseline" class="BaseLineTemplateAction" method="getAllBaseline">		
+		</action>
+		<action name="deleteTemplate" class="BaseLineTemplateAction" method="deleteTemplate">		
 			<result name="failed">/error.jsp</result>
 			<result name="success">/baseline/viewBaseLineTemplate.jsp</result>
 		</action>
-		<action name="getAllBaseline" class="BaseLineAction" method="getAllBaseline">		
+		<action name="toModifyTemplate" class="BaseLineTemplateAction" method="toModifyTemplate">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/baseline/modifyBaseLineTemplate.jsp</result>
+		</action>
+		<action name="modifyBaseLineTemplate" class="BaseLineTemplateAction" method="modifyBaseLineTemplate">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLineTemplate.jsp</result>
+		</action>
+		<action name="getBaseLineTemplateByCompany" class="BaseLineTemplateAction" method="getBaseLineTemplateByCompany">					
+		</action>
+		<action name="templateResMapping" class="BaseLineTemplateAction" method="templateResMapping">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLineTemplate.jsp</result>
+		</action>
+		<!-- 基线类 -->
+		<action name="viewAllBaseline" class="BaseLineAction" method="getAllBaseline">		
+			
+		</action>
+		<action name="saveBaseLine" class="BaseLineAction" method="saveBaseLine">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLine.jsp</result>
+		</action>
+		<action name="deleteBaseLine" class="BaseLineAction" method="deleteBaseLine">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLine.jsp</result>
+		</action>
+		<action name="toModifyBaseLine" class="BaseLineAction" method="toModifyBaseLine">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">modifyBaseLine.jsp</result>
+		</action>
+		<action name="modifyBaseLine" class="BaseLineAction" method="modifyBaseLine">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewBaseLine.jsp</result>
+		</action>
+		<action name="baseLineRuleMapping" class="BaseLineAction" method="baseLineRuleMapping">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/viewAllDevType.jsp</result>
+		</action>
+		<action name="getBaseLineRuleByDev" class="BaseLineAction" method="getBaseLineRuleByDev">		
+		</action>
+		<action name="toAddTemplateRule" class="BaseLineAction" method="toAddTemplateRule">		
+			<result name="success">/rule/addBaseLineRule.jsp</result>
+		</action>
+		<!-- 规则类 -->
+		<action name="toChangeSyslogRule" class="SyslogRuleAction" method="toChangeSyslogRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/changeSyslogRule.jsp</result>
+		</action>
+		<action name="syslogRule" class="SyslogRuleAction" method="syslogRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/viewAllDevType.jsp</result>
+		</action>
+		<action name="deleteSyslogRule" class="SyslogRuleAction" method="deleteRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/viewAllDevType.jsp</result>	
+		</action>
+		<action name="toChangeConfigRule" class="ConfigPolicyRuleAction" method="toChangeConfigRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/changeConfigRule.jsp</result>
+		</action>
+		<action name="configRule" class="ConfigPolicyRuleAction" method="configRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/viewAllDevType.jsp</result>
+		</action>
+		<action name="deleteConfigRule" class="ConfigPolicyRuleAction" method="deleteConfigRule">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/rule/viewAllDevType.jsp</result>
+		</action>
+		<!-- 用户类 -->
+		<action name="viewUserInfo" class="UserAction" method="viewUserInfo">		
+		</action>
+		<action name="saveUser" class="UserAction" method="saveUser">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewUser.jsp</result>
+		</action>
+		<action name="toModifyUser" class="UserAction" method="toModifyUser">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/modifyUser.jsp</result>
+		</action>
+		<action name="modifyUser" class="UserAction" method="modifyUser">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewUser.jsp</result>
+		</action>
+		<action name="deleteUser" class="UserAction" method="deleteUser">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewUser.jsp</result>
+		</action>
+		<action name="userRoleMapping" class="UserAction" method="userRoleMapping">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewUser.jsp</result>
+		</action>
+		<!-- 组织部门 -->
+		<action name="viewAllOrg" class="OrgAction" method="viewAllOrg">		
+		</action>
+		<action name="saveOrg" class="OrgAction" method="saveOrg">		
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewOrg.jsp</result>
+		</action>
+		<action name="toModifyOrg" class="OrgAction" method="toModifyOrg">	
+				<result name="failed">/error.jsp</result>
+			<result name="success">/users/modifyOrg.jsp</result>
+		</action>
+		<action name="modifyOrg" class="OrgAction" method="modifyOrg">	
+				<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewOrg.jsp</result>
+		</action>
+		<action name="deleteOrg" class="OrgAction" method="deleteOrg">	
+				<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewOrg.jsp</result>
+		</action>
+		<action name="allOrgRree" class="OrgAction" method="allOrgRree">	
+		</action>
+		<!-- 角色类 -->
+		<action name="viewRole" class="SysRoleAction" method="viewRole">	
+		</action>
+		<action name="saveRole" class="SysRoleAction" method="saveRole">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewRole.jsp</result>
+		</action>
+		<action name="toModifyRole" class="SysRoleAction" method="toModifyRole">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/modifyRole.jsp</result>
+		</action>
+		<action name="modifyRole" class="SysRoleAction" method="modifyRole">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewRole.jsp</result>
+		</action>
+		<action name="deleteRole" class="SysRoleAction" method="deleteRole">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewRole.jsp</result>
+		</action>
+		<action name="roleAppMapping" class="SysRoleAction" method="roleAppMapping">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/users/viewRole.jsp</result>
+		</action>
+		<action name="getAppTree" class="SysRoleAction" method="getAppTree">	
+			
+		</action>
+		<action name="getAppByRole" class="SysRoleAction" method="getAppByRole">	
+			
+		</action>
+		<!-- 事件类 -->
+		<action name="saveEventType" class="EventAction" method="saveEventType">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewEventType.jsp</result>
+		</action>
+		<action name="toModifyEventType" class="EventAction" method="toModifyEventType">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/modifyEventType.jsp</result>
+		</action>
+		<action name="modifyEventType" class="EventAction" method="modifyEventType">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/viewEventType.jsp</result>
+		</action>
+		<action name="ViewEventType" class="EventAction" method="ViewEventType">	
+		</action>
+		<action name="deleteEventType" class="EventAction" method="deleteEventType">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/viewEventType.jsp</result>
+		</action>
+		<action name="saveEventMsg" class="EventAction" method="saveEventMsg">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/viewEventType.jsp</result>
+		</action>
+		<action name="toSaveEventMsg" class="EventAction" method="toSaveEventMsg">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/addEventMsg.jsp</result>
+		</action>
+		<action name="toModifyEventMsg" class="EventAction" method="toModifyEventMsg">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/event/viewEventMsg.jsp</result>
+		</action>
+		<action name="modifyEventMsg" class="EventAction" method="modifyEventMsg">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">viewEventType.jsp</result>
+		</action>
+		<action name="getAllEventTypeByClass" class="EventAction" method="getAllEventTypeByClass">				
+		</action>
+		<action name="viewEventRule" class="EventAction" method="viewEventRule">				
+		</action>
+		<action name="toAddEventRule" class="EventAction" method="toAddEventRule">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">addEventRule.jsp</result>
+		</action>
+		<action name="toModifyEventRule" class="EventAction" method="toModifyEventRule">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">modifyEventRule.jsp</result>
+		</action>
+		<action name="saveEventRule" class="EventAction" method="saveEventRule">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">eventRule.jsp</result>
+		</action>
+		<action name="modifyEventRule" class="EventAction" method="modifyEventRule">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">eventRule.jsp</result>
+		</action>
+		<action name="deleteEventRule" class="EventAction" method="deleteEventRule">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">eventRule.jsp</result>
+		</action>
+		<!-- 用户登录 -->
+		<action name="login" class="LoginAction" method="login">	
+			<result name="loginError">/login.jsp</result>
+			<result name="success">/index.jsp</result>
 		</action>
     </package>
     <constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />

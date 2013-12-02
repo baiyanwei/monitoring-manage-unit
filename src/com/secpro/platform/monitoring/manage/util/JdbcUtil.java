@@ -32,4 +32,35 @@ public class JdbcUtil {
 			}
 		}
 	}
+	public static void close(Statement sta){
+		
+		if(sta!=null){
+			try {
+				sta.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public static void close(ResultSet rs){
+		if(rs!=null){
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public static void close(Connection con){
+		if(con!=null){
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }

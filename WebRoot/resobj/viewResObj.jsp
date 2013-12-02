@@ -31,6 +31,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
+		var adiv= window.parent.document.getElementById("operation");
+		adiv.innerText="资源管理>查看资源明细";
+	</script>
+	<script>
 		function deitable(){
 			var ip1=document.getElementById("ip1");
 			ip1.disabled=false;

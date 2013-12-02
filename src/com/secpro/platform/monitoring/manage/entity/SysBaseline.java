@@ -20,8 +20,8 @@ public class SysBaseline {
 	private String baselineDesc;
 	@Column(name="baseline_type")
 	private String baselineType;
-	@Column(name="baselin_black_white")
-	private String baselinBlackWhite;
+	@Column(name="baseline_black_white")
+	private String baselineBlackWhite;
 	public Long getId() {
 		return id;
 	}
@@ -40,11 +40,12 @@ public class SysBaseline {
 	public void setBaselineType(String baselineType) {
 		this.baselineType = baselineType;
 	}
-	public String getBaselinBlackWhite() {
-		return baselinBlackWhite;
+	public String getBaselineBlackWhite() {
+		return baselineBlackWhite;
 	}
-	public void setBaselinBlackWhite(String baselinBlackWhite) {
-		this.baselinBlackWhite = baselinBlackWhite;
+	public void setBaselineBlackWhite(String baselineBlackWhite) {
+		this.baselineBlackWhite = baselineBlackWhite;
 	}
+	
 	
 }

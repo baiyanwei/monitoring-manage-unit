@@ -838,7 +838,7 @@ public class ResObjectAction extends ActionSupport {
 			return "failed";
 		}
 		SysResObj mca=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(mcaId));
-		System.out.println(mca.getCityCode()+"-1---------------------");
+		
 		if(mca==null){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mca failed by mcaId "+mcaId);
@@ -847,7 +847,7 @@ public class ResObjectAction extends ActionSupport {
 		}
 		List cityList=cityService.queryAll("from SysCity s where s.cityCode='"+mca.getCityCode()+"'");
 		String ciytName="";
-		System.out.println(cityList.size()+"-2---------------------");
+		
 		if(cityList!=null&&cityList.size()!=0){
 			ciytName=((SysCity)cityList.get(0)).getCityName();
 		}
@@ -865,7 +865,7 @@ public class ResObjectAction extends ActionSupport {
 				ip4=ips[3];
 			}
 		}
-		System.out.println(ciytName+"-3---------------------");
+		
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("mca", mca);
@@ -1007,7 +1007,108 @@ public class ResObjectAction extends ActionSupport {
 		}
 		return "success";
 	}
-	public void findMcaDate(){
-		
+	public void getResObjByCity(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String cityCode=request.getParameter("cityCode");
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(cityCode==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(cityCode.trim().equals("")){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			List resList=sysService.queryAll("from SysResObj s where s.cityCode='"+cityCode+"'");
+			if(resList==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			result.append("[");
+			for (int i = 0; i < resList.size(); i++) {
+				SysResObj res=(SysResObj)resList.get(i);
+				
+				result.append("{\"id\":"+res.getId()+",\"text\":\""+res.getResName()+"\"}");
+				
+				if((i+1)!=resList.size()){
+					result.append(",");
+				}
+				
+			}
+			result.append("]");
+			System.out.println(result.toString());
+			pw.println(result.toString());
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public void getMcaByCity(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String cityCode=request.getParameter("cityCode");
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(cityCode==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(cityCode.trim().equals("")){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			List resList=sysService.queryAll("select s.id ,s.resName from SysResObj s,SysResClass c where s.cityCode='"+cityCode+"' and s.classId=c.id and c.className='mca'");
+			if(resList==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			result.append("[");
+			for (int i = 0; i < resList.size(); i++) {
+				Object[] res=(Object[])resList.get(i);
+				
+				result.append("{\"id\":"+res[0]+",\"text\":\""+res[1]+"\"}");
+				
+				if((i+1)!=resList.size()){
+					result.append(",");
+				}
+				
+			}
+			result.append("]");
+			System.out.println(result.toString());
+			pw.println(result.toString());
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
 	}
 }

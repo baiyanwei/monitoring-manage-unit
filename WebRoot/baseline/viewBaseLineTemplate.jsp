@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="基线管理>基线模板列表";
+		adiv.innerText="基线模板管理>基线模板列表";
 	</script>
   </head>
     <body>
@@ -48,19 +48,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    	 pageList:[10,20,50,100],
         url:'getAllBaseLinetemplate.action',  
        // queryParams:{'viewType':'RK','RKD_ID':_rkdId},  
-        singleSelect:false,  
+        singleSelect:true,  
         fitColumns:true,  
         nowrap:true,  
         loadMsg:'数据加载中,请稍后……',  
         pagination:true ,
-        rownumbers:true,
         columns:[[  
             {field:'templateId',checkbox:true},  
             {field:'templateName',title:'模板名称',width:100,editor:'text',sortable:true},    
             {field:'templateDesc',title:'模板描述',width:200,editor:'text'},  
-            {field:'companyName',title:'支持厂商',width:100,editor:'text'},   
-            {field:'resIp',title:'资源IP',width:100,editor:'text'},
-            {field:'resName',title:'资源名称',width:150,editor:'text'},  
+            {field:'companyName',title:'支持厂商',width:100,editor:'text'},              
            	{field:'baselineDesc',title:'基线描述',width:200,editor:'text'},  
            	{field:'baselineType',title:'基线类型',width:100,editor:'text'},  
            	{field:'blackWhite',title:'黑白名单',width:100,editor:'text'},            	
@@ -81,14 +78,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				       alert('未选择条目');  
 				        return;  
 				     }  
-				    var urll="deleteMca.action?mcaids=";  
+				    var urll="deleteTemplate.action?templateIds=";  
 				    for(var i=0;i<rows.length;i++){ 
 				    	if(i==(rows.length-1)){
-				    		urll+=rows[i].mcaid;
+				    		urll+=rows[i].templateId;
 				    	}else{
-				    		urll=urll+rows[i].mcaid+",";
+				    		urll=urll+rows[i].templateId+",";
 				    	}
 				    }  
+				    
 				 	window.location.href=urll;
 				}  
 
@@ -106,28 +104,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				     	alert('修改厂商只能选择一个条目');
 				     	return;
 				     }
-				    var urll="toModifyMca.action?mcaid="+rows[0].mcaid;  
+				    var urll="toModifyTemplate.action?templateId="+rows[0].templateId;  
 				    
 				 	window.location.href=urll;
 				}  
 
                
-        }, '-', {   
+        }, '-',{   
+            text: '模板资源映射',   
+            iconCls: 'icon-add',   
+            handler: function () {   
+               window.location.href="templateResMapping.jsp";
+            }   
+        }, '-',{   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }
         }],     
         
        
-        onDblClickRow:function(index,row){  
-          //  $('#listDetail').datagrid('expandRow', index);  
-          //  $('#listDetail').datagrid('fitColumns',index);  
-           window.location.href="toViewMcaRaw.action?resid="+row.mcaid;
-        },  
+         
         onLoadSuccess:function(){  
 
 
-      	   $(this).datagrid("autoMergeCells",['templateId','templateName','templateDesc']);  
+      	   $(this).datagrid("autoMergeCells",['templateId','templateName','templateDesc','companyName']);  
 		} 
     }); 
 		$('#listDetail').datagrid("getPager").pagination({
