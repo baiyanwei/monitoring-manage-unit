@@ -7,12 +7,7 @@
 
     <session-factory>
         <property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
-        <property name="connection.url">jdbc:oracle:thin:@192.168.18.166:1521:orcl</property>
-        <property name="connection.username">flow</property>
-        <property name="connection.password">flow</property>
-        <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="myeclipse.connection.profile">oracle</property>
-    
+    	<mapping class="com.secpro.platform.monitoring.manage.entity.SysOperation"/>
     </session-factory>
 
 </hibernate-configuration>

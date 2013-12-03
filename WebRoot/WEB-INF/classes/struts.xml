@@ -131,6 +131,15 @@
 		</action>
 		<action name="getAllBaseline" class="BaseLineAction" method="getAllBaseline">		
 		</action>
+		
+		<!--调度任务-->
+		<action name="*TaskScheduleAction"
+        	class="com.secpro.platform.monitoring.manage.actions.TaskScheduleAction" method="{1}">
+        	<result name="error" type="dispatcher">/error.jsp</result>
+        	<result name="warning" type="dispatcher">/warning.jsp</result>
+        	<result name="alert" type="dispatcher">/alert.jsp</result>
+        	<result name="success" type="dispatcher">/message.jsp</result>
+        </action>
     </package>
     <constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />
 </struts>    
