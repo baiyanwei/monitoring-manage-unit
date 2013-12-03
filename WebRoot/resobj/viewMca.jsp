@@ -113,8 +113,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    				formatter:function(value,row,index){
 				//    value="<img src='../../images/icons/alldelete.png'>" + "删除";
 					var d;
-					d = '<a href="#" class="easyui-linkbutton l-btn l-btn-plain" onclick = toViewKpiValue("'
-       					+ 'toViewMcaRaw.action?resid=' + row.mcaid +'")>' + "<font color='blue'>查看明细</font>" + '</a>';
+					d = '<a href="toViewMcaRaw.action?resid=' + row.mcaid +'" class="easyui-linkbutton l-btn l-btn-plain">' + "<font color='blue'>查看明细</font>" + '</a>';
     				return d; 
     			}
     		}

@@ -40,16 +40,16 @@ public class SysResObjDaoImpl extends BaseDao implements SysResObjDao{
 		return sb.toString();
 	}
 	public void getResObjForm(final ResObjForm resObjForm){
-		System.out.println("===========================");
+		
 		getSessionFactory().getCurrentSession().doWork(new Work(){
 			public void execute(Connection connection) {
-				System.out.println("------------111111111111");
+				
 				Statement s = null;
 				ResultSet rs = null;		
 				try {
 					
 					s = connection.createStatement();
-					System.out.println("------------2222222222222");
+					
 					rs = s.executeQuery("select s1.id,s1.res_name,s1.res_desc,s1.res_ip,s1.status_opertion,s1.config_opertion,s1.res_paused,s1.mca_id," +
 							" s1.city_code,s1.company_code,s1.type_code,s2.company_name,s3.type_name,s4.id,s4.username,s4.password," +
 							"s4.community,s4.snmpv3_user,s4.snmpv3_auth,s4.snmpv3_authpass," +

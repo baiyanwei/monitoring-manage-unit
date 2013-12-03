@@ -1,5 +1,7 @@
 package com.secpro.platform.monitoring.manage.actions;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -7,16 +9,23 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
+import com.secpro.platform.monitoring.manage.entity.EventMsg;
+import com.secpro.platform.monitoring.manage.entity.EventType;
 import com.secpro.platform.monitoring.manage.entity.SysEvent;
 import com.secpro.platform.monitoring.manage.entity.SysEventHis;
+import com.secpro.platform.monitoring.manage.entity.SysEventRule;
+import com.secpro.platform.monitoring.manage.services.EventMsgService;
+import com.secpro.platform.monitoring.manage.services.EventTypeService;
 import com.secpro.platform.monitoring.manage.services.SysEventHisService;
+import com.secpro.platform.monitoring.manage.services.SysEventRuleService;
 import com.secpro.platform.monitoring.manage.services.SysEventService;
+import com.secpro.platform.monitoring.manage.services.SysKpiInfoService;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 /**
@@ -27,13 +36,80 @@ import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
  */
 
 @Controller("EventAction")
-public class EventAction extends ActionSupport{
+public class EventAction {
 	PlatformLogger logger=PlatformLogger.getLogger(EventAction.class);
 	private SysEventService sysEventService;
 	private SysEventHisService sysEventHisService;
 	private SysEventHis syh;
 	private SysEvent se;
+	private EventType eventType;
+	private String returnMsg;
+	private String backUrl;
+	private EventTypeService eventTypeService;
+	private EventMsg msg;
+	private EventMsgService msgService;
+	private SysEventRuleService eventRuleService;
+	private SysEventRule eventRule;
+	private SysKpiInfoService kpiService;
 	
+	public SysKpiInfoService getKpiService() {
+		return kpiService;
+	}
+	@Resource(name="SysKpiInfoServiceImpl")
+	public void setKpiService(SysKpiInfoService kpiService) {
+		this.kpiService = kpiService;
+	}
+	public SysEventRule getEventRule() {
+		return eventRule;
+	}
+	public void setEventRule(SysEventRule eventRule) {
+		this.eventRule = eventRule;
+	}
+	public SysEventRuleService getEventRuleService() {
+		return eventRuleService;
+	}
+	@Resource(name="SysEventRuleServiceImpl")
+	public void setEventRuleService(SysEventRuleService eventRuleService) {
+		this.eventRuleService = eventRuleService;
+	}
+	public EventMsgService getMsgService() {
+		return msgService;
+	}
+	@Resource(name="EventMsgServiceImpl")
+	public void setMsgService(EventMsgService msgService) {
+		this.msgService = msgService;
+	}
+	public EventMsg getMsg() {
+		return msg;
+	}
+	public void setMsg(EventMsg msg) {
+		this.msg = msg;
+	}
+	public EventTypeService getEventTypeService() {
+		return eventTypeService;
+	}
+	@Resource(name="EventTypeServiceImpl")
+	public void setEventTypeService(EventTypeService eventTypeService) {
+		this.eventTypeService = eventTypeService;
+	}
+	public String getReturnMsg() {
+		return returnMsg;
+	}
+	public void setReturnMsg(String returnMsg) {
+		this.returnMsg = returnMsg;
+	}
+	public String getBackUrl() {
+		return backUrl;
+	}
+	public void setBackUrl(String backUrl) {
+		this.backUrl = backUrl;
+	}
+	public EventType getEventType() {
+		return eventType;
+	}
+	public void setEventType(EventType eventType) {
+		this.eventType = eventType;
+	}
 	public SysEvent getSe() {
 		return se;
 	}
@@ -124,4 +200,698 @@ public class EventAction extends ActionSupport{
 		requestMap.put("eventList", eventList);
 		return "eventlisByTime";
 	}
+	public String saveEventType(){
+		if(eventType.getEventTypeName()==null){
+			returnMsg = "类型名称不能为空，事件类型保存失败！";
+			logger.info("fetch EventTypeName failed , EventTypeName is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventTypeName().trim().equals("")){
+			returnMsg = "事件类型名称不能为空，事件类型保存失败！";
+			logger.info("fetch EventTypeName failed , EventTypeName is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventRecover()==null){
+			returnMsg = "事件类型是否可恢复不能为空，事件类型保存失败！";
+			logger.info("fetch EventRecover failed , EventRecover is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventRecover().trim().equals("")){
+			returnMsg = "事件类型是否可恢复不能为空，事件类型保存失败！";
+			logger.info("fetch EventRecover failed , EventRecover is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		eventTypeService.save(eventType);
+		return "success";
+	}
+	public String toModifyEventType(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventTypeId=request.getParameter("eventTypeId");
+		if(eventTypeId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventTypeId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		EventType et=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("eType", et);
+		return "success";
+	}
+	public String modifyEventType(){
+		if(eventType.getId()==null){
+			returnMsg = "系统错误，事件类型修改失败！";
+			logger.info("fetch EventTypeName failed , EventTypeName is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventTypeName()==null){
+			returnMsg = "类型名称不能为空，事件类型修改失败！";
+			logger.info("fetch EventTypeName failed , EventTypeName is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventTypeName().trim().equals("")){
+			returnMsg = "事件类型名称不能为空，事件类型修改失败！";
+			logger.info("fetch EventTypeName failed , EventTypeName is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventRecover()==null){
+			returnMsg = "事件类型是否可恢复不能为空，事件类型修改失败！";
+			logger.info("fetch EventRecover failed , EventRecover is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(eventType.getEventRecover().trim().equals("")){
+			returnMsg = "事件类型是否可恢复不能为空，事件类型修改失败！";
+			logger.info("fetch EventRecover failed , EventRecover is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		EventType et=(EventType)eventTypeService.getObj(EventType.class, eventType.getId());
+		if(et==null){
+			returnMsg = "系统错误，事件类型修改失败！";
+			logger.info("fetch EventType failed from database!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		et.setEventRecover(eventType.getEventRecover());
+		et.setEventTypeDesc(eventType.getEventTypeDesc());
+		et.setEventTypeName(eventType.getEventTypeName());
+		eventTypeService.update(et);
+		return "success";
+	}
+	public void ViewEventType(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String rows=request.getParameter("rows");
+		String page=request.getParameter("page");
+		int pageNum=1;
+		int maxPage=10;
+		if(rows!=null&&!rows.trim().equals("")){
+			maxPage=Integer.parseInt(rows); 
+		}
+		if(page!=null&&!page.trim().equals("")){
+			pageNum=Integer.parseInt(page); 
+		}
+		List eventTypeList = eventTypeService.queryAll("from EventType");
+		List pageEventType= eventTypeService.queryByPage("from EventType", pageNum,maxPage);
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if (eventTypeList == null) {
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			sb.append("{\"total\":" + eventTypeList.size() + ",\"rows\":[");
+			for (int i = 0; i < pageEventType.size(); i++) {
+				EventType et=(EventType)pageEventType.get(i);
+				sb.append("{\"eventTypeId\":" + et.getId() + ",");
+				sb.append("\"eventTypeName\":\"" + et.getEventTypeName() + "\",");
+				sb.append("\"eventTypeDesc\":\"" + et.getEventTypeDesc() + "\",");
+				
+				List msgList=msgService.queryAll("from EventMsg m where m.eventTypeId="+et.getId());
+				if(msgList!=null&&msgList.size()>0){
+					sb.append("\"isMsg\":\"" + 1 + "\",");
+				}else{
+					sb.append("\"isMsg\":\"" + 0 + "\",");
+				}
+				
+				if(i==(pageEventType.size()-1)){
+					sb.append("\"eventRecover\":\"" + (et.getEventRecover().equals("1")?"自动恢复":"不自动恢复") + "\"}");
+				}else{
+					sb.append("\"eventRecover\":\"" + (et.getEventRecover().equals("1")?"自动恢复":"不自动恢复") + "\"},");
+				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public String deleteEventType(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventTypeId=request.getParameter("eventTypeId");
+		if(eventTypeId==null){
+			returnMsg = "系统错误，事件类型删除失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		if(eventTypeId.trim().equals("")){
+			returnMsg = "系统错误，事件类型删除失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		String[] eventTypeIds=eventTypeId.split(",");
+		for(int i=0;i<eventTypeIds.length;i++){
+			EventType et=new EventType();
+			et.setId(Long.parseLong(eventTypeIds[i]));
+			
+			List msgList=msgService.queryAll("from EventMsg m where m.eventTypeId="+et.getId());
+			if(msgList!=null&&msgList.size()>0){
+				msgService.delete(msgList.get(0));
+			}
+			eventTypeService.delete(et);
+		}
+		return "success";
+	}
+	public String saveEventMsg(){
+		if(msg.getMsgFormat()==null){
+			returnMsg = "消息格式不能为空，事件消息格式保存失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		if(msg.getMsgFormat().trim().equals("")){
+			returnMsg = "消息格式不能为空，事件消息格式保存失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		if(msg.getEventTypeId()==null){
+			returnMsg = "系统错误，事件消息格式保存失败！";
+			logger.info("fetch EventTypeId failed , EventTypeId is null!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		msgService.save(msg);
+		return "success";
+	}
+	public String toSaveEventMsg(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventTypeId=request.getParameter("eventTypeId");
+		if(eventTypeId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		if(eventTypeId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("eventTypeId", eventTypeId);
+		return "success";
+	}
+	public String toModifyEventMsg(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventTypeId=request.getParameter("eventTypeId");
+		if(eventTypeId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		if(eventTypeId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";
+		}
+		List msgList = msgService.queryAll("from EventMsg m where m.eventTypeId="+eventTypeId);
+		if(msgList==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventMsg failed from database!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";	
+		}
+		if(msgList.size()==0){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventMsg failed from database!");
+			backUrl = "event/viewEventType.jsp";
+			return "failed";	
+		}
+		
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("emsg",msgList.get(0) );
+		return "success";
+	}
+	public String modifyEventMsg(){
+		
+		if(msg.getId()==null){
+			returnMsg = "系统错误，事件消息格式修改失败！";
+			logger.info("fetch id failed , eventTypeId is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(msg.getMsgFormat()==null){
+			returnMsg = "消息格式不能为空，事件消息格式修改失败！";
+			logger.info("fetch msgFormat failed , msgFormat is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(msg.getMsgFormat().trim().equals("")){
+			returnMsg = "消息格式不能为空，事件消息格式修改失败！";
+			logger.info("fetch msgFormat failed , msgFormat is ''!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		
+		if(msg.getEventTypeId()==null){
+			returnMsg = "系统错误，事件消息格式修改失败！";
+			logger.info("fetch EventTypeId failed , EventTypeId is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		msgService.update(msg);
+		return "success";
+	}
+	public void getAllEventTypeByClass(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resclass=request.getParameter("resclass");
+		
+		
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(resclass==null){
+				result.append("[]");
+				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(resclass.trim().equals("")){
+				result.append("[]");
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			List eventType = eventTypeService.queryAll("select e.id ,e.eventTypeName,e.eventTypeDesc from EventType e , SysKpiInfo s,SysResClass c where e.eventTypeName=s.kpiName and s.classId=c.id and c.className='"+resclass+"'");
+			if (eventType == null) {
+				result.append("[]");
+				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			result.append("[");
+			for (int i = 0; i < eventType.size(); i++) {
+				Object[] etype =(Object[])eventType.get(i);
+				
+				result.append("{\"id\":"+etype[0]+",\"text\":\""+etype[1]+" "+etype[2]+"\"}");
+				
+				if((i+1)!=eventType.size()){
+					result.append(",");
+				}
+				
+			}
+			result.append("]");
+			System.out.println(result.toString());
+			pw.println(result.toString());
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}	
+	}
+
+	public void viewEventRule(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		String eventTypeId=request.getParameter("eventTypeId");
+		List allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+	//	List allEventRule=eventRuleService.queryAll("from SysEventRule");
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if (allEventRule == null) {
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			sb.append("{\"total\":" + allEventRule.size() + ",\"rows\":[");
+			for (int i = 0; i < allEventRule.size(); i++) {
+				SysEventRule rule=(SysEventRule)allEventRule.get(i);
+				sb.append("{\"ruleid\":" + rule.getId() + ",");
+				int level=rule.getEventLevel();
+				if(level==1){
+					sb.append("\"eventlevel\":\"通知\",");
+				}else if(level==2){
+					sb.append("\"eventlevel\":\"轻微\",");
+				}else if(level==3){
+					sb.append("\"eventlevel\":\"重要\",");
+				}else if(level==4){
+					sb.append("\"eventlevel\":\"紧急\",");
+				}
+				sb.append("\"setMsg\":\"" + (rule.getSetMsg().equals("0")?"否":"是") + "\",");
+				
+				sb.append("\"tvalue\":\"" + rule.getThresholdValue() + "\",");
+				String opr=rule.getThresholdOpr();
+				if(opr.equals("==")||opr.equals("=")){
+					sb.append("\"topr\":\"等于\",");
+				}else if(opr.equals("!=")){
+					sb.append("\"topr\":\"不等于\",");
+				}else if(opr.equals(">")){
+					sb.append("\"topr\":\"大于\",");
+				}else if(opr.equals(">=")){
+					sb.append("\"topr\":\"大于等于\",");
+				}else if(opr.equals("<")){
+					sb.append("\"topr\":\"小于\",");
+				}else if(opr.equals("<=")){
+					sb.append("\"topr\":\"小于等于\",");
+				}
+				sb.append("\"recoverSetMsg\":\"" + (rule.getRecoverSetMsg().equals("0")?"否":"是") + "\",");
+				
+				sb.append("\"resId\":" + rule.getResId() + ",");
+				sb.append("\"eventTypeId\":" + rule.getEventTypeId() + ",");
+				if(i==(allEventRule.size()-1)){
+					sb.append("\"repeat\":\"" + (rule.getRepeat().equals("0")?"否":"是") + "\"}");
+				}else{
+					sb.append("\"repeat\":\"" + (rule.getRepeat().equals("0")?"否":"是") + "\"},");
+				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public String toAddEventRule(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		String eventTypeId=request.getParameter("eventTypeId");
+		if(resId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is null!");
+			backUrl = "viewEventType.jsp";
+			return "failed";
+		}
+		if(resId.equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventTypeId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventTypeId.equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		
+		EventType type=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
+		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		if(kpiList==null){
+			returnMsg = "请先创建KPI指标，页面跳转失败！";
+			logger.info("fetch SysKpiInfo failed from database !");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(kpiList.size()==0){
+			returnMsg = "请先创建KPI指标，页面跳转失败！";
+			logger.info("fetch SysKpiInfo failed from database !");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		List ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		String levels="";
+		for(int i=0;i<ruleList.size();i++){
+			SysEventRule r=(SysEventRule)ruleList.get(i);
+			levels+=r.getEventLevel();
+			if(i!=(ruleList.size()-1)){
+				levels+=",";
+			}
+		}
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("resId", resId);
+		requestMap.put("type", type);
+		requestMap.put("levels", levels);
+		requestMap.put("kpi", kpiList.get(0));
+		return "success";
+	}
+	public String toModifyEventRule(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String ruleId=request.getParameter("ruleid");
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		SysEventRule rule=(SysEventRule)eventRuleService.getObj(SysEventRule.class, Long.parseLong(ruleId));
+		EventType type=(EventType)eventTypeService.getObj(EventType.class, rule.getEventTypeId());
+		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		if(kpiList==null){
+			returnMsg = "请先创建KPI指标，页面跳转失败！";
+			logger.info("fetch SysKpiInfo failed from database !");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(kpiList.size()==0){
+			returnMsg = "请先创建KPI指标，页面跳转失败！";
+			logger.info("fetch SysKpiInfo failed from database !");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("eRule", rule);
+		requestMap.put("kpi", kpiList.get(0));
+		return "success";
+	}
+	public String saveEventRule(){
+		
+		if(eventRule.getEventLevel()==null){
+			returnMsg = "告警级别不能为空，规则保存失败！";
+			logger.info("fetch EventLevel failed , EventLevel is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getEventTypeId()==null){
+			returnMsg = "系统错误，规则保存失败！";
+			logger.info("fetch EventTypeId failed , EventTypeId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getResId()==null){
+			returnMsg = "系统错误，规则保存失败！";
+			logger.info("fetch ResId failed , ResId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRecoverSetMsg()==null){
+			returnMsg = "是否产生恢复告警不能为空，规则保存失败！";
+			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRecoverSetMsg().equals("")){
+			returnMsg = "是否产生恢复告警不能为空，规则保存失败！";
+			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRepeat()==null){
+			returnMsg = "是否重复告警不能为空，规则保存失败！";
+			logger.info("fetch Repeat failed , Repeat is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRepeat().equals("")){
+			returnMsg = "是否重复告警不能为空，规则保存失败！";
+			logger.info("fetch Repeat failed , Repeat is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getSetMsg()==null){
+			returnMsg = "是否产生告警短信不能为空，规则保存失败！";
+			logger.info("fetch SetMsg failed , SetMsg is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getSetMsg().equals("")){
+			returnMsg = "是否产生告警短信不能为空，规则保存失败！";
+			logger.info("fetch SetMsg failed , SetMsg is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdOpr()==null){
+			returnMsg = "操作符不能为空，规则保存失败！";
+			logger.info("fetch ThresholdOpr failed , ThresholdOpr is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdOpr().equals("")){
+			returnMsg = "操作符不能为空，规则保存失败！";
+			logger.info("fetch ThresholdOpr failed , ThresholdOpr is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdValue()==null){
+			returnMsg = "阀值不能为空，规则保存失败！";
+			logger.info("fetch ThresholdValue failed , ThresholdValue is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		eventRuleService.save(eventRule);
+		return "success";
+	}
+	public String modifyEventRule(){
+		if(eventRule.getId()==null){
+			returnMsg = "系统错误，规则修改失败！";
+			logger.info("fetch EventLevel failed , EventLevel is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getEventLevel()==null){
+			returnMsg = "告警级别不能为空，规则修改失败！";
+			logger.info("fetch EventLevel failed , EventLevel is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getEventTypeId()==null){
+			returnMsg = "系统错误，规则修改失败！";
+			logger.info("fetch EventTypeId failed , EventTypeId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getResId()==null){
+			returnMsg = "系统错误，规则修改失败！";
+			logger.info("fetch ResId failed , ResId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRecoverSetMsg()==null){
+			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
+			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRecoverSetMsg().equals("")){
+			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
+			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRepeat()==null){
+			returnMsg = "是否重复告警不能为空，规则修改失败！";
+			logger.info("fetch Repeat failed , Repeat is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getRepeat().equals("")){
+			returnMsg = "是否重复告警不能为空，规则修改失败！";
+			logger.info("fetch Repeat failed , Repeat is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getSetMsg()==null){
+			returnMsg = "是否产生告警短信不能为空，规则修改失败！";
+			logger.info("fetch SetMsg failed , SetMsg is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getSetMsg().equals("")){
+			returnMsg = "是否产生告警短信不能为空，规则修改失败！";
+			logger.info("fetch SetMsg failed , SetMsg is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdOpr()==null){
+			returnMsg = "操作符不能为空，规则修改失败！";
+			logger.info("fetch ThresholdOpr failed , ThresholdOpr is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdOpr().equals("")){
+			returnMsg = "操作符不能为空，规则修改失败！";
+			logger.info("fetch ThresholdOpr failed , ThresholdOpr is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(eventRule.getThresholdValue()==null){
+			returnMsg = "阀值不能为空，规则修改失败！";
+			logger.info("fetch ThresholdValue failed , ThresholdValue is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		eventRuleService.update(eventRule);
+		return "success";
+	}
+	public String deleteEventRule(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String ruleId=request.getParameter("ruleId");
+		if(ruleId==null){
+			returnMsg = "系统错误，规则删除失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.equals("")){
+			returnMsg = "系统错误，规则删除失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "eventRule.jsp";
+			return "failed";
+		}
+		String[] ruleIds=ruleId.split(",");
+		for(int i=0;i<ruleIds.length;i++){
+			SysEventRule r=new SysEventRule();
+			r.setId(Long.parseLong(ruleIds[i]));
+			eventRuleService.delete(r);
+		}
+		return "success";
+	}
+	
 }

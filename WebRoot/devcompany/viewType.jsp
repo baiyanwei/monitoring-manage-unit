@@ -92,7 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改类型只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyType.action?devTypeId="+rows[0].typeid_ccode;  
@@ -100,6 +100,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				 	window.location.href=urll;
 				}  
 
+               
+        }, '-', {   
+            text: '添加采集命令',   
+            iconCls: 'icon-edit',   
+            handler: function () {     
+               	 var rows = $('#listDetail').datagrid('getSelections');  
+				     if (null == rows || rows.length == 0) {  
+				       alert('未选择条目');  
+				        return;  
+				     }  
+				     if (rows.length>1){
+				     	alert('添加采集命令只能选择一个条目');
+				     	return;
+				     }
+				    var urll="toAddCommand.action?typeCode="+rows[0].typecode+"&companyCode=<%=request.getParameter("companyCode")%>";  
+				    
+				 	window.location.href=urll;
+				}  
+               
+        }, '-', {   
+            text: '查看采集命令',   
+            iconCls: 'icon-edit',   
+            handler: function () {     
+               	 var rows = $('#listDetail').datagrid('getSelections');  
+				     if (null == rows || rows.length == 0) {  
+				       alert('未选择条目');  
+				        return;  
+				     }  
+				     if (rows.length>1){
+				     	alert('查看采集命令只能选择一个条目');
+				     	return;
+				     }
+				    var urll="toViewCommand.action?typeCode="+rows[0].typecode;  
+				    
+				 	window.location.href=urll;
+				}  
                
         }, '-', {   
             text:'刷新',

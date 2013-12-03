@@ -17,7 +17,6 @@ public class SysDevTypeDaoImpl extends BaseDao implements SysDevTypeDao{
 		final StringBuilder sb=new StringBuilder();
 		getSessionFactory().getCurrentSession().doWork(new Work(){
 			public void execute(Connection connection) {
-				System.out.println("------------111111111111");
 				Statement s = null;
 				ResultSet rs = null;
 				try {

@@ -57,7 +57,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'companyid',checkbox:true},  
             {field:'companycode',title:'厂商编码',width:100,editor:'text',sortable:true},    
             {field:'companyname',title:'厂商名称',width:100,editor:'text'},  
-            {field:'companydesc',title:'厂商描述',width:100,editor:'text'},    
+            {field:'companydesc',title:'厂商描述',width:100,editor:'text'}    
         ]],   
        toolbar: [{   
             text: '添加厂商',   

@@ -27,4 +27,10 @@ public class BaselineTemplateServiceImpl extends BaseService implements Baseline
 	public boolean saveBaseLineTemplete(Long BaselineTemplateId,String[] baselineIds,Map<String,String> scores){
 		return dao.saveBaseLineTemplete(BaselineTemplateId, baselineIds, scores);
 	}
+	public boolean deleteTemplate(String[] ids){
+		return dao.deleteTemplate(ids);
+	}
+	public List getSelectBaseLine(Long id){
+		return dao.getSelectBaseLine(id);
+	}
 }

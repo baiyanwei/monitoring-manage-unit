@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.secpro.platform.monitoring.manage.entity.SysCity;
-import com.secpro.platform.monitoring.manage.entity.SysDevCompany;
 import com.secpro.platform.monitoring.manage.services.CityTreeService;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 @Controller("CityTreeAction")
@@ -21,29 +21,29 @@ public class SysCityAction extends ActionSupport{
 	
 	private static final long serialVersionUID = 1L;
 	private PlatformLogger log=PlatformLogger.getLogger(SysCityAction.class);
-	private CityTreeService _userService;
+	private CityTreeService _cityService;
 
 	public CityTreeService get_userService() {
-		return _userService;
+		return _cityService;
 	}
 	public void set_userService(CityTreeService _userService) {
-		this._userService = _userService;
+		this._cityService = _userService;
 	}
 	public CityTreeService getUserService() {
-		return _userService;
+		return _cityService;
 	}
 	@Resource(name="CityTreeServiceImpl")
 	public void setUserService(CityTreeService userService) {
-		this._userService = userService;
+		this._cityService = userService;
 	}
 	public void getCityTree(){
 		log.debug("fetch city restree");
 		List sysCitys=null;
 		String citycode =ServletActionContext.getRequest().getParameter("citycode");
 		if(citycode!=null&&!citycode.equals("")){
-			sysCitys=_userService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'"+citycode+"\'");
+			sysCitys=_cityService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'"+citycode+"\'");
 		}else{
-			sysCitys=_userService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'0\'");
+			sysCitys=_cityService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'0\'");
 		}	
 		PrintWriter pw=null;
 		try {
@@ -56,7 +56,7 @@ public class SysCityAction extends ActionSupport{
 			if(pw!=null){
 				for(int i=0;i<sysCitys.size();i++){
 					SysCity sc=(SysCity)sysCitys.get(i);
-					List ll=_userService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'"+sc.getCityCode()+"\'");
+					List ll=_cityService.queryAll("from com.secpro.platform.monitoring.manage.entity.SysCity s where s.parentCode=\'"+sc.getCityCode()+"\'");
 					if(ll.size()>0){
 						sb.append("<tree text=\""+sc.getCityName()+"\" src=\"CityTreeAction?citycode="+sc.getCityCode()+"\""+"/>");
 					}else{
@@ -78,7 +78,7 @@ public class SysCityAction extends ActionSupport{
 		}
 	}
 	public void getAllCity(){
-		List citys = _userService.queryAll("from SysCity s where s.parentCode='1'");
+		List citys = _cityService.queryAll("from SysCity s where s.parentCode='1'");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -99,6 +99,58 @@ public class SysCityAction extends ActionSupport{
 				result.append("{\"id\":"+city.getCityCode()+",\"text\":\""+city.getCityName()+"\"}");
 				
 				if((i+1)!=citys.size()){
+					result.append(",");
+				}
+				
+			}
+			result.append("]");
+			System.out.println(result.toString());
+			pw.println(result.toString());
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public void getCityByParent(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String parentCode=request.getParameter("cityCode");
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(parentCode==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(parentCode.trim().equals("")){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			List cityList=_cityService.queryAll("from SysCity s where s.parentCode='"+parentCode+"'");
+			if(cityList==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			result.append("[");
+			for (int i = 0; i < cityList.size(); i++) {
+				SysCity city=(SysCity)cityList.get(i);
+				
+				result.append("{\"id\":"+city.getCityCode()+",\"text\":\""+city.getCityName()+"\"}");
+				
+				if((i+1)!=cityList.size()){
 					result.append(",");
 				}
 				

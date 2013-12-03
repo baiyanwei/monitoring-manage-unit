@@ -2,6 +2,7 @@ package com.secpro.platform.monitoring.manage.actions;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,15 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.secpro.platform.monitoring.manage.actions.forms.DevCompanyForm;
+import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysDevCompany;
 import com.secpro.platform.monitoring.manage.entity.SysDevType;
+import com.secpro.platform.monitoring.manage.services.ConfigPolicyRuleService;
+import com.secpro.platform.monitoring.manage.services.SysCommandService;
 import com.secpro.platform.monitoring.manage.services.SysDevCompanyService;
 import com.secpro.platform.monitoring.manage.services.SysDevTypeService;
 import com.secpro.platform.monitoring.manage.services.SysResObjService;
+import com.secpro.platform.monitoring.manage.services.SyslogRuleService;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 @Controller("SysDevAction")
@@ -30,7 +35,39 @@ public class SysDevAction extends ActionSupport {
 	private String returnMsg;
 	private String backUrl;
 	private DevCompanyForm company;
+	private SysCommandService scService;
+	private SysCommand sc;
+	private SyslogRuleService syslogRuleService;
+	private ConfigPolicyRuleService configRuleService;
 	
+	
+	public SyslogRuleService getSyslogRuleService() {
+		return syslogRuleService;
+	}
+	@Resource(name = "SyslogRuleStorage")
+	public void setSyslogRuleService(SyslogRuleService syslogRuleService) {
+		this.syslogRuleService = syslogRuleService;
+	}
+	public ConfigPolicyRuleService getConfigRuleService() {
+		return configRuleService;
+	}
+	@Resource(name = "ConfigPolicyRuleServiceImpl")
+	public void setConfigRuleService(ConfigPolicyRuleService configRuleService) {
+		this.configRuleService = configRuleService;
+	}
+	public SysCommand getSc() {
+		return sc;
+	}
+	public void setSc(SysCommand sc) {
+		this.sc = sc;
+	}
+	public SysCommandService getScService() {
+		return scService;
+	}
+	@Resource(name = "SysCommandServiceImpl")
+	public void setScService(SysCommandService scService) {
+		this.scService = scService;
+	}
 	public SysResObjService getSros() {
 		return sros;
 	}
@@ -506,7 +543,7 @@ public class SysDevAction extends ActionSupport {
 		String companyCode=request.getParameter("companyCode");
 		String rows=request.getParameter("rows");
 		String page=request.getParameter("page");
-		int pageNum=1;
+		int pageNum=1;    
 		int maxPage=10;
 		if(rows!=null&&!rows.trim().equals("")){
 			maxPage=Integer.parseInt(rows); 
@@ -520,6 +557,7 @@ public class SysDevAction extends ActionSupport {
 		HttpServletResponse resp = ServletActionContext.getResponse();
 		resp.setContentType("text/json");
 		PrintWriter pw = null;
+		
 		try {
 			pw = resp.getWriter();
 			sb.append("{\"total\":"+allDevTypes.size()+",\"rows\":[");
@@ -527,8 +565,8 @@ public class SysDevAction extends ActionSupport {
 				SysDevType sdc=(SysDevType)sysDevTypes.get(i);
 				sb.append("{\"typeid_ccode\":\""+sdc.getId()+"_"+sdc.getCompanyCode()+"\",");
 				
-				sb.append("\"typename\":\""+sdc.getTypeCode()+"\",");
-				
+				sb.append("\"typename\":\""+sdc.getTypeName()+"\",");
+			   	
 				sb.append("\"typecode\":\""+sdc.getTypeCode()+"\",");
 				
 				if(i!=sysDevTypes.size()-1){
@@ -657,5 +695,204 @@ public class SysDevAction extends ActionSupport {
 		sdts.update(sdt);
 		return "success";	
 	}
-	
+	public String toAddCommand(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String companyCode=request.getParameter("companyCode");
+		String typeCode=request.getParameter("typeCode");
+		List sysCommand=scService.queryAll("from SysCommand s where s.typeCode='"+typeCode+"'");
+		if(sysCommand!=null&&sysCommand.size()>0){
+			returnMsg="此设备类型已经存在采集命令！";
+			backUrl="viewType.jsp?companyCode="+companyCode;
+			return "failed";
+		}
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("typeCode", typeCode);
+		return "success";
+	}
+	public String saveCommand(){
+		if(sc.getTypeCode()==null){
+			returnMsg="系统错误,保存失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is null");
+			return "failed";
+		}
+		if(sc.getTypeCode().trim().equals("")){
+			returnMsg="系统错误,保存失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is ''");
+			return "failed";
+		}
+		if(sc.getCommand()==null){
+			returnMsg="采集命令不能为空,保存失败！";
+			backUrl="toAddCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch command failed , Command is null");
+			return "failed";
+		}
+		if(sc.getCommand().trim().equals("")){
+			returnMsg="采集命令不能为空,保存失败！";
+			backUrl="toAddCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch command failed , Command is ''");
+			return "failed";
+		}
+		if(sc.getOpenCommand()==null){
+			returnMsg="开启命令不能为空,保存失败！";
+			backUrl="toAddCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch openCommand failed , Command is null");
+			return "failed";
+		}
+		if(sc.getOpenCommand().trim().equals("")){
+			returnMsg="开启命令不能为空,保存失败！";
+			backUrl="toAddCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch openCommand failed , Command is ''");
+			return "failed";
+		}
+		sc.setCdate((new Date()).getTime());
+		scService.save(sc);
+		return "success";
+	}
+	public String toViewCommand(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String typeCode=request.getParameter("typeCode");
+		
+		if(typeCode==null){
+			returnMsg="查看命令失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is null");
+			return "failed";
+		}
+		if(typeCode.trim().equals("")){
+			returnMsg="查看命令失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is ''");
+			return "failed";
+		}
+		List commandList=scService.queryAll("from SysCommand s where s.typeCode='"+typeCode+"'");
+		SysCommand ssc=null;
+		if(commandList!=null&&commandList.size()>0){
+			ssc=(SysCommand)commandList.get(0);
+		}else{
+			returnMsg="请先添加采集命令！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch SysCommand from database failed");
+			return "failed";
+		}
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("ssc", ssc);
+		return "success";
+	}
+	public String modifyCommand(){
+		if(sc.getTypeCode()==null){
+			returnMsg="系统错误,保存失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is null");
+			return "failed";
+		}
+		if(sc.getTypeCode().trim().equals("")){
+			returnMsg="系统错误,保存失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is ''");
+			return "failed";
+		}
+		if(sc.getId()==null){
+			returnMsg="系统错误,保存失败！";
+			backUrl="viewAllDevCompany.jsp";
+			logger.info("fetch typeCode failed , typeCode is null");
+			return "failed";
+		}
+		if(sc.getCommand()==null){
+			returnMsg="采集命令不能为空,保存失败！";
+			backUrl="toViewCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch command failed , Command is null");
+			return "failed";
+		}
+		if(sc.getCommand().trim().equals("")){
+			returnMsg="采集命令不能为空,保存失败！";
+			backUrl="toViewCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch command failed , Command is ''");
+			return "failed";
+		}
+		if(sc.getOpenCommand()==null){
+			returnMsg="开启命令不能为空,保存失败！";
+			backUrl="toViewCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch openCommand failed , Command is null");
+			return "failed";
+		}
+		if(sc.getOpenCommand().trim().equals("")){
+			returnMsg="开启命令不能为空,保存失败！";
+			backUrl="toViewCommand.action?typeCode="+sc.getTypeCode();
+			logger.info("fetch openCommand failed , Command is ''");
+			return "failed";
+		}
+		sc.setCdate((new Date().getTime()));
+		scService.update(sc);
+		return "success";
+	}
+	public void getAllType(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String rows=request.getParameter("rows");
+		String page=request.getParameter("page");
+		int pageNum=1;
+		int maxPage=10;
+		if(rows!=null&&!rows.trim().equals("")){
+			maxPage=Integer.parseInt(rows); 
+		}
+		if(page!=null&&!page.trim().equals("")){
+			pageNum=Integer.parseInt(page); 
+		}
+		List typeList = sdts.queryAll("from SysDevType");
+		List typePage=sdts.queryByPage("select t.typeCode,t.typeName,c.companyName,t.typeDesc from SysDevType t,SysDevCompany c where t.companyCode=c.companyCode", pageNum,maxPage);
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		List syslogRule=null;
+		List configRule=null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if (typeList == null) {
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			sb.append("{\"total\":" + typeList.size() + ",\"rows\":[");
+			for (int i = 0; i < typePage.size(); i++) {
+				
+				Object obj[]=(Object[])typePage.get(i);
+				syslogRule=syslogRuleService.queryAll("from SyslogRule s where s.typeCode='"+obj[0]+"'");
+				configRule=configRuleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+obj[0]+"'");
+				sb.append("{\"typeCode\":\"" + obj[0] + "\",");
+				sb.append("\"typeName\":\"" + obj[1] + "\",");
+				sb.append("\"typeDesc\":\"" + obj[3] + "\",");
+				if(syslogRule!=null&&syslogRule.size()>0){
+					sb.append("\"hasSyslogRule\":\"1\",");
+				}else{
+					sb.append("\"hasSyslogRule\":\"0\",");
+				}
+				if(configRule!=null&&configRule.size()>0){
+					sb.append("\"hasConfigRule\":\"1\",");
+				}else{
+					sb.append("\"hasConfigRule\":\"0\",");
+				}
+				if(i==(typeList.size()-1)){
+					sb.append("\"companyName\":\"" + obj[2] + "\"}");
+				}else{
+					sb.append("\"companyName\":\"" + obj[2] + "\"},");
+				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
 }

@@ -32,18 +32,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="模板管理>创建模板";
+		adiv.innerText="基线模板管理>创建模板";
 	</script>
   </head>
   
   <body>
-  <div class="easyui-panel" title="" style="width:400px">
+  <div class="easyui-panel" title="" style="width:700px">
+  
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="getAllBaseline.action" method="post">
+		    <form id="ff" action="saveBaseLineTemplate.action" method="post">
 		    	<table>
 	    		<tr>
 	    			<td><label>模板名称：</label></td>
-	    			<td><input class="easyui-validatebox" type="text" missingMessage="请输入模板名称" name="templateName" data-options="required:true"></input></td>
+	    			<td><input id="templateName" class="easyui-validatebox" type="text" missingMessage="请输入模板名称" name="templateName" data-options="required:true"></input></td>
 	    		</tr>
 	    		
 	    		<tr>
@@ -52,12 +53,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		<tr>
 	    			<td><label>防火墙厂商：</label></td>
-	    			<td><input name="companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany'" /> 
+	    			<td><input id="companyCode" name="companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany'" /> 
 	    			</td>
 	    		</tr>
+	    		<tr>
+	    			<td>
+	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			</td>
+	    			<td>
+	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			</td>
+	    		<tr>
+	    		
 	    	</table>
-	    	<table id="listDetail"></table>
-		    </form>		     
+	    	<table id="listDetail">
+	    	</table>
+		        
     	</div>
   </div>
   <script>
@@ -76,33 +87,72 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         rownumbers:true,
         columns:[[  
             {field:'baselineId',checkbox:true},  
-            {field:'baselineType',title:'基线类型',width:100,editor:'text',sortable:true},    
-            {field:'blackWhite',title:'黑白名单',width:200,editor:'text',sortable:true},  
-            {field:'baselineDesc',title:'模板描述',width:100,editor:'text'}      	
+            {field:'baselineType',title:'基线类型',width:100,editor:'text',sortable:true},     
+            {field:'blackWhite',title:'黑白名单',width:200,editor:'text'} ,
+            {field:'baselineDesc',title:'模板描述',width:100,editor:'textarea'}, 
+            {field:'score',title:'分数(默认10分，点击修改)',width:150,editor:'text'}
         ]],   
        toolbar: [ {   
+            text:'请选择基线'
+			
+        },'-',{   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }
         }],     
         
-        onLoadSuccess:function(){  
+       
+		onClickCell:function(rowIndex, field, value){	
+		//	$('#listDetail').datagrid('beginEdit', rowIndex);
+			
+			
+			 if(field == "score"){
+   				$.messager.prompt('分值输入', '请输入分值，不需要添加单位！', function(r){
+				if (r&&!isNaN(r)){
+						$('#listDetail').datagrid('beginEdit', rowIndex);
+						var ed=$('#listDetail').datagrid('getEditor', {index:rowIndex,field:field})
+						$(ed.target).val(r);
+						$('#listDetail').datagrid('endEdit', rowIndex);
+					}
+				});
+ 			 }
 
-
-      	   $(this).datagrid("autoMergeCells",['baselineType','blackWhite']);  
-		} 
+			//$(ed.target).val("ddd");
+			//$('#listDetail').datagrid('endEdit', rowIndex);
+		}
+		
+		
     }); 
 		
 	}); 
+	
+	 
+	
 		function submitForm(){
+			var templateName=document.getElementById("templateName");
+			var companyCode=document.getElementById("companyCode");
+			if(templateName.value!=''&&companyCode!=''){
+				var ids = [];
+				var rows = $('#listDetail').datagrid('getSelections');
+				for(var i=0; i<rows.length; i++){
+	    			var input1 = document.createElement("input"); 
+	
+					input1.setAttribute("type","hidden"); 
+					input1.setAttribute("value",rows[i].score); 
+					input1.setAttribute("id","score"); 
+					input1.setAttribute("name","score"+rows[i].baselineId);
+					document.getElementById("ff").appendChild(input1);
+				}
+			}
+			
 			$('#ff').form('submit');
 		}
 		function clearForm(){
 			$('#ff').form('clear');
 		}
 		
-		 
 		
 	</script>
+	</form>	
   </body>
 </html>
