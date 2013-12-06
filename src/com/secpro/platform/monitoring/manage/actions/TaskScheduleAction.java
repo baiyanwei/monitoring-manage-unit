@@ -4,27 +4,28 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao;
-import com.secpro.platform.monitoring.manage.dao.impl.SysResObjDaoImpl;
-import com.secpro.platform.monitoring.manage.entity.MSUTask;
+import com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao1;
+import com.secpro.platform.monitoring.manage.entity.MsuTask;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
+import com.secpro.platform.monitoring.manage.services.TaskScheduleService;
 import com.secpro.platform.monitoring.manage.util.httpclient.HttpClient;
 import com.secpro.platform.monitoring.manage.util.httpclient.IClientResponseListener;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
-public class TaskScheduleAction extends ActionSupport {
+@Controller("TaskScheduleAction")
+public class TaskScheduleAction {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7815398525744691861L;
 	final public static String ID_TITLE = "tid";
 	final public static String REGION_TITLE = "reg";
 	final public static String OPERATION_TITLE = "ope";
@@ -39,24 +40,65 @@ public class TaskScheduleAction extends ActionSupport {
 			"TOPIC-SYSLOG-STANDARD-RULE-UPDATE", "TOPIC-SYSLOG-STANDARD-RULE-REMOVE" };
 	final public static String OPERATION_TYPE = "operationType";
 
+	PlatformLogger logger = PlatformLogger.getLogger(TaskScheduleAction.class);
+	private String returnMsg;
+	private String backUrl;
+	private MsuTask msuTask;
+	private TaskScheduleService taskScheduleService;
+
+	public String getReturnMsg() {
+		return returnMsg;
+	}
+
+	public void setReturnMsg(String returnMsg) {
+		this.returnMsg = returnMsg;
+	}
+
+	public String getBackUrl() {
+		return backUrl;
+	}
+
+	public void setBackUrl(String backUrl) {
+		this.backUrl = backUrl;
+	}
+
+	public MsuTask getMsuTask() {
+		return msuTask;
+	}
+
+	public void setMsuTask(MsuTask msuTask) {
+		this.msuTask = msuTask;
+	}
+
+	public TaskScheduleService getTaskScheduleService() {
+		return taskScheduleService;
+	}
+
+	@Resource(name = "TaskScheduleServiceImpl")
+	public void setTaskScheduleService(TaskScheduleService taskScheduleService) {
+		this.taskScheduleService = taskScheduleService;
+	}
+
 	//
-	public String createMSUTask() throws Exception {
+	public String create() throws Exception {
+		System.out.println(">>>>>>>>>>>TaskScheduleAction.create");
+		System.out.println(">>>>>>>>>>>TaskScheduleAction.taskScheduleService:" + taskScheduleService.getSessionFactory());
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
-
-			MSUTask task = getBuildMSUTaskByRequest(request, true);
+			MsuTask task = getBuildMSUTaskByRequest(request, true);
 			if (task == null) {
 				request.setAttribute("exception", new Exception("Build MSUTask instance Exception. invalid bean."));
 				return "error";
 			}
 			//
-			TaskScheduleActionDao.save(task);
+			taskScheduleService.save(task);
 			//
 			request.setAttribute("resourceBean", task);
 			String callBackUrl = request.getParameter("callBackUrl");
 			request.setAttribute("previousURL", callBackUrl);
 			request.setAttribute("WEB_MSG", "创建成功！");
 			// publish the task change into MSU
+			System.out.println(formatMSUTask(task));
 			publishMUSTaskToMSU(formatMSUTask(task), "TOPIC-TASK-ADD");
 		} catch (Exception e) {
 			request.setAttribute("exception", e);
@@ -67,17 +109,17 @@ public class TaskScheduleAction extends ActionSupport {
 		return "success";
 	}
 
-	public String updateMSUTask() throws Exception {
+	public String update() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String callBackUrl = request.getParameter("callBackUrl");
 		try {
-			MSUTask task = getBuildMSUTaskByRequest(request, false);
+			MsuTask task = getBuildMSUTaskByRequest(request, false);
 			if (task == null) {
 				request.setAttribute("exception", new Exception("Build MSUTask instance Exception. invalid bean."));
 				return "error";
 			}
 			//
-			TaskScheduleActionDao.update(task);
+			TaskScheduleActionDao1.update(task);
 			//
 			request.setAttribute("resourceBean", task);
 			request.setAttribute("previousURL", callBackUrl);
@@ -93,7 +135,7 @@ public class TaskScheduleAction extends ActionSupport {
 		return "success";
 	}
 
-	public String removeMSUTask() throws Exception {
+	public String remove() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String callBackUrl = request.getParameter("callBackUrl");
 		try {
@@ -102,11 +144,11 @@ public class TaskScheduleAction extends ActionSupport {
 				throw new Exception("invalid id");
 			}
 			// exist
-			MSUTask task = TaskScheduleActionDao.findById(id);
+			MsuTask task = TaskScheduleActionDao1.findById(id);
 			if (task == null) {
 				throw new Exception("doesn't exist instance ," + id);
 			}
-			TaskScheduleActionDao.delete(task);
+			TaskScheduleActionDao1.delete(task);
 			request.setAttribute("resourceBean", task);
 			request.setAttribute("previousURL", callBackUrl);
 			request.setAttribute("WEB_MSG", "操作成功！");
@@ -162,25 +204,25 @@ public class TaskScheduleAction extends ActionSupport {
 	 * 
 	 *             build bean from form.
 	 */
-	private MSUTask getBuildMSUTaskByRequest(HttpServletRequest request, boolean isNew) throws Exception {
-		MSUTask task = new MSUTask();
+	private MsuTask getBuildMSUTaskByRequest(HttpServletRequest request, boolean isNew) throws Exception {
+		MsuTask task = new MsuTask();
 		//
-		task.setRegion(request.getParameter("region").trim());
-		task.setOperation(request.getParameter("operation").trim());
-		task.setSchedule(request.getParameter("schedule").trim());
+		task.setRegion(request.getParameter("region"));
+		task.setOperation(request.getParameter("operation"));
+		task.setSchedule(request.getParameter("schedule"));
 		task.setCreateAt(System.currentTimeMillis());
-		//build the meateData from the ResAuth.
-		String metaDataValue=formatSysResAuth(getBuildSysResAuthByRequest(request, isNew));
+		// build the meateData from the ResAuth.
+		String metaDataValue = formatSysResAuth(getBuildSysResAuthByRequest(request, isNew));
 		task.setMetaData(metaDataValue);
 		//
 		task.setContent(request.getParameter("content").trim());
 		task.setResId(Long.parseLong(request.getParameter("resId")));
 		task.setTargetIp(request.getParameter("targetIp").trim());
 		task.setTargetPort(Integer.parseInt(request.getParameter("targetPort")));
-		task.setRealtime(Boolean.parseBoolean(request.getParameter("isRealtime")));
+		task.setIsRealtime(Boolean.parseBoolean(request.getParameter("isRealtime")));
 		if (isNew == true) {
 			// create a UUID.
-			task.setId(createMSUTaskID(task.getRegion(), task.getOperation(), task.isRealtime()));
+			task.setId(createMSUTaskID(task.getRegion(), task.getOperation(), task.getIsRealtime()));
 		} else {
 			task.setId(request.getParameter("id").trim());
 		}
@@ -193,21 +235,21 @@ public class TaskScheduleAction extends ActionSupport {
 		// if (isNew == false) {
 		// resAuth.setId(Long.valueOf(request.getParameter("resAuthId").trim()));
 		// }
-		resAuth.setUsername(request.getParameter("username").trim());
-		resAuth.setPassword(request.getParameter("password").trim());
-		resAuth.setUserPrompt(request.getParameter("userPrompt").trim());
-		resAuth.setPassPrompt(request.getParameter("passPrompt").trim());
-		resAuth.setPrompt(request.getParameter("prompt").trim());
-		resAuth.setExecPrompt(request.getParameter("execPrompt").trim());
-		resAuth.setNextPrompt(request.getParameter("nextPrompt").trim());
-		resAuth.setSepaWord(request.getParameter("sepaWord").trim());
-		resAuth.setCommunity(request.getParameter("community").trim());
-		resAuth.setSnmpv3User(request.getParameter("snmpv3User").trim());
-		resAuth.setSnmpv3Auth(request.getParameter("snmpv3Auth").trim());
-		resAuth.setSnmpv3Authpass(request.getParameter("snmpv3Authpass").trim());
-		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv").trim());
-		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass").trim());
-		resAuth.setResId(Long.valueOf(request.getParameter("resId").trim()));
+		resAuth.setUsername(request.getParameter("username"));
+		resAuth.setPassword(request.getParameter("password"));
+		resAuth.setUserPrompt(request.getParameter("userPrompt"));
+		resAuth.setPassPrompt(request.getParameter("passPrompt"));
+		resAuth.setPrompt(request.getParameter("prompt"));
+		resAuth.setExecPrompt(request.getParameter("execPrompt"));
+		resAuth.setNextPrompt(request.getParameter("nextPrompt"));
+		resAuth.setSepaWord(request.getParameter("sepaWord"));
+		resAuth.setCommunity(request.getParameter("community"));
+		resAuth.setSnmpv3User(request.getParameter("snmpv3User"));
+		resAuth.setSnmpv3Auth(request.getParameter("snmpv3Auth"));
+		resAuth.setSnmpv3Authpass(request.getParameter("snmpv3Authpass"));
+		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv"));
+		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass"));
+		resAuth.setResId(Long.valueOf(request.getParameter("resId")));
 
 		//
 		return resAuth;
@@ -218,7 +260,7 @@ public class TaskScheduleAction extends ActionSupport {
 			return;
 		}
 		try {
-			URI targetURI = new URI("http://localhost:8092//msu/manage");
+			URI targetURI = new URI("http://localhost:8092/msu/manage");
 			HashMap<String, String> headerParameterMap = new HashMap<String, String>();
 			headerParameterMap.put(OPERATION_TYPE, opeationType);
 			IClientResponseListener responseListener = new IClientResponseListener() {
@@ -232,6 +274,8 @@ public class TaskScheduleAction extends ActionSupport {
 				}
 
 			};
+			// String
+			// testContent={"isrt":false,"mda":"{\"username\":\"baiyanwei\"}","con":"ls","cat":1386066691274,"rid":1,"reg":"0311","ope":"ssh","sch":"0 10 * * * ?","tid":"0311-0-SSH-513B4E8CFEB2418895DD972C54580467"};
 			HttpClient httpClient = new HttpClient(targetURI, HttpMethod.POST, headerParameterMap, publishTask, responseListener);
 			httpClient.start();
 		} catch (Exception e) {
@@ -270,7 +314,7 @@ public class TaskScheduleAction extends ActionSupport {
 		return regionShort.toUpperCase() + "-" + (isRealTime ? 1 : 0) + "-" + operationShort.toUpperCase() + "-" + sortSN.toUpperCase();
 	}
 
-	public String formatMSUTask(MSUTask task) {
+	public String formatMSUTask(MsuTask task) {
 		JSONObject messageObj = new JSONObject();
 		if (task != null) {
 			try {
@@ -282,7 +326,7 @@ public class TaskScheduleAction extends ActionSupport {
 				messageObj.put(CONTENT_TITLE, task.getContent());
 				messageObj.put(META_DATA_TITLE, task.getMetaData());
 				messageObj.put(RES_ID_TITLE, task.getResId());
-				messageObj.put(IS_REALTIME_TITLE, task.isRealtime());
+				messageObj.put(IS_REALTIME_TITLE, task.getIsRealtime());
 			} catch (JSONException e) {
 				theLogger.exception(e);
 			}
@@ -346,5 +390,29 @@ public class TaskScheduleAction extends ActionSupport {
 
 		}
 		return messageObj.toString();
+	}
+
+	public static void main(String[] args) {
+		try {
+			URI targetURI = new URI("http://localhost:8092/msu/manage");
+			HashMap<String, String> headerParameterMap = new HashMap<String, String>();
+			headerParameterMap.put(OPERATION_TYPE, "TOPIC-TASK-ADD");
+			IClientResponseListener responseListener = new IClientResponseListener() {
+
+				public void fireSucceed(Object messageObj) throws Exception {
+					System.out.println(messageObj);
+				}
+
+				public void fireError(Object messageObj) throws Exception {
+					System.out.println(messageObj);
+				}
+
+			};
+			String publishTask="{\"isrt\":false,\"mda\":\"{\"username\":\"baiyanwei\"}\",\"con\":\"ls\",\"cat\":1386066691274,\"rid\":1,\"reg\":\"0311\",\"ope\":\"ssh\",\"sch\":\"0 10 * * * ?\",\"tid\":\"0311-0-SSH-513B4E8CFEB2418895DD972C54580467\"}";
+			HttpClient httpClient = new HttpClient(targetURI, HttpMethod.POST, headerParameterMap, publishTask, responseListener);
+			httpClient.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

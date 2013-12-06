@@ -26,7 +26,7 @@ public class LoginFilter implements Filter{
 		s=((HttpServletRequest)request).getSession();
 		String nexturl=((HttpServletRequest)request).getServletPath();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
-		if(user!=null){
+		if(true||user!=null){
 			chain.doFilter(request,response);
 		}else{
 			if("/login.action".equals(nexturl)){

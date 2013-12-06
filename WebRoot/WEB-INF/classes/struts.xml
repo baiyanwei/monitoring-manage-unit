@@ -398,7 +398,7 @@
 		
 		<!--调度任务-->
 		<action name="*TaskScheduleAction"
-        	class="com.secpro.platform.monitoring.manage.actions.TaskScheduleAction" method="{1}">
+        	class="TaskScheduleAction" method="{1}">
         	<result name="error" type="dispatcher">/error.jsp</result>
         	<result name="warning" type="dispatcher">/warning.jsp</result>
         	<result name="alert" type="dispatcher">/alert.jsp</result>

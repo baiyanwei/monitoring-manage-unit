@@ -1,11 +1,11 @@
 package com.secpro.platform.monitoring.manage.util;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * @author baiyanwei 
- * Jul 13, 2013 
- * our own assertion class that is useful for failing fast and for eliminating
+ * @author baiyanwei Jul 13, 2013 our own assertion class that is useful for
+ *         failing fast and for eliminating
  */
 public final class Assert {
 
@@ -21,7 +21,7 @@ public final class Assert {
 	 * @param o
 	 * @return
 	 */
-	public static boolean isNull(Object o) {
+	final public static boolean isNull(Object o) {
 		if (null == o) {
 			return true;
 		}
@@ -33,7 +33,7 @@ public final class Assert {
 	 * 
 	 * @param s
 	 */
-	public static boolean isEmptyString(String s) {
+	final public static boolean isEmptyString(String s) {
 		if (null == s || s.length() == 0 || s.trim().length() == 0) {
 			return true;
 		}
@@ -46,8 +46,21 @@ public final class Assert {
 	 * @param c
 	 * @return
 	 */
-	public static boolean isEmptyCollection(Collection<Object> c) {
+	final public static <T extends Object> boolean isEmptyCollection(Collection<?> c) {
 		if (null == c || c.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * check one Map is empty or not
+	 * 
+	 * @param c
+	 * @return
+	 */
+	final public static <T extends Object> boolean isEmptyMap(Map<?, ?> m) {
+		if (null == m || m.isEmpty()) {
 			return true;
 		}
 		return false;

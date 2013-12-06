@@ -1,10 +1,15 @@
-<%@page import="com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao"%>
+<%@page import="com.secpro.platform.monitoring.manage.services.impl.TaskScheduleServiceImpl"%>
+<%@page import="com.secpro.platform.monitoring.manage.services.TaskScheduleService"%>
+<%@page import="com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao1"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="com.secpro.platform.monitoring.manage.entity.SysOperation"%>
+<%@page import="com.secpro.platform.monitoring.manage.util.SpringBeanUtile"%>
 <%
+	//localhost:8080/mmu/task/taskSave.jsp?operationType=new&region=0311&resId=1&resObjName=HBFW_TEST_001
 	String pageTitle = "任务新建";
 	String operationType = "new";
 	String actionButtonName="新建";
+	String typeCode=null;
 	if (request.getParameter("operationType") != null) {
 		operationType = request.getParameter("operationType");
 	}
@@ -13,16 +18,16 @@
 		actionButtonName="更新";
 	}
 	String pageDescrption = pageTitle;
-	String formSubmitTarget = "/TaskScheduleAction.createMSUTask";
+	String formSubmitTarget = "createTaskScheduleAction.action";
 
 	//
 	String region = request.getParameter("region");
 	String resId = request.getParameter("resId");
-	String targetIp="";
+	String targetIp="192.168.18.100";
 	String resObjName = request.getParameter("resObjName");
-	String regionName = "";
-	
-	List<Object> sysOperationList=TaskScheduleActionDao.findAll(SysOperation.class);
+	String regionName = "河北";
+	TaskScheduleService tss=SpringBeanUtile.getSpringBean(request, TaskScheduleService.class, "TaskScheduleServiceImpl");
+	List<SysOperation> sysOperationList=tss.getSystemOperation(typeCode);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -46,9 +51,9 @@
 </script>
 <script language="javascript">
 	function myFormSubmit(form) {
-		if (checkOwnRule(form)) {
-			form.submit();
-		}
+		//if (checkOwnRule(form)) {
+		form.submit();
+		//}
 	}
 	function authRowChange(authType) {
 		if ("none" == authType) {
@@ -74,6 +79,16 @@
 			document.getElementById("operationSNMPV3AuthRow").style.display = "block";
 		}
 	}
+	function setTaskType() {
+		if (document.getElementById("isRealtime").value == "false") {
+			document.getElementById("isRealtime").value = "true";
+			document.getElementById("schedule").disabled = true;
+		} else {
+			document.getElementById("isRealtime").value = "false";
+			document.getElementById("schedule").disabled = false;
+
+		}
+	}
 </script>
 </head>
 <body>
@@ -91,7 +106,8 @@
 							<legend><%=pageTitle%></legend>
 							<form name="taskForm" id="taskForm" action="<%=formSubmitTarget%>" method="post">
 								<input type="hidden" name="resId" id="resId" value="<%=resId%>" /> <input type="hidden" name="region" id="region" value="<%=region%>" /> <input type="hidden"
-									name="targetIp" id="targetIp" value="<%=targetIp%>" /> <input type="hidden" name="targetIp" id="targetIp" value="<%=targetIp%>" />
+									name="targetIp" id="targetIp" value="<%=targetIp%>" /> <input type="hidden" name="targetIp" id="targetIp" value="<%=targetIp%>" /> <input type="hidden"
+									name="isRealtime" id="isRealtime" value="false" />
 								<div id="div1">
 									<p></p>
 									<table cellpadding="0" cellspacing="0" border="0" width="600px" align="center">
@@ -133,7 +149,7 @@
 																	<%
 																		if (sysOperationList != null) {
 																			for (int i = 0; i < sysOperationList.size(); i++) {
-																				SysOperation sysOperationBean = (SysOperation) (sysOperationList.get(i));
+																				SysOperation sysOperationBean = sysOperationList.get(i);
 																				out.println("<option value=\"" + sysOperationBean.getOperationName() + "\">" + sysOperationBean.getOperationName() + "</option>");
 																			}
 																		}
@@ -323,7 +339,7 @@
 															</td>
 														</tr>
 													</table>
-											</div>
+												</div>
 											</td>
 										</tr>
 										<tr>
@@ -333,7 +349,8 @@
 														<td valign="top" width="35%"><div align="right">调度周期：</div>
 														</td>
 														<td valign="top" width="65%"><div align="left">
-																<input name="schedule" id="schedule" type="text" size="30" maxlength="50" hint="调度周期" allownull="false" />
+																<input name="schedule" id="schedule" type="text" size="30" maxlength="50" hint="调度周期" allownull="false" value="0 10 * * * ?" /> <input type="checkbox"
+																	onclick="setTaskType()" />即时任务
 															</div>
 														</td>
 													</tr>
