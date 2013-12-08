@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.secpro.platform.monitoring.manage.common.services.impl.BaseService;
 import com.secpro.platform.monitoring.manage.dao.TaskScheduleDao;
+import com.secpro.platform.monitoring.manage.entity.SysCity;
+import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysOperation;
+import com.secpro.platform.monitoring.manage.entity.SysResAuth;
 import com.secpro.platform.monitoring.manage.services.TaskScheduleService;
+import com.secpro.platform.monitoring.manage.util.Assert;
 
 @Service("TaskScheduleServiceImpl")
 public class TaskScheduleServiceImpl extends BaseService implements TaskScheduleService {
@@ -44,12 +48,39 @@ public class TaskScheduleServiceImpl extends BaseService implements TaskSchedule
 		}
 	}
 
-	public List<SysOperation> getSystemOperation(String typeCode) {
-		if (typeCode == null) {
-			return findAll(SysOperation.class);
-		} else {
-
+	public List<SysOperation> getSysOperationByTypeCode(String typeCode) {
+		String whereSql = null;
+		if (Assert.isEmptyString(typeCode) == false) {
+			whereSql = "TYPE_CODE='" + typeCode + "'";
 		}
-		return null;
+		return this.dao.findAll(SysOperation.class, whereSql, 1, 1000, null);
 	}
+
+	public List<SysCommand> getSystCommandByTypeCode(String typeCode) {
+		String whereSql = null;
+		if (Assert.isEmptyString(typeCode) == false) {
+			whereSql = "TYPE_CODE='" + typeCode + "'";
+		}
+		return this.dao.findAll(SysCommand.class, whereSql, 1, 1000, null);
+	}
+
+	public List<SysResAuth> getSysResAuthByResId(long resId) {
+		return this.dao.findAll(SysResAuth.class, "RES_ID=" + resId, 1, 1000, null);
+	}
+
+	public SysCity getSysCityBycityCode(String cityCode) {
+		if (Assert.isEmptyString(cityCode) == true) {
+			return null;
+		}
+		List<SysCity> cityList = this.dao.findAll(SysCity.class, "CITY_CODE='" + cityCode + "'", 1, 1000, null);
+		if (cityList == null || cityList.isEmpty()) {
+			return null;
+		}
+		return cityList.get(0);
+	}
+
+	public TaskScheduleDao getTaskScheduleDao() {
+		return this.dao;
+	}
+
 }

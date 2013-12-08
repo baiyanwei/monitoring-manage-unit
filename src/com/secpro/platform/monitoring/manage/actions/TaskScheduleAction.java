@@ -1,24 +1,28 @@
 package com.secpro.platform.monitoring.manage.actions;
 
-import java.net.URI;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
-import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
-import com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao1;
 import com.secpro.platform.monitoring.manage.entity.MsuTask;
+import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
 import com.secpro.platform.monitoring.manage.services.TaskScheduleService;
-import com.secpro.platform.monitoring.manage.util.httpclient.HttpClient;
-import com.secpro.platform.monitoring.manage.util.httpclient.IClientResponseListener;
+import com.secpro.platform.monitoring.manage.util.Assert;
+import com.secpro.platform.monitoring.manage.util.MsuMangementAPI;
+import com.secpro.platform.monitoring.manage.util.StringFormat;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 @Controller("TaskScheduleAction")
@@ -32,13 +36,13 @@ public class TaskScheduleAction {
 	final public static String CREATE_AT_TITLE = "cat";
 	final public static String SCHEDULE_TITLE = "sch";
 	final public static String CONTENT_TITLE = "con";
+	final public static String TARGET_IP_TITLE = "tip";
+	final public static String TARGET_PORT_TITLE = "tpt";
 	final public static String META_DATA_TITLE = "mda";
 	final public static String RES_ID_TITLE = "rid";
 	final public static String IS_REALTIME_TITLE = "isrt";
+	//
 	private final static PlatformLogger theLogger = PlatformLogger.getLogger(TaskScheduleAction.class);
-	final public static String[] MANAGEMENT_OPERATION_TYPE = new String[] { "TOPIC-TASK-ADD", "TOPIC-TASK-UPDATE", "TOPIC-TASK-REMOVE", "TOPIC-SYSLOG-STANDARD-RULE-ADD",
-			"TOPIC-SYSLOG-STANDARD-RULE-UPDATE", "TOPIC-SYSLOG-STANDARD-RULE-REMOVE" };
-	final public static String OPERATION_TYPE = "operationType";
 
 	PlatformLogger logger = PlatformLogger.getLogger(TaskScheduleAction.class);
 	private String returnMsg;
@@ -80,146 +84,241 @@ public class TaskScheduleAction {
 	}
 
 	//
-	public String create() throws Exception {
-		System.out.println(">>>>>>>>>>>TaskScheduleAction.create");
-		System.out.println(">>>>>>>>>>>TaskScheduleAction.taskScheduleService:" + taskScheduleService.getSessionFactory());
+	/**
+	 * create or update the task.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String save() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
-			MsuTask task = getBuildMSUTaskByRequest(request, true);
+			String operationType = request.getParameter("operationType");
+			if (Assert.isEmptyString(operationType) == true) {
+				throw new Exception("未发现操作类别,操作失败");
+			}
+			boolean isNew = false;
+			if ("new".equalsIgnoreCase(operationType) == true) {
+				isNew = true;
+			}
+			String mcaOperation = request.getParameter("operation");
+			if (Assert.isEmptyString(mcaOperation) == true) {
+				throw new Exception("未发现MCA采集类型,操作失败");
+			}
+			if ("ssh,snmp,telnet".indexOf(mcaOperation) == -1) {
+				throw new Exception(mcaOperation + "不是MCA有效的采集类型[ssh/snmp/telnet],操作失败");
+			}
+			// content中存放的是命令的ID
+			SysCommand sysCommand = (SysCommand) (taskScheduleService.getObj(SysCommand.class, Long.parseLong(request.getParameter("content").trim())));
+			if (sysCommand == null) {
+				throw new Exception("未找到ID" + request.getParameter("content") + "对应的命令资源");
+			}
+			//
+			SysResAuth sysResAuth = buildSysResAuthByRequest(request);
+			JSONObject metaDataObj = BuildTaskMetaData(sysResAuth, mcaOperation, request.getParameter("snmp_version"), sysCommand.getOpenCommand());
+			//
+			MsuTask task = buildMSUTaskByRequest(request, isNew, metaDataObj, sysCommand.getCommand());
 			if (task == null) {
-				request.setAttribute("exception", new Exception("Build MSUTask instance Exception. invalid bean."));
-				return "error";
+				throw new Exception("无法从请求中分析出任务主体,操作失败.");
 			}
 			//
 			taskScheduleService.save(task);
 			//
-			request.setAttribute("resourceBean", task);
-			String callBackUrl = request.getParameter("callBackUrl");
-			request.setAttribute("previousURL", callBackUrl);
-			request.setAttribute("WEB_MSG", "创建成功！");
-			// publish the task change into MSU
-			System.out.println(formatMSUTask(task));
-			publishMUSTaskToMSU(formatMSUTask(task), "TOPIC-TASK-ADD");
-		} catch (Exception e) {
-			request.setAttribute("exception", e);
-			e.printStackTrace();
-			return "error";
-		}
-
-		return "success";
-	}
-
-	public String update() throws Exception {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String callBackUrl = request.getParameter("callBackUrl");
-		try {
-			MsuTask task = getBuildMSUTaskByRequest(request, false);
-			if (task == null) {
-				request.setAttribute("exception", new Exception("Build MSUTask instance Exception. invalid bean."));
-				return "error";
+			returnMsg = "操作成功！";
+			String msu_command = MsuMangementAPI.MSU_COMMAND_TASK_ADD;
+			if (isNew == false) {
+				msu_command = MsuMangementAPI.MSU_COMMAND_TASK_UPDATE;
 			}
-			//
-			TaskScheduleActionDao1.update(task);
-			//
-			request.setAttribute("resourceBean", task);
-			request.setAttribute("previousURL", callBackUrl);
-			request.setAttribute("WEB_MSG", "操作成功！");
-			// publish the task change into MSU
-			publishMUSTaskToMSU(formatMSUTask(task), "TOPIC-TASK-UPDATE");
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(formatMSUTask(task).toString(), msu_command);
 		} catch (Exception e) {
 			request.setAttribute("exception", e);
-			e.printStackTrace();
-			return "error";
+			returnMsg = "操作失败:" + e.getMessage();
+			return "failed";
 		}
 
-		return "success";
+		return "toView";
 	}
 
+	/**
+	 * remove the musTask by ids,
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public String remove() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		String callBackUrl = request.getParameter("callBackUrl");
 		try {
-			String id = request.getParameter("id");
-			if (id == null || id.trim().length() == 0) {
-				throw new Exception("invalid id");
+			String tids = request.getParameter("tids");
+			if (Assert.isEmptyString(tids) == true) {
+				throw new Exception("未找到需要删除的任务ID");
 			}
-			// exist
-			MsuTask task = TaskScheduleActionDao1.findById(id);
-			if (task == null) {
-				throw new Exception("doesn't exist instance ," + id);
+			String[] idArray = tids.split(",");
+			StringBuffer querySQL = new StringBuffer();
+			querySQL.append("DELETE FROM MSU_TASK WHERE ID IN (");
+			if (idArray.length > 1) {
+				for (int i = 0; i < idArray.length; i++) {
+					if (i == 0) {
+						querySQL.append("'").append(idArray[i]).append("'");
+					} else {
+						querySQL.append(",'").append(idArray[i]).append("'");
+					}
+				}
+				querySQL.append(")");
+			} else {
+				querySQL.append("'").append(idArray[0]).append("')");
 			}
-			TaskScheduleActionDao1.delete(task);
-			request.setAttribute("resourceBean", task);
-			request.setAttribute("previousURL", callBackUrl);
-			request.setAttribute("WEB_MSG", "操作成功！");
-			// publish the task change into MSU
-			publishMUSTaskToMSU(formatMSUTask(task), "TOPIC-TASK-REMOVE");
+
+			//
+			this.taskScheduleService.getTaskScheduleDao().executeBySql(querySQL.toString());
+			returnMsg = "操作成功！";
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(tids, MsuMangementAPI.MSU_COMMAND_TASK_REMOVE);
+			return "toView";
 		} catch (Exception e) {
 			request.setAttribute("exception", e);
-			e.printStackTrace();
-			return "error";
+			returnMsg = "操作失败:" + e.getMessage();
+			return "failed";
 		}
 
-		return "success";
 	}
 
-	//
-	// public String removeListMSUTask() throws Exception {
-	// HttpServletRequest request = ServletActionContext.getRequest();
-	// String callBackUrl = request.getParameter("callBackUrl");
-	// try {
-	// request.setAttribute("previousURL", callBackUrl);
-	// String type = request.getParameter("type");
-	// String[] ids = request.getParameterValues("ids");
-	// if (type == null || type.trim().length() == 0) {
-	// throw new Exception("TYPE未定义");
-	// }
-	// if (ids == null || ids.length == 0) {
-	// throw new Exception("ids未定义");
-	// }
-	// DataViewService dataViewService =
-	// ServiceHelper.findService(DataViewService.class);
-	// Class<?> clazz = dataViewService.getBeanClass(type);
-	// if (clazz == null) {
-	// throw new Exception("TYPE未定义");
-	// }
-	// for (int i = 0; i < ids.length; i++) {
-	// TaskScheduleActionDao.removeBean(clazz, Long.parseLong(ids[i]));
-	// }
-	// request.setAttribute("WEB_MSG", "操作成功！");
-	// } catch (Exception e) {
-	// request.setAttribute("exception", e);
-	// e.printStackTrace();
-	// return "error";
-	// }
-	//
-	// return "success";
-	// }
+	public String viewTask() {
+		//
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String rows = request.getParameter("rows");
+		String page = request.getParameter("page");
+		int pageNo = 1;
+		int pageSize = 10;
+		if (Assert.isEmptyString(rows) == false) {
+			pageSize = Integer.parseInt(rows);
+		}
+		if (Assert.isEmptyString(page) == false) {
+			pageNo = Integer.parseInt(page);
+		}
+		StringBuffer querySQL = new StringBuffer();
+		querySQL.append("SELECT MT.ID,");
+		querySQL.append("	       R.CITY_NAME,");
+		querySQL.append("	       MT.CREATE_AT,");
+		querySQL.append("	       MT.SCHEDULE,");
+		querySQL.append("	       MT.OPERATION,");
+		querySQL.append("	       MT.TARGET_IP,");
+		querySQL.append("	       MT.TARGET_PORT,");
+		querySQL.append("	       MT.CONTENT,");
+		querySQL.append("	       MT.META_DATA,");
+		querySQL.append("	       MT.RES_ID,");
+		querySQL.append("	       MT.IS_REALTIME");
+		querySQL.append("	  FROM (SELECT T.ID,");
+		querySQL.append("	               T.REGION,");
+		querySQL.append("	               T.CREATE_AT,");
+		querySQL.append("	               T.SCHEDULE,");
+		querySQL.append("	               T.OPERATION,");
+		querySQL.append("	               T.TARGET_IP,");
+		querySQL.append("	               T.TARGET_PORT,");
+		querySQL.append("	               T.CONTENT,");
+		querySQL.append("	               T.META_DATA,");
+		querySQL.append("	               T.RES_ID,");
+		querySQL.append("	               T.IS_REALTIME");
+		querySQL.append("	          FROM MSU_TASK T");
+		querySQL.append("	         WHERE T.IS_REALTIME = 0) MT");
+		querySQL.append("	  LEFT JOIN (SELECT C.CITY_NAME, C.CITY_CODE FROM SYS_CITY C) R");
+		querySQL.append("	    ON MT.REGION = R.CITY_CODE");
+
+		List<Object> viewTableList = this.taskScheduleService.getTaskScheduleDao().queryBySql(querySQL.toString(), pageSize, pageNo);
+		if (viewTableList == null) {
+			returnMsg = "获取任务失败！";
+			return "failed";
+		}
+		int totalSize = this.taskScheduleService.getTaskScheduleDao().getRowNumber("MSU_TASK", "IS_REALTIME = 0");
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			JSONObject viewObj = new JSONObject();
+			try {
+				viewObj.put("total", totalSize);
+				JSONArray rowArray = new JSONArray();
+				//
+				for (Object taskObj : viewTableList) {
+					Object[] rowObj = (Object[]) taskObj;
+					if (rowObj != null) {
+						try {
+							JSONObject messageObj = new JSONObject();
+							// querySQL.append("SELECT MT.ID,");
+							// querySQL.append("	       R.CITY_NAME,");
+							// querySQL.append("	       MT.CREATE_AT,");
+							// querySQL.append("	       MT.SCHEDULE,");
+							// querySQL.append("	       MT.OPERATION,");
+							// querySQL.append("	       MT.TARGET_IP,");
+							// querySQL.append("	       MT.TARGET_PORT,");
+							// querySQL.append("	       MT.CONTENT,");
+							// querySQL.append("	       MT.META_DATA,");
+							// querySQL.append("	       MT.RES_ID,");
+							// querySQL.append("	       MT.IS_REALTIME");
+							messageObj.put("id", (String) rowObj[0]);
+							messageObj.put(ID_TITLE, (String) rowObj[0]);
+							messageObj.put(REGION_TITLE, (String) rowObj[1]);
+							messageObj.put(CREATE_AT_TITLE, StringFormat.FormatDate(new Date(((Number) rowObj[2]).longValue())));
+							messageObj.put(SCHEDULE_TITLE, (String) rowObj[3]);
+							messageObj.put(OPERATION_TITLE, (String) rowObj[4]);
+							messageObj.put(TARGET_IP_TITLE, (String) rowObj[5]);
+							messageObj.put(TARGET_PORT_TITLE, String.valueOf(rowObj[6]));
+							messageObj.put(CONTENT_TITLE, (String) rowObj[7]);
+							messageObj.put(META_DATA_TITLE, (String) rowObj[8]);
+							messageObj.put(RES_ID_TITLE, String.valueOf(rowObj[9]));
+							messageObj.put(IS_REALTIME_TITLE, String.valueOf(rowObj[10]));
+							rowArray.put(messageObj);
+						} catch (JSONException e) {
+							theLogger.exception(e);
+						}
+					}
+				}
+				viewObj.put("rows", rowArray);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			System.out.println(viewObj.toString());
+			pw.println(viewObj.toString());
+			pw.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+		return "success";
+	}
 
 	/**
 	 * @param request
 	 * @param isNew
+	 * @param command 
 	 * @return
 	 * @throws Exception
 	 * 
 	 *             build bean from form.
 	 */
-	private MsuTask getBuildMSUTaskByRequest(HttpServletRequest request, boolean isNew) throws Exception {
+	private MsuTask buildMSUTaskByRequest(HttpServletRequest request, boolean isNew, JSONObject metaDataObj, String command) throws Exception {
+		if (request == null || metaDataObj == null) {
+			return null;
+		}
+
 		MsuTask task = new MsuTask();
 		//
 		task.setRegion(request.getParameter("region"));
 		task.setOperation(request.getParameter("operation"));
-		task.setSchedule(request.getParameter("schedule"));
 		task.setCreateAt(System.currentTimeMillis());
-		// build the meateData from the ResAuth.
-		String metaDataValue = formatSysResAuth(getBuildSysResAuthByRequest(request, isNew));
-		task.setMetaData(metaDataValue);
-		//
-		task.setContent(request.getParameter("content").trim());
+		task.setMetaData(metaDataObj.toString());
+		task.setContent(command);
 		task.setResId(Long.parseLong(request.getParameter("resId")));
 		task.setTargetIp(request.getParameter("targetIp").trim());
 		task.setTargetPort(Integer.parseInt(request.getParameter("targetPort")));
 		task.setIsRealtime(Boolean.parseBoolean(request.getParameter("isRealtime")));
+		if (task.getIsRealtime() == true) {
+			task.setSchedule("realtime");
+		} else {
+			task.setSchedule(request.getParameter("schedule"));
+		}
 		if (isNew == true) {
 			// create a UUID.
 			task.setId(createMSUTaskID(task.getRegion(), task.getOperation(), task.getIsRealtime()));
@@ -230,7 +329,16 @@ public class TaskScheduleAction {
 		return task;
 	}
 
-	public static SysResAuth getBuildSysResAuthByRequest(HttpServletRequest request, boolean isNew) throws Exception {
+	/**
+	 *  
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	private SysResAuth buildSysResAuthByRequest(HttpServletRequest request) throws Exception {
+		if(request==null){
+			throw new Exception("request为空");
+		}
 		SysResAuth resAuth = new SysResAuth();
 		// if (isNew == false) {
 		// resAuth.setId(Long.valueOf(request.getParameter("resAuthId").trim()));
@@ -250,37 +358,8 @@ public class TaskScheduleAction {
 		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv"));
 		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass"));
 		resAuth.setResId(Long.valueOf(request.getParameter("resId")));
-
 		//
 		return resAuth;
-	}
-
-	private void publishMUSTaskToMSU(String publishTask, String opeationType) {
-		if (publishTask == null || publishTask.length() == 0 || opeationType == null || opeationType.length() == 0) {
-			return;
-		}
-		try {
-			URI targetURI = new URI("http://localhost:8092/msu/manage");
-			HashMap<String, String> headerParameterMap = new HashMap<String, String>();
-			headerParameterMap.put(OPERATION_TYPE, opeationType);
-			IClientResponseListener responseListener = new IClientResponseListener() {
-
-				public void fireSucceed(Object messageObj) throws Exception {
-					System.out.println(messageObj);
-				}
-
-				public void fireError(Object messageObj) throws Exception {
-					System.out.println(messageObj);
-				}
-
-			};
-			// String
-			// testContent={"isrt":false,"mda":"{\"username\":\"baiyanwei\"}","con":"ls","cat":1386066691274,"rid":1,"reg":"0311","ope":"ssh","sch":"0 10 * * * ?","tid":"0311-0-SSH-513B4E8CFEB2418895DD972C54580467"};
-			HttpClient httpClient = new HttpClient(targetURI, HttpMethod.POST, headerParameterMap, publishTask, responseListener);
-			httpClient.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -314,7 +393,7 @@ public class TaskScheduleAction {
 		return regionShort.toUpperCase() + "-" + (isRealTime ? 1 : 0) + "-" + operationShort.toUpperCase() + "-" + sortSN.toUpperCase();
 	}
 
-	public String formatMSUTask(MsuTask task) {
+	private JSONObject formatMSUTask(MsuTask task) {
 		JSONObject messageObj = new JSONObject();
 		if (task != null) {
 			try {
@@ -324,95 +403,99 @@ public class TaskScheduleAction {
 				messageObj.put(CREATE_AT_TITLE, task.getCreateAt());
 				messageObj.put(SCHEDULE_TITLE, task.getSchedule());
 				messageObj.put(CONTENT_TITLE, task.getContent());
-				messageObj.put(META_DATA_TITLE, task.getMetaData());
+				messageObj.put(META_DATA_TITLE, new JSONObject(task.getMetaData()));
 				messageObj.put(RES_ID_TITLE, task.getResId());
 				messageObj.put(IS_REALTIME_TITLE, task.getIsRealtime());
+				messageObj.put(TARGET_IP_TITLE, task.getTargetIp());
+				messageObj.put(TARGET_PORT_TITLE, task.getTargetPort());
 			} catch (JSONException e) {
 				theLogger.exception(e);
 			}
 
 		}
-		return messageObj.toString();
+		System.out.println(">>" + messageObj);
+		return messageObj;
 	}
 
-	public String formatSysResAuth(SysResAuth resAuth) {
-		JSONObject messageObj = new JSONObject();
-		if (resAuth != null) {
-			try {
-				//
+	private JSONObject BuildTaskMetaData(SysResAuth resAuth, String mcaOperation, String snmpVersion, String openCommand) throws Exception {
+
+		if (resAuth == null) {
+			throw new Exception("防火墙认证信息为空");
+		}
+		if (Assert.isEmptyString(mcaOperation) == true) {
+			throw new Exception("MCA采集类型为空");
+		}
+		if (mcaOperation.equalsIgnoreCase("snmp") == false) {
+			if (Assert.isEmptyString(snmpVersion) == true) {
+				throw new Exception("MCA采集类型snmp的版本为空");
+			}
+		}
+		if (mcaOperation.equalsIgnoreCase("telnet") == false) {
+			if (Assert.isEmptyString(openCommand) == true) {
+				throw new Exception("MCA采集类型telnet中openCommand为空");
+			}
+		}
+		JSONObject metaDataObj = new JSONObject();
+		try {
+			//
+			if ("telnet".equalsIgnoreCase(mcaOperation) == true || "ssh".equalsIgnoreCase(mcaOperation) == true) {
 				if (resAuth.getUsername() != null && resAuth.getUsername().length() > 0) {
-					messageObj.put("username", resAuth.getUsername());
+					metaDataObj.put("username", resAuth.getUsername());
 				}
 				//
 				if (resAuth.getPassword() != null && resAuth.getPassword().length() > 0) {
-					messageObj.put("password", resAuth.getPassword());
+					metaDataObj.put("password", resAuth.getPassword());
 				}
+			}
+			if ("telnet".equalsIgnoreCase(mcaOperation) == true) {
 				if (resAuth.getUserPrompt() != null && resAuth.getUserPrompt().length() > 0) {
-					messageObj.put("userPrompt", resAuth.getUserPrompt());
+					metaDataObj.put("userPrompt", resAuth.getUserPrompt());
 				}
 				if (resAuth.getPassPrompt() != null && resAuth.getPassPrompt().length() > 0) {
-					messageObj.put("passPrompt", resAuth.getPassPrompt());
+					metaDataObj.put("passPrompt", resAuth.getPassPrompt());
 				}
 				if (resAuth.getPrompt() != null && resAuth.getPrompt().length() > 0) {
-					messageObj.put("prompt", resAuth.getPrompt());
+					metaDataObj.put("prompt", resAuth.getPrompt());
 				}
 				if (resAuth.getExecPrompt() != null && resAuth.getExecPrompt().length() > 0) {
-					messageObj.put("execPrompt", resAuth.getExecPrompt());
+					metaDataObj.put("execPrompt", resAuth.getExecPrompt());
 				}
 				if (resAuth.getNextPrompt() != null && resAuth.getNextPrompt().length() > 0) {
-					messageObj.put("nextPrompt", resAuth.getNextPrompt());
+					metaDataObj.put("nextPrompt", resAuth.getNextPrompt());
 				}
 				if (resAuth.getSepaWord() != null && resAuth.getSepaWord().length() > 0) {
-					messageObj.put("sepaWord", resAuth.getSepaWord());
+					metaDataObj.put("sepaWord", resAuth.getSepaWord());
 				}
-				if (resAuth.getCommunity() != null && resAuth.getCommunity().length() > 0) {
-					messageObj.put("community", resAuth.getCommunity());
-				}
-				if (resAuth.getSnmpv3User() != null && resAuth.getSnmpv3User().length() > 0) {
-					messageObj.put("snmpv3User", resAuth.getSnmpv3User());
-				}
-				if (resAuth.getSnmpv3Auth() != null && resAuth.getSnmpv3Auth().length() > 0) {
-					messageObj.put("snmpv3Auth", resAuth.getSnmpv3Auth());
-				}
-				if (resAuth.getSnmpv3Authpass() != null && resAuth.getSnmpv3Authpass().length() > 0) {
-					messageObj.put("snmpv3Authpass", resAuth.getSnmpv3Authpass());
-				}
-				if (resAuth.getSnmpv3Priv() != null && resAuth.getSnmpv3Priv().length() > 0) {
-					messageObj.put("snmpv3Priv", resAuth.getSnmpv3Priv());
-				}
-				if (resAuth.getSnmpv3Privpass() != null && resAuth.getSnmpv3Privpass().length() > 0) {
-					messageObj.put("snmpv3Privpass", resAuth.getSnmpv3Privpass());
-				}
-
-			} catch (JSONException e) {
-				theLogger.exception(e);
+				metaDataObj.put("openCommand", "openCommand");
 			}
-
-		}
-		return messageObj.toString();
-	}
-
-	public static void main(String[] args) {
-		try {
-			URI targetURI = new URI("http://localhost:8092/msu/manage");
-			HashMap<String, String> headerParameterMap = new HashMap<String, String>();
-			headerParameterMap.put(OPERATION_TYPE, "TOPIC-TASK-ADD");
-			IClientResponseListener responseListener = new IClientResponseListener() {
-
-				public void fireSucceed(Object messageObj) throws Exception {
-					System.out.println(messageObj);
+			if ("snmp".equalsIgnoreCase(mcaOperation) == true) {
+				if ("1".equals(snmpVersion) || "2".equals(snmpVersion)) {
+					if (resAuth.getCommunity() != null && resAuth.getCommunity().length() > 0) {
+						metaDataObj.put("community", resAuth.getCommunity());
+					}
+				} else if ("3".equals(snmpVersion)) {
+					if (resAuth.getSnmpv3User() != null && resAuth.getSnmpv3User().length() > 0) {
+						metaDataObj.put("snmpv3User", resAuth.getSnmpv3User());
+					}
+					if (resAuth.getSnmpv3Auth() != null && resAuth.getSnmpv3Auth().length() > 0) {
+						metaDataObj.put("snmpv3Auth", resAuth.getSnmpv3Auth());
+					}
+					if (resAuth.getSnmpv3Authpass() != null && resAuth.getSnmpv3Authpass().length() > 0) {
+						metaDataObj.put("snmpv3Authpass", resAuth.getSnmpv3Authpass());
+					}
+					if (resAuth.getSnmpv3Priv() != null && resAuth.getSnmpv3Priv().length() > 0) {
+						metaDataObj.put("snmpv3Priv", resAuth.getSnmpv3Priv());
+					}
+					if (resAuth.getSnmpv3Privpass() != null && resAuth.getSnmpv3Privpass().length() > 0) {
+						metaDataObj.put("snmpv3Privpass", resAuth.getSnmpv3Privpass());
+					}
 				}
-
-				public void fireError(Object messageObj) throws Exception {
-					System.out.println(messageObj);
-				}
-
-			};
-			String publishTask="{\"isrt\":false,\"mda\":\"{\"username\":\"baiyanwei\"}\",\"con\":\"ls\",\"cat\":1386066691274,\"rid\":1,\"reg\":\"0311\",\"ope\":\"ssh\",\"sch\":\"0 10 * * * ?\",\"tid\":\"0311-0-SSH-513B4E8CFEB2418895DD972C54580467\"}";
-			HttpClient httpClient = new HttpClient(targetURI, HttpMethod.POST, headerParameterMap, publishTask, responseListener);
-			httpClient.start();
-		} catch (Exception e) {
-			e.printStackTrace();
+				metaDataObj.put("snmp_version", snmpVersion);
+			}
+		} catch (JSONException e) {
+			theLogger.exception(e);
 		}
+
+		return metaDataObj;
 	}
 }

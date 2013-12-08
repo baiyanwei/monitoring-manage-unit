@@ -47,7 +47,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		// 6 automatic content decompression.
 		pipeline.addLast("inflater", new HttpContentDecompressor());
 		//
-		pipeline.addLast("timeout", _readTimeoutHandler);
+		//pipeline.addLast("timeout", _readTimeoutHandler);
 		// 7 HTTP handle HttpChunks.
 		// pipeline.addLast("aggregator", new HttpChunkAggregator(1048576));
 		// 9 business operation handler

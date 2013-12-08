@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import javax.persistence.Entity;
-
 /**
  * @author baiyanwei 应用配置
  */
@@ -22,6 +20,8 @@ public class ApplicationConfiguration {
 	public static String SYSLOGRULEPATH;
 	public static String SYSLOGWSPATH;
 	public static String CONFIGRULEPATH;
+	public static String MSU_MANAGE_TASK_BEACON_INTERFACE;
+	
 	static{
 		
 		Properties configuration = new Properties();
@@ -32,7 +32,7 @@ public class ApplicationConfiguration {
             SYSLOGWSPATH = configuration.getProperty("syslogwspath");
             SYSLOGRULEPATH=configuration.getProperty("syslogrulepath");
             CONFIGRULEPATH=configuration.getProperty("configrulepath");
-            
+            MSU_MANAGE_TASK_BEACON_INTERFACE=configuration.getProperty("msu.manageTaskBeaconInterface");
         } catch (Exception e) {
             e.printStackTrace();
            

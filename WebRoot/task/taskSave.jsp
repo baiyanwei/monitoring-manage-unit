@@ -1,33 +1,102 @@
-<%@page import="com.secpro.platform.monitoring.manage.services.impl.TaskScheduleServiceImpl"%>
-<%@page import="com.secpro.platform.monitoring.manage.services.TaskScheduleService"%>
-<%@page import="com.secpro.platform.monitoring.manage.dao.TaskScheduleActionDao1"%>
+<%@page import="com.secpro.platform.monitoring.manage.entity.SysResObj"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="com.secpro.platform.monitoring.manage.entity.SysOperation"%>
+<%@page import="com.secpro.platform.monitoring.manage.entity.SysCommand"%>
 <%@page import="com.secpro.platform.monitoring.manage.util.SpringBeanUtile"%>
+<%@page import="com.secpro.platform.monitoring.manage.util.Assert"%>
+<%@page import="com.secpro.platform.monitoring.manage.entity.SysResAuth"%>
+<%@page import="com.secpro.platform.monitoring.manage.entity.SysCity"%>
+<%@page import="com.secpro.platform.monitoring.manage.entity.MsuTask"%>
+<%@page import="com.secpro.platform.monitoring.manage.services.TaskScheduleService"%>
 <%
-	//localhost:8080/mmu/task/taskSave.jsp?operationType=new&region=0311&resId=1&resObjName=HBFW_TEST_001
-	String pageTitle = "任务新建";
-	String operationType = "new";
-	String actionButtonName="新建";
-	String typeCode=null;
-	if (request.getParameter("operationType") != null) {
-		operationType = request.getParameter("operationType");
-	}
-	if ("update".equalsIgnoreCase(operationType)) {
-		pageTitle = "任务更新";
-		actionButtonName="更新";
-	}
-	String pageDescrption = pageTitle;
-	String formSubmitTarget = "createTaskScheduleAction.action";
-
-	//
-	String region = request.getParameter("region");
+	//localhost:8080/mmu/task/taskSave.jsp?operationType=new&&resId=62
+	String tid = request.getParameter("tid");
 	String resId = request.getParameter("resId");
-	String targetIp="192.168.18.100";
-	String resObjName = request.getParameter("resObjName");
-	String regionName = "河北";
-	TaskScheduleService tss=SpringBeanUtile.getSpringBean(request, TaskScheduleService.class, "TaskScheduleServiceImpl");
-	List<SysOperation> sysOperationList=tss.getSystemOperation(typeCode);
+	String operationType = request.getParameter("operationType");
+	//
+	if (Assert.isEmptyString(operationType) == true) {
+		out.println("未发现操作类别,请设置operationType参数");
+		return;
+	}
+	//
+	String mcaOperation = null;
+	String operationTitle = null;
+	MsuTask msuTask = null;
+	TaskScheduleService taskScheduleService = SpringBeanUtile.getSpringBean(request, TaskScheduleService.class, "TaskScheduleServiceImpl");
+	//
+	if ("new".equalsIgnoreCase(operationType) == true) {
+		if (Assert.isEmptyString(resId) == true) {
+			out.println("未发现创建任务需要的资源,请设置resId参数");
+			return;
+		}
+		msuTask = new MsuTask();
+		msuTask.setTargetPort(0);
+		msuTask.setSchedule("0 10 * * * ?");
+		operationTitle = "新建任务";
+	} else {
+		if (Assert.isEmptyString(tid) == true) {
+			out.println("未发现要操作的任务标识,请设置tid参数");
+			return;
+		}
+		msuTask = (MsuTask) (taskScheduleService.getTaskScheduleDao().findById(MsuTask.class, tid));
+		if (msuTask == null) {
+			out.println("未取得" + tid + "对应的任务");
+			return;
+		}
+		resId = String.valueOf(msuTask.getResId());
+		if ("update".equalsIgnoreCase(operationType) == true) {
+			operationTitle = "更新任务 " + tid;
+		} else {
+			operationTitle = "查看详细 " + tid;
+		}
+	}
+	SysResObj sysResObj = (SysResObj) (taskScheduleService.getObj(SysResObj.class, Long.parseLong(resId)));
+	if (sysResObj == null) {
+		out.println("未取得" + resId + "对应的资源,无法进行创建任务操作");
+		return;
+	}
+	SysCity SysCity = taskScheduleService.getSysCityBycityCode(sysResObj.getCityCode());
+	if (SysCity == null) {
+		out.println(sysResObj.getResName() + "未指定所属城市,无法进行创建任务操作");
+		return;
+	}
+	List<String> sysOperationList = new ArrayList<String>();
+	String snmpVersion = "";
+	if (Assert.isEmptyString(sysResObj.getStatusOperation()) == false) {
+		sysOperationList.add("snmp");
+		snmpVersion = sysResObj.getStatusOperation();
+		mcaOperation = "snmp";
+	}
+	if (Assert.isEmptyString(sysResObj.getConfigOperation()) == false) {
+		if (sysResObj.getConfigOperation().toLowerCase().indexOf("ssh") != -1) {
+			sysOperationList.add("ssh");
+			mcaOperation = "ssh";
+		}
+		if (sysResObj.getConfigOperation().toLowerCase().indexOf("telnet") != -1) {
+			sysOperationList.add("telnet");
+			mcaOperation = "telnet";
+		}
+	}
+	if (sysOperationList.isEmpty()) {
+		out.println(sysResObj.getResName() + "未指定采集状态信息的操作或采集配置信息的操作");
+		return;
+	}
+	//根据设备型号查询此设备支持的operation
+	//List<SysOperation> sysOperationList = taskScheduleService.getSysOperationByTypeCode(sysResObj.getTypeCode());
+	List<SysCommand> sysCommandList = taskScheduleService.getSystCommandByTypeCode(sysResObj.getTypeCode());
+	if (sysCommandList == null || sysCommandList.isEmpty()) {
+		out.println(sysResObj.getResName() + ",未指定设备型号,法进行创建任务操作");
+		return;
+	}
+	List<SysResAuth> SysResAuthList = taskScheduleService.getSysResAuthByResId(sysResObj.getId());
+	if (SysResAuthList == null || SysResAuthList.isEmpty()) {
+		out.println(sysResObj.getResName() + ",未指定防火墙认证信息,法进行创建任务操作");
+		return;
+	}
+	SysResAuth currentSysResAuth = SysResAuthList.get(0);
+	if (Assert.isEmptyString(msuTask.getOperation()) == false) {
+		mcaOperation = msuTask.getOperation();
+	}
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -35,7 +104,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" media="all" type="text/css" href="../style/blue/css/main.css" />
 <link rel="stylesheet" media="all" type="text/css" href="../style/blue/css/basic.css" />
-<title><%=pageTitle%></title>
+<title><%=operationTitle%></title>
 <link rel="stylesheet" type="text/css" href="../style/app/css/app_main.css" />
 <link rel="stylesheet" type="text/css" href="../style/blue/css/main.css" />
 <script src="../js/ueframe/main.js"></script>
@@ -51,51 +120,93 @@
 </script>
 <script language="javascript">
 	function myFormSubmit(form) {
-		//if (checkOwnRule(form)) {
-		form.submit();
-		//}
+		if (checkOwnRule(form)) {
+			form.submit();
+		}
 	}
-	function authRowChange(authType) {
-		if ("none" == authType) {
-			document.getElementById("operationSSH/TELNETAuthRow").style.display = "none";
+	function operationChange() {
+		var operationValue = document.getElementById("operation").value;
+		//set default port 
+		setDefaultProt(operationValue);
+		//ssh
+		if ("ssh" == operationValue) {
+			document.getElementById("operationSSH/TELNETAuthRow").style.display = "block";
+			//
+			//document.getElementById("operationSSH/TELNETAuthRow").style.display = "none";
 			document.getElementById("operationTELNETAuthRow").style.display = "none";
 			document.getElementById("operationSNMPV1/2AuthRow").style.display = "none";
 			document.getElementById("operationSNMPV3AuthRow").style.display = "none";
-			return;
-		} else {
-			authRowChange("none");
+			document.getElementById("operationSNMPVersionSelector").style.display = "none";
 		}
-		if ("telnet" == authType || "ssh" == authType) {
+		//telnet
+		if ("telnet" == operationValue) {
 			document.getElementById("operationSSH/TELNETAuthRow").style.display = "block";
-		}
-		if ("telnet" == authType) {
 			document.getElementById("operationTELNETAuthRow").style.display = "block";
-			document.getElementById("operationTELNETAuthRow").width = "800OX";
+			//
+			//document.getElementById("operationSSH/TELNETAuthRow").style.display = "none";
+			//document.getElementById("operationTELNETAuthRow").style.display = "none";
+			document.getElementById("operationSNMPV1/2AuthRow").style.display = "none";
+			document.getElementById("operationSNMPV3AuthRow").style.display = "none";
+			document.getElementById("operationSNMPVersionSelector").style.display = "none";
 		}
-		if ("snmpv1" == authType || "snmpv2c" == authType) {
-			document.getElementById("operationSNMPV1/2AuthRow").style.display = "block";
-		}
-		if ("snmpv3" == authType) {
-			document.getElementById("operationSNMPV3AuthRow").style.display = "block";
+
+		//snmp
+		if ("snmp" == operationValue) {
+			document.getElementById("operationSNMPVersionSelector").style.display = "block";
+			var snmpVersion = document.getElementById("snmp_version").value;
+			if ("1" == snmpVersion || "2" == snmpVersion) {
+				document.getElementById("operationSNMPV1/2AuthRow").style.display = "block";
+				//
+				document.getElementById("operationSSH/TELNETAuthRow").style.display = "none";
+				document.getElementById("operationTELNETAuthRow").style.display = "none";
+				//document.getElementById("operationSNMPV1/2AuthRow").style.display = "none";
+				document.getElementById("operationSNMPV3AuthRow").style.display = "none";
+			} else if ("3" == snmpVersion) {
+				document.getElementById("operationSNMPV3AuthRow").style.display = "block";
+				//
+				document.getElementById("operationSSH/TELNETAuthRow").style.display = "none";
+				document.getElementById("operationTELNETAuthRow").style.display = "none";
+				document.getElementById("operationSNMPV1/2AuthRow").style.display = "none";
+				//document.getElementById("operationSNMPV3AuthRow").style.display = "none";
+			}
 		}
 	}
 	function setTaskType() {
 		if (document.getElementById("isRealtime").value == "false") {
 			document.getElementById("isRealtime").value = "true";
+			document.getElementById("schedule").value = "resltime";
 			document.getElementById("schedule").disabled = true;
 		} else {
 			document.getElementById("isRealtime").value = "false";
+			document.getElementById("schedule").value = "";
 			document.getElementById("schedule").disabled = false;
 
 		}
 	}
+	function setDefaultProt(operation) {
+		//ssh
+		if ("ssh" == operation) {
+			document.getElementById("targetPort").value = "22";
+			return;
+		}
+		//telnet
+		if ("telnet" == operation) {
+			document.getElementById("targetPort").value = "23";
+			return;
+		}
+		//snmp
+		if ("snmp" == operation) {
+			document.getElementById("targetPort").value = "161";
+			return;
+		}
+	}
 </script>
 </head>
-<body>
+<body onload="operationChange();">
 	<div class="content">
 		<div class="content_title_bg">
 			<div class="content_title">
-				<%=pageDescrption%></div>
+				<%=operationTitle%></div>
 		</div>
 		<div class="about_title"></div>
 		<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
@@ -103,70 +214,69 @@
 				<tr>
 					<td valign="top">
 						<fieldset style="width: 96%; border: 1px #cccccc solid; margin-left: 5px; margin-top: 5px; text-align: center;">
-							<legend><%=pageTitle%></legend>
-							<form name="taskForm" id="taskForm" action="<%=formSubmitTarget%>" method="post">
-								<input type="hidden" name="resId" id="resId" value="<%=resId%>" /> <input type="hidden" name="region" id="region" value="<%=region%>" /> <input type="hidden"
-									name="targetIp" id="targetIp" value="<%=targetIp%>" /> <input type="hidden" name="targetIp" id="targetIp" value="<%=targetIp%>" /> <input type="hidden"
-									name="isRealtime" id="isRealtime" value="false" />
+							<legend><%=operationTitle%></legend>
+							<form name="taskForm" id="taskForm" action="saveTaskScheduleAction.action" method="post">
+								<input type="hidden" name="id" id="id" value="<%=tid%>" /> <input type="hidden" name="resId" id="resId" value="<%=resId%>" /> <input type="hidden"
+									name="operationType" id="operationType" value="<%=operationType%>" /> <input type="hidden" name="region" id="region" value="<%=sysResObj.getCityCode()%>" /> <input
+									type="hidden" name="targetIp" id="targetIp" value="<%=sysResObj.getResIp()%>" /> <input type="hidden" name="isRealtime" id="isRealtime" value="false" /> <input
+									type="hidden" name="snmp_version" id="snmp_version" value="<%=snmpVersion%>" />
 								<div id="div1">
 									<p></p>
-									<table cellpadding="0" cellspacing="0" border="0" width="600px" align="center">
+									<table cellpadding="0" cellspacing="0" border="0" width="800px" align="center">
 										<tr>
 											<td>
 												<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 													<tr>
-														<td valign="top" width="35%"><div align="right">采集目标：</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<span><%=resObjName%></span>
-															</div>
-														</td>
+														<td valign="top" width="20%"><div align="right">采集目标：</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<span><%=sysResObj.getResName()%></span>
+															</div></td>
 													</tr>
 													<tr>
-														<td valign="top" width="35%"><div align="right">目标位置：</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<span><%=regionName%></span>
-															</div>
-														</td>
+														<td valign="top" width="20%"><div align="right">归属城市：</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<span><%=SysCity.getCityName()%></span>
+															</div></td>
 													</tr>
 													<tr>
-														<td valign="top" width="35%"><div align="right">目标IP：</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<span><%=targetIp%></span>
-															</div>
-														</td>
+														<td valign="top" width="20%"><div align="right">目标IP：</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<span><%=sysResObj.getResIp()%></span>
+															</div></td>
 													</tr>
 													<tr>
-														<td valign="top" width="35%"><div align="right">
+														<td valign="top" width="20%"><div align="right">
 																<span class="input_redstar ">*</span>采集方式：
-															</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<select id="operation" name="operation" hint="采集方式" allownull="false" onchange="authRowChange(this.options[this.options.selectedIndex].value)">
-																	<option value="none" selected></option>
+															</div></td>
+														<td valign="top" width="80%"><div align="left" style="float:left">
+																<select id="operation" name="operation" hint="采集方式" onchange="operationChange()">
 																	<%
 																		if (sysOperationList != null) {
 																			for (int i = 0; i < sysOperationList.size(); i++) {
-																				SysOperation sysOperationBean = sysOperationList.get(i);
-																				out.println("<option value=\"" + sysOperationBean.getOperationName() + "\">" + sysOperationBean.getOperationName() + "</option>");
+																				if (mcaOperation.equalsIgnoreCase(sysOperationList.get(i)) == true) {
+																					out.println("<option value=\"" + sysOperationList.get(i) + "\" selected=\"selected\">" + sysOperationList.get(i) + "</option>");
+																				} else {
+																					out.println("<option value=\"" + sysOperationList.get(i) + "\">" + sysOperationList.get(i) + "</option>");
+																				}
 																			}
 																		}
 																	%>
-																</select><span class="input_redstar ">*</span>
+																</select>
+															</div>
+															<div id="operationSNMPVersionSelector" style="float:left;display:none">
+																|SNMP版本:v<%=snmpVersion%>
 															</div>
 														</td>
 													</tr>
 													<tr>
-														<td valign="top" width="35%"><div align="right">采集端口：</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<input name="targetPort" id="targetPort" type="text" size="10" maxlength="10" hint="采集端口" allownull="false" />
-															</div>
-														</td>
+														<td valign="top" width="20%"><div align="right">采集端口：</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<input name="targetPort" id="targetPort" type="text" size="10" maxlength="10" hint="采集端口" allownull="false" isPortNo="true"
+																	value="<%=(msuTask.getTargetPort() == 0 ? "" : msuTask.getTargetPort())%>" />
+															</div></td>
 													</tr>
-												</table></td>
+												</table>
+											</td>
 										</tr>
 
 										<tr>
@@ -179,34 +289,20 @@
 													%>
 													<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>用户名：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="username" id="username" type="text" size="20" maxlength="20" hint="用户名" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="username" id="username" type="text" size="20" maxlength="20" hint="用户名" readonly="readonly" value="<%=currentSysResAuth.getUsername()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>密码：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="password" id="password" type="password" size="20" maxlength="20" hint="密码" allownull="false" />
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td valign="top" width="35%"><div align="right">
-																	<span class="input_redstar ">*</span>确认密码：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="password_confirm" id="password_confirm" type="password" size="20" maxlength="20" hint="确认密码" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="password" id="password" type="password" size="20" maxlength="20" hint="密码" readonly="readonly" value="<%=currentSysResAuth.getPassword()%>" />
+																</div></td>
 														</tr>
 													</table>
 												</div>
@@ -221,54 +317,56 @@
 													%>
 													<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>用户名提示字符串：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="userPrompt" id="userPrompt" type="text" size="20" maxlength="20" hint="用户名提示字符串" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="userPrompt" id="userPrompt" type="text" size="20" maxlength="20" hint="用户名提示字符串" readonly="readonly"
+																		value="<%=currentSysResAuth.getUserPrompt()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>密码提示字符串：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="passPrompt" id="passPrompt" type="text" size="20" maxlength="20" hint="密码提示字符串" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="passPrompt" id="passPrompt" type="text" size="20" maxlength="20" hint="密码提示字符串" readonly="readonly"
+																		value="<%=currentSysResAuth.getPassPrompt()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>命令提示符：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="prompt" id="prompt" type="text" size="20" maxlength="20" hint="命令提示符" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="prompt" id="prompt" type="text" size="20" maxlength="20" hint="命令提示符" readonly="readonly" value="<%=currentSysResAuth.getPrompt()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>执行命令提示符：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="execPrompt" id="execPrompt" type="text" size="20" maxlength="20" hint="执行命令提示符" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="execPrompt" id="execPrompt" type="text" size="20" maxlength="20" hint="执行命令提示符" readonly="readonly"
+																		value="<%=currentSysResAuth.getExecPrompt()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">
+															<td valign="top" width="20%"><div align="right">
 																	<span class="input_redstar ">*</span>翻页命令提示符：
-																</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="nextPrompt" id="nextPrompt" type="text" size="20" maxlength="20" hint="翻页命令提示符" allownull="false" />
-																</div>
-															</td>
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="nextPrompt" id="nextPrompt" type="text" size="20" maxlength="20" hint="翻页命令提示符" readonly="readonly"
+																		value="<%=currentSysResAuth.getNextPrompt()%>" />
+																</div></td>
+														</tr>
+														<tr>
+															<td valign="top" width="20%"><div align="right">
+																	<span class="input_redstar ">*</span>分页提示符：
+																</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="sepaWord" id="sepaWord" type="text" size="20" maxlength="20" hint="分页提示符" readonly="readonly" value="<%=currentSysResAuth.getSepaWord()%>" />
+																</div></td>
 														</tr>
 													</table>
 												</div>
@@ -279,12 +377,10 @@
 													%>
 													<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 														<tr>
-															<td valign="top" width="35%"><div align="right">团体名：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="community" id="community" type="text" size="20" maxlength="20" hint="团体名" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">团体名：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="community" id="community" type="text" size="20" maxlength="20" hint="团体名" readonly="readonly" value="<%=currentSysResAuth.getCommunity()%>" />
+																</div></td>
 														</tr>
 													</table>
 												</div>
@@ -299,88 +395,95 @@
 													%>
 													<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 														<tr>
-															<td valign="top" width="35%"><div align="right">V3版本用户名：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="snmpv3User" id="snmpv3User" type="text" size="20" maxlength="20" hint="V3版本用户名" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">V3版本用户名：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="snmpv3User" id="snmpv3User" type="text" size="20" maxlength="20" hint="V3版本用户名" readonly="readonly"
+																		value="<%=currentSysResAuth.getSnmpv3User()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">认证算法：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="snmpv3Auth" id="snmpv3Auth" type="text" size="20" maxlength="20" hint="认证算法" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">认证算法：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="snmpv3Auth" id="snmpv3Auth" type="text" size="20" maxlength="20" hint="认证算法" readonly="readonly"
+																		value="<%=currentSysResAuth.getSnmpv3Auth()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">认证密钥：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="snmpv3Authpass" id="snmpv3Authpass" type="text" size="20" maxlength="20" hint="认证密钥" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">认证密钥：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="snmpv3Authpass" id="snmpv3Authpass" type="text" size="20" maxlength="20" hint="认证密钥" readonly="readonly"
+																		value="<%=currentSysResAuth.getSnmpv3Authpass()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">加密算法：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="snmpv3Priv" id="snmpv3Priv" type="text" size="20" maxlength="20" hint="加密算法" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">加密算法：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="snmpv3Priv" id="snmpv3Priv" type="text" size="20" maxlength="20" hint="加密算法" readonly="readonly"
+																		value="<%=currentSysResAuth.getSnmpv3Priv()%>" />
+																</div></td>
 														</tr>
 														<tr>
-															<td valign="top" width="35%"><div align="right">加密密钥：</div>
-															</td>
-															<td valign="top" width="65%"><div align="left">
-																	<input name="snmpv3Privpass" id="snmpv3Privpass" type="text" size="20" maxlength="20" hint="加密密钥" allownull="false" />
-																</div>
-															</td>
+															<td valign="top" width="20%"><div align="right">加密密钥：</div></td>
+															<td valign="top" width="80%"><div align="left">
+																	<input name="snmpv3Privpass" id="snmpv3Privpass" type="text" size="20" maxlength="20" hint="加密密钥" readonly="readonly"
+																		value="<%=currentSysResAuth.getSnmpv3Privpass()%>" />
+																</div></td>
 														</tr>
 													</table>
-												</div>
-											</td>
+												</div></td>
 										</tr>
 										<tr>
 											<td>
 												<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tableborder">
 													<tr>
-														<td valign="top" width="35%"><div align="right">调度周期：</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<input name="schedule" id="schedule" type="text" size="30" maxlength="50" hint="调度周期" allownull="false" value="0 10 * * * ?" /> <input type="checkbox"
-																	onclick="setTaskType()" />即时任务
-															</div>
-														</td>
+														<td valign="top" width="20%"><div align="right">调度周期：</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<input name="schedule" id="schedule" type="text" size="30" maxlength="50" hint="调度周期" allownull="false" value="<%=msuTask.getSchedule()%>" /> <input
+																	type="checkbox" onclick="setTaskType()" />即时任务
+															</div></td>
 													</tr>
 													<tr>
-														<td valign="top" width="35%"><div align="right">
+														<td valign="top" width="20%"><div align="right">
 																<span class="input_redstar ">*</span>采集命令：
-															</div>
-														</td>
-														<td valign="top" width="65%"><div align="left">
-																<textarea name="content" id="content" cols="45" rows="5" maxlength="500" hint="采集命令" allownull="false"></textarea>
-																<span class="input_redstar ">*</span>
-															</div>
-														</td>
+															</div></td>
+														<td valign="top" width="80%"><div align="left">
+																<select id="content" name="content" hint="采集命令" allownull="false">
+																	<%
+																		if (sysCommandList != null) {
+																			for (int i = 0; i < sysCommandList.size(); i++) {
+																				if (Assert.isEmptyString(msuTask.getContent()) == false && msuTask.getContent().equalsIgnoreCase(sysCommandList.get(i).getCommand()) == true) {
+																					//BEAN中已经设置了命令
+																					out.println("<option value=\"" + sysCommandList.get(i).getId() + "\" selected=\"selected\">" + sysCommandList.get(i).getCommand() + "</option>");
+																				} else {
+																					out.println("<option value=\"" + sysCommandList.get(i).getId() + "\">" + sysCommandList.get(i).getCommand() + "</option>");
+																				}
+																			}
+																		}
+																	%>
+																</select>
+															</div></td>
 													</tr>
-												</table></td>
+												</table>
+											</td>
 										</tr>
 										<tr>
 											<td>
 												<div align="center" style="margin-top: 15px; margin-bottom: 15px;">
-													<input type="button" class="button" onmouseover="this.className='buttonhover'" onmouseout="this.className='button'" name="Submit" value="<%=actionButtonName%>"
-														onclick="myFormSubmit(taskForm)" /> <input type="button" class="button" onmouseover="this.className='buttonhover'" onmouseout="this.className='button'"
-														onclick="window.history.back();" name="back" value="返回" />
-												</div>
-											</td>
+													<%
+														if ("new".equalsIgnoreCase(operationType) == true || "update".equalsIgnoreCase(operationType) == true) {
+													%><input type="button" class="button"
+														onmouseover="this.className='buttonhover'" onmouseout="this.className='button'" name="Submit" value="提交" onclick="myFormSubmit(taskForm)" />
+													<%
+														}
+													%>
+													<input type="button" class="button" onmouseover="this.className='buttonhover'" onmouseout="this.className='button'" onclick="window.history.back();"
+														name="back" value="返回" />
+												</div></td>
 										</tr>
 									</table>
 								</div>
 							</form>
-						</fieldset>
-					</td>
+						</fieldset></td>
 				</tr>
 			</table>
 

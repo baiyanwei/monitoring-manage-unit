@@ -10,21 +10,21 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MSU_TASK")
-public class MsuTask{
+public class MsuTask {
 
 	// Fields
 
-	private String id;
-	private String region;
-	private Long createAt;
-	private String schedule;
-	private String operation;
-	private String targetIp;
-	private Integer targetPort;
-	private String metaData;
-	private String content;
-	private Long resId;
-	private Boolean isRealtime;
+	private String id = "";
+	private String region = "";
+	private Long createAt = 0L;
+	private String schedule = "";
+	private String operation = "";
+	private String targetIp = "";
+	private Integer targetPort = 0;
+	private String metaData = "";
+	private String content = "";
+	private Long resId = 0L;
+	private Boolean isRealtime = false;
 
 	// Constructors
 
@@ -33,8 +33,7 @@ public class MsuTask{
 	}
 
 	/** minimal constructor */
-	public MsuTask(String id, String region, Long createAt, String schedule, String operation, String targetIp, Integer targetPort, String metaData, String content,
-			Long resId) {
+	public MsuTask(String id, String region, Long createAt, String schedule, String operation, String targetIp, Integer targetPort, String metaData, String content, Long resId) {
 		this.id = id;
 		this.region = region;
 		this.createAt = createAt;
@@ -48,8 +47,8 @@ public class MsuTask{
 	}
 
 	/** full constructor */
-	public MsuTask(String id, String region, Long createAt, String schedule, String operation, String targetIp, Integer targetPort, String metaData, String content,
-			Long resId, Boolean isRealtime) {
+	public MsuTask(String id, String region, Long createAt, String schedule, String operation, String targetIp, Integer targetPort, String metaData, String content, Long resId,
+			Boolean isRealtime) {
 		this.id = id;
 		this.region = region;
 		this.createAt = createAt;
