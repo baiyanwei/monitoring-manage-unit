@@ -360,6 +360,7 @@ function _onMouseDown(obj,e){
       	            	window.parent.frames["contextMain"].location.href="toViewEvent.action?resId="+obj.id;
       	            },
       	            'taskview': function(t) {
+      	            	
     	            	window.parent.frames["contextMain"].location.href="../task/taskView.jsp?resId="+obj.id;
     	            },
       	            'refresh': function(t) {

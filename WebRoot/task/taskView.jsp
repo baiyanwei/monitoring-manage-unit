@@ -5,6 +5,15 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String _contexPath = request.getContextPath().equals("/")? "": request.getContextPath();
+	String oldResId=request.getParameter("resId");
+	String resId="";
+	if(oldResId!=null&&!oldResId.trim().equals("")){
+		if(oldResId.contains("_"))
+		resId=oldResId.split("_")[1];
+		else
+		resId=oldResId;
+	}
+	
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -21,7 +30,7 @@
 <script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 <script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="采集管理>采集端列表";
+		adiv.innerText="任务管理>任务列表";
 		function mcapaused(url){
 			window.location.href=url;
 		}
@@ -41,7 +50,7 @@
 					pageSize : 10,
 					pageList : [10, 20, 50, 100],
 					url : 'viewTaskTaskScheduleAction.action',
-					// queryParams:{'viewType':'RK','RKD_ID':_rkdId},
+					 queryParams:{'resId':'<%=resId%>'},
 					singleSelect : false,
 					fitColumns : true,
 					nowrap : true,
@@ -112,7 +121,7 @@
 						text : '添加任务',
 						iconCls : 'icon-add',
 						handler : function() {
-							window.location.href = "task/taskSave.jsp?operationType=new&&resId=62";
+							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=new&&resId=<%=resId%>";
 						}
 					}, '-', {
 						text : '删除任务',

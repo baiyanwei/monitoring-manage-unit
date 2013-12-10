@@ -21,7 +21,7 @@
 		
         <default-action-ref name="index" />
 		<global-results>
-			<result name="error">/demo/error.jsp</result>
+			<result name="error">/error.jsp</result>
 		</global-results>
 
 		<global-exception-mappings>
