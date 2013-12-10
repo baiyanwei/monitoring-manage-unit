@@ -21,12 +21,17 @@ public class ApplicationConfiguration {
 	public static String SYSLOGRULEPATH;
 	public static String SYSLOGWSPATH;
 	public static String CONFIGRULEPATH;
+
 	public static String WATCHDOGPORT;
 	public static String WATCHDOGSERVERPATH;
 	public static String DEFAULT_ENCODING="UTF-8";
 	public static String HMAC_SHA1_ALGORITHM="HmacSHA1";
 	public static Charset DEFAULT_CHARSET;
 	public static String HMAC_SHA256_ALGORITHM="HmacSHA256";
+
+	public static String MSU_MANAGE_TASK_BEACON_INTERFACE;
+	
+
 	static{
 		
 		Properties configuration = new Properties();
@@ -37,9 +42,13 @@ public class ApplicationConfiguration {
             SYSLOGWSPATH = configuration.getProperty("syslogwspath");
             SYSLOGRULEPATH=configuration.getProperty("syslogrulepath");
             CONFIGRULEPATH=configuration.getProperty("configrulepath");
+
             WATCHDOGPORT=configuration.getProperty("watchdogport");
             WATCHDOGSERVERPATH=configuration.getProperty("watchdogserverpath");
             DEFAULT_CHARSET = Charset.forName(DEFAULT_ENCODING);
+
+            MSU_MANAGE_TASK_BEACON_INTERFACE=configuration.getProperty("msu.manageTaskBeaconInterface");
+
         } catch (Exception e) {
             e.printStackTrace();
            

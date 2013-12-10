@@ -69,8 +69,7 @@
 	</bean>
 	
 	<!-- 配置SessionFactory，据说这个packagesToScan不能扫描子包-->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan">
 			<list>

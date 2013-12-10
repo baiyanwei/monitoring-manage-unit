@@ -264,6 +264,8 @@ function clickFolder() {
         <li id="delete"><img src="<%=_contexPath%>/style/app/images/delete.png" /> 删除资源</li>
      <% }if(app.get("查看防火墙告警")!=null){ %>  
         <li id="catevent"><img src="<%=_contexPath%>/style/app/images/deregulation_affair.png" /> 查看告警</li>
+       <%}if(app.get("查看防火墙任务")!=null){  %>
+        <li id="taskview"><img src="<%=_contexPath%>/style/app/images/workspace.png" /> 查看任务</li>
        <%} %>
         <li id="refresh"><img src="<%=_contexPath%>/style/app/images/refresh.png" /> 树刷新</li>
       </ul>

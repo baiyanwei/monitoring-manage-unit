@@ -359,6 +359,9 @@ function _onMouseDown(obj,e){
       	            'catevent': function(t) {
       	            	window.parent.frames["contextMain"].location.href="toViewEvent.action?resId="+obj.id;
       	            },
+      	            'taskview': function(t) {
+    	            	window.parent.frames["contextMain"].location.href="../task/taskView.jsp?resId="+obj.id;
+    	            },
       	            'refresh': function(t) {
       	            	window.location.reload();
       	            }
@@ -392,7 +395,7 @@ function _onMouseDown(obj,e){
   		      bindings: 
   	          {
   	            'add': function(t) {
-  	            	window.parent.frames["contextMain"].location.href="toAddSysObj?cityCode="+obj.id;
+  	            	window.parent.frames["contextMain"].location.href="toAddSysObj.action?cityCode="+obj.id;
   	            },
   	            'refresh': function(t) {
   	            	window.location.reload();
