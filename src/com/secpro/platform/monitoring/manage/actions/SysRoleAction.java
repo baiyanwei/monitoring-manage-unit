@@ -116,13 +116,13 @@ public class SysRoleAction {
 		if(role.getRoleName()==null){
 			returnMsg = "角色名称不能为空，角色添加！";
 			logger.info("fetch roleName failed , roleName is null!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		if(role.getRoleName()==null){
 			returnMsg = "角色名称不能为空，角色添加！";
 			logger.info("fetch roleName failed , roleName is null!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		roleService.save(role);
@@ -134,20 +134,20 @@ public class SysRoleAction {
 		if(roleid==null){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch roleid failed , roleid is null!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		if(roleid.trim().equals("")){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch userid failed , userid is ''!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		SysRole r=(SysRole)roleService.getObj(SysRole.class, Long.parseLong(roleid));
 		if(r==null){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch user failed from database !");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -159,19 +159,19 @@ public class SysRoleAction {
 		if(role.getId()==null){
 			returnMsg = "系统错误，角色修改失败！";
 			logger.info("fetch userid failed , userid is null !");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		if(role.getRoleName()==null){
 			returnMsg = "角色名称不能为空，保存失败！";
 			logger.info("fetch roleName failed , roleName is null !");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		if(role.getRoleName().trim().equals("")){
 			returnMsg = "角色名称不能为空，保存失败！";
 			logger.info("fetch roleName failed , roleName is ''!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		roleService.update(role);
@@ -183,13 +183,13 @@ public class SysRoleAction {
 		if(roleid==null){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch roleid failed , roleid is ''!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		if(roleid.trim().equals("")){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch roleid failed , roleid is ''!");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		String[] roleids=roleid.split(",");
@@ -197,7 +197,7 @@ public class SysRoleAction {
 		if(!flag){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("delete role failed !");
-			backUrl = "viewRole.jsp";
+			backUrl = "users/viewRole.jsp";
 			return "failed";
 		}
 		return "success";
@@ -206,23 +206,24 @@ public class SysRoleAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String[] roleids=request.getParameterValues("roleid");
 		String appid=request.getParameter("appid");
+		System.out.println(roleids+"------------------------"+appid);
 		if(roleids==null){
 			returnMsg = "系统错误，角色应用映射失败！";
 			logger.info("fetch roleid failed , roleid is null!");
-			backUrl = "viewRoleAppMapping.jsp";
+			backUrl = "users/roleAppMapping.jsp";
 			return "failed";
 		}
 		
 		if(appid==null){
 			returnMsg = "系统错误，角色应用映射失败！";
 			logger.info("fetch appid failed , appid is null!");
-			backUrl = "viewRoleAppMapping.jsp";
+			backUrl = "users/roleAppMapping.jsp";
 			return "failed";
 		}
 		if(appid.trim().equals("")){
 			returnMsg = "系统错误，角色应用映射失败！";
 			logger.info("fetch appid failed , appid is null!");
-			backUrl = "viewRoleAppMapping.jsp";
+			backUrl = "users/roleAppMapping.jsp";
 			return "failed";
 		}
 		String[] appids=appid.split(",");
@@ -230,7 +231,7 @@ public class SysRoleAction {
 		if(!flag){
 			returnMsg = "系统错误，角色应用映射失败！";
 			logger.info("insert database error!");
-			backUrl = "viewRoleAppMapping.jsp";
+			backUrl = "users/roleAppMapping.jsp";
 			return "failed";
 		}
 		return "success";
@@ -250,6 +251,7 @@ public class SysRoleAction {
 	public void getAppTree(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String id=request.getParameter("id");
+		System.out.println("----------------------------------");
 		String hql="";
 		if(id==null){
 			hql="from SysApp a where a.parentId=0";

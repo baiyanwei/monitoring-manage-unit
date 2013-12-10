@@ -25,6 +25,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.secpro.platform.monitoring.manage.util.DBConfig;
 import com.vandagroup.common.bean.BaseBean;
 import com.vandagroup.common.util.ReadProperties;
 import com.vandagroup.common.util.StringUtil;
@@ -179,8 +180,8 @@ public class PersistentToolUtil {
 	public Connection getConnection() throws Exception {
 			Connection conn=null;
 			try{	
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-				conn=DriverManager.getConnection("jdbc:oracle:thin:@192.168.138.128:1521:unionmon","fcvst","fcvst");
+				Class.forName(DBConfig.DRIVER);
+				conn=DriverManager.getConnection(DBConfig.URL,DBConfig.USERNAME,DBConfig.PASSWORD);
 				
 			
 		} catch (Exception e) {

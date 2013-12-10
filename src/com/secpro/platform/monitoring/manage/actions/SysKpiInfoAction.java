@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.jboss.netty.channel.ChannelPipeline;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -19,10 +20,13 @@ import com.secpro.platform.monitoring.manage.entity.RawKpi;
 import com.secpro.platform.monitoring.manage.entity.SysKpiInfo;
 import com.secpro.platform.monitoring.manage.entity.SysResClass;
 import com.secpro.platform.monitoring.manage.entity.SysResObj;
+import com.secpro.platform.monitoring.manage.http.client.HttpClient;
+import com.secpro.platform.monitoring.manage.http.client.HttpResponseHandler;
 import com.secpro.platform.monitoring.manage.services.RawKpiService;
 import com.secpro.platform.monitoring.manage.services.SysKpiInfoService;
 import com.secpro.platform.monitoring.manage.services.SysResClassService;
 import com.secpro.platform.monitoring.manage.services.SysResObjService;
+import com.secpro.platform.monitoring.manage.util.ApplicationConfiguration;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 /**
@@ -224,27 +228,29 @@ public class SysKpiInfoAction {
 		if(mcaid==null){
 			returnMsg = "操作失败！";
 			logger.info("fetch mcaid failed ,mcaid is null");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(mcaid.trim().equals("")){
 			returnMsg = "操作失败！";
 			logger.info("fetch mcaid failed ,mcaid is ''");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(operation==null){
 			returnMsg = "操作失败！";
 			logger.info("fetch operation failed ,operation is null");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(operation.trim().equals("")){
 			returnMsg = "操作失败！";
 			logger.info("fetch operation failed ,operation is ''");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
+		SysResObj mca=(SysResObj)objService.getObj(SysResObj.class, Long.parseLong(mcaid));
+		String mcaurl="http://"+mca.getResIp()+":"+ApplicationConfiguration.WATCHDOGPORT+ApplicationConfiguration.WATCHDOGSERVERPATH;
 		JSONObject task=null;
 		try {
 			JSONObject json=new JSONObject();
@@ -258,11 +264,20 @@ public class SysKpiInfoAction {
 		if(task==null){
 			returnMsg = "任务创建失败，请重新执行操作！";
 			logger.info("task is null ");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		//-----------------下发及时任务到watchdog-------------------
 		System.out.println("---------------------------"+task.toString());
+		HttpClient hc = new HttpClient();
+		ChannelPipeline line;
+		try {
+			line = hc.post(mcaurl, task);
+			line.addLast("handler", new HttpResponseHandler());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		//-------------------------------------------

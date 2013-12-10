@@ -41,7 +41,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveEventRule.action" method="post">
+		    <form id="ff" action="saveEventRule.action" method="post" onsubmit="return submitForm();">
 		    	<input type="hidden" name="eventRule.resId" value="${resId }"/>
 		    	<input type="hidden" name="eventRule.eventTypeId" value="${type.id }"/>
 		    	<table>
@@ -126,10 +126,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    		<tr>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			<input type="submit" value="提交"/>
 	    			</td>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
 	    	</table>
@@ -151,9 +151,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			}
 			if(thresholdValue1!=null&&isNaN(thresholdValue1.value)){
 				alert("阀值请输入数字！");
-				return ;
+				return false;
 			}
-			$('#ff').form('submit');
+			return true;
 		}
 		function clearForm(){
 			$('#ff').form('clear');

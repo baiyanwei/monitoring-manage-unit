@@ -1470,7 +1470,7 @@ a:hover.l-btn-disabled {
   filter: alpha(opacity=100);
 }
 .datebox .combo-arrow {
-  background-image: url('images/datebox_arrow.png');
+  background-image: url('../style/app/images/datebox_arrow.png');
   background-position: center center;
 }
 .datebox-button {
@@ -1526,10 +1526,10 @@ a:hover.l-btn-disabled {
   filter: alpha(opacity=100);
 }
 .spinner-arrow-up {
-  background: url('images/spinner_arrows.png') no-repeat 1px center;
+  background: url('../style/app/images/spinner_arrows.png') no-repeat 1px center;
 }
 .spinner-arrow-down {
-  background: url('images/spinner_arrows.png') no-repeat -15px center;
+  background: url('../style/app/images/spinner_arrows.png') no-repeat -15px center;
 }
 .spinner {
   border-color: #95B8E7;

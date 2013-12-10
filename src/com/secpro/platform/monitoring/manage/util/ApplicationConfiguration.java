@@ -2,9 +2,8 @@ package com.secpro.platform.monitoring.manage.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Properties;
-
-import javax.persistence.Entity;
 
 /**
  * @author baiyanwei 应用配置
@@ -22,6 +21,12 @@ public class ApplicationConfiguration {
 	public static String SYSLOGRULEPATH;
 	public static String SYSLOGWSPATH;
 	public static String CONFIGRULEPATH;
+	public static String WATCHDOGPORT;
+	public static String WATCHDOGSERVERPATH;
+	public static String DEFAULT_ENCODING="UTF-8";
+	public static String HMAC_SHA1_ALGORITHM="HmacSHA1";
+	public static Charset DEFAULT_CHARSET;
+	public static String HMAC_SHA256_ALGORITHM="HmacSHA256";
 	static{
 		
 		Properties configuration = new Properties();
@@ -32,7 +37,9 @@ public class ApplicationConfiguration {
             SYSLOGWSPATH = configuration.getProperty("syslogwspath");
             SYSLOGRULEPATH=configuration.getProperty("syslogrulepath");
             CONFIGRULEPATH=configuration.getProperty("configrulepath");
-            
+            WATCHDOGPORT=configuration.getProperty("watchdogport");
+            WATCHDOGSERVERPATH=configuration.getProperty("watchdogserverpath");
+            DEFAULT_CHARSET = Charset.forName(DEFAULT_ENCODING);
         } catch (Exception e) {
             e.printStackTrace();
            

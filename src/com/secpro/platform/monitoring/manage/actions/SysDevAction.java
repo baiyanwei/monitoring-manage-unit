@@ -139,7 +139,7 @@ public class SysDevAction extends ActionSupport {
 			for (int i = 0; i < companys.size(); i++) {
 				SysDevCompany sdc=(SysDevCompany)companys.get(i);
 				
-				result.append("{\"id\":"+sdc.getCompanyCode()+",\"text\":\""+sdc.getCompanyName()+"\"}");
+				result.append("{\"id\":\""+sdc.getCompanyCode()+"\",\"text\":\""+sdc.getCompanyName()+"\"}");
 				
 				if((i+1)!=companys.size()){
 					result.append(",");
@@ -713,13 +713,13 @@ public class SysDevAction extends ActionSupport {
 	public String saveCommand(){
 		if(sc.getTypeCode()==null){
 			returnMsg="系统错误,保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is null");
 			return "failed";
 		}
 		if(sc.getTypeCode().trim().equals("")){
 			returnMsg="系统错误,保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is ''");
 			return "failed";
 		}
@@ -757,13 +757,13 @@ public class SysDevAction extends ActionSupport {
 		
 		if(typeCode==null){
 			returnMsg="查看命令失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is null");
 			return "failed";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg="查看命令失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is ''");
 			return "failed";
 		}
@@ -785,19 +785,19 @@ public class SysDevAction extends ActionSupport {
 	public String modifyCommand(){
 		if(sc.getTypeCode()==null){
 			returnMsg="系统错误,保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is null");
 			return "failed";
 		}
 		if(sc.getTypeCode().trim().equals("")){
 			returnMsg="系统错误,保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is ''");
 			return "failed";
 		}
 		if(sc.getId()==null){
 			returnMsg="系统错误,保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeCode failed , typeCode is null");
 			return "failed";
 		}

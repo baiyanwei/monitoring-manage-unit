@@ -65,10 +65,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    		<tr>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			<input type="submit" value="提交"/>
 	    			</td>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
 				</table>

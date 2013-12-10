@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -46,14 +49,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <body>
   <div style="padding:5px;border:1px solid #95B8E7;width:600px;background:#EFF5FF">
+  		 <% if(app.get("修改事件格式")!=null){ %>
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="deitable()">编辑内容</a>
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()" disabled=true>修改提交</a>
+		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  disabled=true>修改提交</a>
+		<%} %>
 	</div>
   
   <div class="easyui-panel" title="" style="width:600px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="modifyEventMsg.action" method="post">
+		    <form id="ff" name="ff" action="modifyEventMsg.action" method="post">
 		    <input type="hidden" name="msg.id" value="${ emsg.id}"/>
 		    <input type="hidden" name="msg.eventTypeId" value="${ emsg.eventTypeId}"/>
 		    	<table>

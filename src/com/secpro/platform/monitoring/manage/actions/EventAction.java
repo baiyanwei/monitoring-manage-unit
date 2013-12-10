@@ -3,6 +3,7 @@ package com.secpro.platform.monitoring.manage.actions;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,22 +11,30 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.EventMsg;
 import com.secpro.platform.monitoring.manage.entity.EventType;
+import com.secpro.platform.monitoring.manage.entity.NotifyUserRule;
 import com.secpro.platform.monitoring.manage.entity.SysEvent;
+import com.secpro.platform.monitoring.manage.entity.SysEventDealMsg;
 import com.secpro.platform.monitoring.manage.entity.SysEventHis;
 import com.secpro.platform.monitoring.manage.entity.SysEventRule;
+import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
 import com.secpro.platform.monitoring.manage.services.EventMsgService;
 import com.secpro.platform.monitoring.manage.services.EventTypeService;
+import com.secpro.platform.monitoring.manage.services.NotifyUserRuleService;
+import com.secpro.platform.monitoring.manage.services.SysEventDealMsgService;
 import com.secpro.platform.monitoring.manage.services.SysEventHisService;
 import com.secpro.platform.monitoring.manage.services.SysEventRuleService;
 import com.secpro.platform.monitoring.manage.services.SysEventService;
 import com.secpro.platform.monitoring.manage.services.SysKpiInfoService;
+import com.secpro.platform.monitoring.manage.services.SysUserInfoService;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 /**
@@ -51,7 +60,38 @@ public class EventAction {
 	private SysEventRuleService eventRuleService;
 	private SysEventRule eventRule;
 	private SysKpiInfoService kpiService;
+	private String errorMsg;
+	private SysEventDealMsgService dealMsgService;
+	private SysUserInfoService userService;
+	private NotifyUserRuleService notifyService;
 	
+	public NotifyUserRuleService getNotifyService() {
+		return notifyService;
+	}
+	@Resource(name="NotifyUserRuleServiceImpl")
+	public void setNotifyService(NotifyUserRuleService notifyService) {
+		this.notifyService = notifyService;
+	}
+	public SysUserInfoService getUserService() {
+		return userService;
+	}
+	@Resource(name="SysUserInfoServiceImpl")
+	public void setUserService(SysUserInfoService userService) {
+		this.userService = userService;
+	}
+	public SysEventDealMsgService getDealMsgService() {
+		return dealMsgService;
+	}
+	@Resource(name="SysEventDealMsgServiceImpl")
+	public void setDealMsgService(SysEventDealMsgService dealMsgService) {
+		this.dealMsgService = dealMsgService;
+	}
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
 	public SysKpiInfoService getKpiService() {
 		return kpiService;
 	}
@@ -141,64 +181,362 @@ public class EventAction {
 		this.sysEventHisService = sysEventHisService;
 	}
 	//告警确认
-	public void confirmEvent(){
+	public void dealEvent(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
-		//session中获取用户信息
-		se.setConfirmUser("liyan");
-		se.setConfirmDate(sdf.format(new Date()));
-		sysEventService.update(se);
-		
-	}
-	//告警清除
-	public void clearEvent(){
-		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
-		SysEvent setemp=null;
-		if(syh.getId()==null){
-			logger.info("event id is null");
-			return;
-		}
-		List sysEvents=sysEventService.queryAll("from SysEvent s where s.id="+syh.getId());
-		if(sysEvents==null){
-			logger.info("query eventList filed");
-			return ;
-		}
-		if(sysEvents.size()==0){
-			logger.info("query eventList size is 0");
-			return;
-		}
-		setemp=(SysEvent)sysEvents.get(0);
-		syh.setCdate(setemp.getCdate());
-		syh.setClearDate(sdf.format(new Date()) );
-		//获取当前用户
-		syh.setClearUser("liyan");
-		syh.setEventLevel(setemp.getEventLevel());
-		syh.setEventTypeId(setemp.getEventTypeId());
-		syh.setMessage(setemp.getMessage());
-		syh.setResId(setemp.getResId());
-		sysEventHisService.save(syh);
-		sysEventService.delete(setemp);
-	}
-	
-	//根据资源ID获取告警列表
-	public String getEventbyResId(){
-		ActionContext actionContext = ActionContext.getContext(); 
-		List eventList=sysEventService.queryAll("from SysEvent s where s.resId="+syh.getResId());
-		Map<String,Object> request=(Map)actionContext.get("request");
-		request.put("eventList", eventList);
-		return "eventlisByid";
-	}
-	
-	//根据时间段查找告警事件
-	public String getEventbyTime(){
-		
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
-		String from=request.getParameter("from");
-		String to=request.getParameter("to");
-		List eventList=sysEventService.queryAll("from SysEvent s where s.cdate>='"+from+"' and s.cdate <='"+to+"'");
+		String type=request.getParameter("type");//0代表确认告警，1代表清楚告警
+		String dealMsg=request.getParameter("dealMsg");
+		if(type==null){
+			return ;
+		}
+		if(type.trim().equals("")){
+			return ;
+		}
+		HttpSession s=request.getSession();
+		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
+		if(user==null){
+			return;
+		}
+		if(se.getId()==null){
+			return ;
+		}
+		System.out.println("-------------------------"+se.getId());
+		if(type.equals("0")){
+			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, se.getId());
+			SysEventDealMsg smsg=(SysEventDealMsg)dealMsgService.getObj(SysEventDealMsg.class, se.getId());
+			event.setConfirmUser(user.getAccount());
+			event.setConfirmDate(sdf.format(new Date()));
+			sysEventService.update(event);
+			if(smsg==null){
+				smsg=new SysEventDealMsg();
+				smsg.setEventId(event.getId());
+				smsg.setConfirmDealmsg(dealMsg);
+				dealMsgService.save(smsg);
+			}else{
+				smsg.setConfirmDealmsg(dealMsg);
+				dealMsgService.update(smsg);
+			}
+		}else if(type.equals("1")){
+			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, se.getId());
+			SysEventDealMsg smsg=(SysEventDealMsg)dealMsgService.getObj(SysEventDealMsg.class, se.getId());
+			SysEventHis eventHis=new SysEventHis();
+			eventHis.setId(event.getId());
+			eventHis.setEventLevel(event.getEventLevel());
+			eventHis.setEventTypeId(event.getEventTypeId());
+			eventHis.setMessage(event.getMessage());
+			eventHis.setResId(event.getResId());
+			eventHis.setCdate(event.getCdate());
+			eventHis.setConfirmUser(event.getConfirmUser()==null?user.getAccount():event.getConfirmUser());
+			eventHis.setConfirmDate(event.getConfirmDate()==null?sdf.format(new Date()):event.getConfirmDate());
+			eventHis.setClearUser(user.getAccount());
+			eventHis.setClearDate(sdf.format(new Date()));
+			if(smsg==null){
+				smsg=new SysEventDealMsg();
+				smsg.setEventId(event.getId());
+				smsg.setConfirmDealmsg(dealMsg);
+				dealMsgService.save(smsg);
+			}else{
+				smsg.setConfirmDealmsg(dealMsg);
+				dealMsgService.update(smsg);
+			}
+			sysEventService.delete(event);
+			sysEventHisService.save(eventHis);
+				
+		}
+	}
+	
+	
+	//根据资源ID获取告警列表
+	public void getEventbyResId(){
+		
+		HttpServletRequest request=ServletActionContext.getRequest();
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		String rows=request.getParameter("rows");
+		String page=request.getParameter("page");
+		
+		int pageNum=1;
+		int maxPage=10;
+		if(rows!=null&&!rows.trim().equals("")){
+			maxPage=Integer.parseInt(rows); 
+		}
+		if(page!=null&&!page.trim().equals("")){
+			pageNum=Integer.parseInt(page); 
+		}
+		String resId=request.getParameter("resId");
+		System.out.println("================================"+resId);
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(resId==null){
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			if(resId.trim().equals("")){
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			List eventList=sysEventService.queryAll("from SysEvent s where s.resId="+resId);
+			List pageEvent=sysEventService.queryByPage("from SysEvent s where s.resId="+resId,pageNum,maxPage);
+			if (eventList == null) {
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			sb.append("{\"total\":" + eventList.size() + ",\"rows\":[");
+			for (int i = 0; i < pageEvent.size(); i++) {
+				SysEvent event=(SysEvent)pageEvent.get(i);
+				sb.append("{\"eventid\":" + event.getId() + ",");
+				int level=event.getEventLevel();
+				if(level==1){
+					sb.append("\"eventlevel\":\"通知\",");
+				}else if(level==2){
+					sb.append("\"eventlevel\":\"轻微\",");
+				}else if(level==3){
+					sb.append("\"eventlevel\":\"重要\",");
+				}else if(level==4){
+					sb.append("\"eventlevel\":\"紧急\",");
+				}
+				sb.append("\"message\":\"" + event.getMessage() + "\",");
+				
+				sb.append("\"cdate\":\"" + sdf1.format(sdf.parse(event.getCdate())) + "\",");
+
+				
+				if(i==(eventList.size()-1)){
+					sb.append("\"status\":\"" + (event.getConfirmUser()==null?"未确认":"未清除") + "\"}");
+				}else{
+					sb.append("\"status\":\"" + (event.getConfirmUser()==null?"未确认":"未清除") + "\"},");
+				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		} catch (Exception e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+		
+	public String toDealEvent(){
+		ActionContext actionContext = ActionContext.getContext(); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventId=request.getParameter("eventId");
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
-		requestMap.put("eventList", eventList);
-		return "eventlisByTime";
+		requestMap.put("eventId", eventId);
+		return "success";
+	}
+	public String toViewEvent(){
+		ActionContext actionContext = ActionContext.getContext(); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		String resId=request.getParameter("resId");
+		System.out.println("-------------------------------"+resId);
+		if(resId.contains("_")){
+			requestMap.put("resId", resId.split("_")[1]);
+			return "success";
+		}
+		requestMap.put("resId", resId);
+		return "success";
+	}
+	public void getEventByEventId(){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		ActionContext actionContext = ActionContext.getContext(); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String eventId=request.getParameter("eventId");
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(eventId==null){
+				result.append("{}");
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(eventId.trim().equals("")){
+				result.append("{}");
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			System.out.println("=--=-=-=-=-=-=-=-="+eventId);
+			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, Long.parseLong(eventId));
+			if(event==null){
+				result.append("{}");
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			SysEventDealMsg msg=(SysEventDealMsg)dealMsgService.getObj(SysEventDealMsg.class, Long.parseLong(eventId));
+			EventType et=(EventType)eventTypeService.getObj(EventType.class, event.getEventTypeId());	
+			JSONObject json=new JSONObject();
+			
+			json.put("eventId", event.getId());
+			json.put("eventType", et.getEventTypeName());
+			
+			int level=event.getEventLevel();
+			if(level==1){
+				json.put("eventlevel", "通知");
+				
+			}else if(level==2){
+				json.put("eventlevel", "轻微");
+				
+			}else if(level==3){
+				json.put("eventlevel", "重要");
+				
+			}else if(level==4){
+				json.put("eventlevel", "紧急");
+				
+			}
+			json.put("message", event.getMessage());
+			
+			json.put("cdate", sdf1.format(sdf.parse(event.getCdate())));
+			
+			json.put("cuser", (event.getConfirmUser()==null?"":event.getConfirmUser()));
+			
+			json.put("confirmDate", (event.getConfirmDate()==null?"":sdf1.format(sdf.parse(event.getConfirmDate()))));
+			
+			if(msg==null){
+				json.put("dealMsg","");
+				
+			}else{
+				json.put("dealMsg",(msg.getConfirmDealmsg()==null?"":msg.getConfirmDealmsg()));
+				
+			}
+			
+			System.out.println(json.toString());
+			pw.println(json.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}	
+	}
+	//根据时间段查找告警事件
+	public void getEventbyTime(){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+		ActionContext actionContext = ActionContext.getContext(); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String from=request.getParameter("ff");
+		String to=request.getParameter("tt");
+		String rows=request.getParameter("rows");
+		String page=request.getParameter("page");
+		
+		int pageNum=1;
+		int maxPage=10;
+		if(rows!=null&&!rows.trim().equals("")){
+			maxPage=Integer.parseInt(rows); 
+		}
+		if(page!=null&&!page.trim().equals("")){
+			pageNum=Integer.parseInt(page); 
+		}
+		String resId=request.getParameter("resId");
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			
+			
+			if(resId==null){
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			if(resId.trim().equals("")){
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			if(from!=null&&!from.trim().equals("")){
+				from=sdf.format(sdf2.parse(from));
+
+			}else{
+				 String todays=sdf1.format(new Date());
+			     from=sdf.format(sdf1.parse(todays));
+			}
+			
+			if(to!=null&&!to.trim().equals("")){
+				to=sdf.format(sdf2.parse(to));
+			}else{
+			
+				to=sdf.format(new Date());
+			}
+			System.out.println(from+"-------------------------"+to);
+			List eventList=sysEventHisService.queryAll("from SysEventHis s where s.cdate>='"+from+"' and s.cdate <='"+to+"' and s.resId="+resId);
+			List pageEvent=sysEventHisService.queryByPage("from SysEventHis s where s.cdate>='"+from+"' and s.cdate <='"+to+"' and s.resId="+resId,pageNum,maxPage);
+			if (eventList == null) {
+				sb.append("{\"total\":0,\"rows\":[]}");
+				pw.println(sb.toString());
+				pw.flush();
+				return;
+			}
+			sb.append("{\"total\":" + eventList.size() + ",\"rows\":[");
+			for (int i = 0; i < pageEvent.size(); i++) {
+				SysEventHis event=(SysEventHis)pageEvent.get(i);
+				sb.append("{\"eventid\":" + event.getId() + ",");
+				int level=event.getEventLevel();
+				if(level==1){
+					sb.append("\"eventlevel\":\"通知\",");
+				}else if(level==2){
+					sb.append("\"eventlevel\":\"轻微\",");
+				}else if(level==3){
+					sb.append("\"eventlevel\":\"重要\",");
+				}else if(level==4){
+					sb.append("\"eventlevel\":\"紧急\",");
+				}
+				sb.append("\"message\":\"" + event.getMessage() + "\",");
+				
+				sb.append("\"cdate\":\"" + sdf1.format(sdf.parse(event.getCdate())) + "\",");
+				sb.append("\"confirmUser\":\"" + event.getConfirmUser() + "\",");
+				sb.append("\"confirmDate\":\"" + (event.getConfirmDate()==null?"":sdf1.format(sdf.parse(event.getConfirmDate()))) + "\",");
+				
+				sb.append("\"clearUser\":\"" + event.getClearUser() + "\",");
+				
+				if(i==(pageEvent.size()-1)){
+					sb.append("\"clearDate\":\"" + (event.getClearDate()==null?"":sdf1.format(sdf.parse(event.getClearDate()))) + "\"}");
+				}else{
+					sb.append("\"clearDate\":\"" + (event.getClearDate()==null?"":sdf1.format(sdf.parse(event.getClearDate()))) + "\"},");
+				}
+			}
+			sb.append("]}");
+			System.out.println(sb.toString());
+			pw.println(sb.toString());
+			pw.flush();
+		} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
 	}
 	public String saveEventType(){
 		if(eventType.getEventTypeName()==null){
@@ -564,6 +902,8 @@ public class EventAction {
 			sb.append("{\"total\":" + allEventRule.size() + ",\"rows\":[");
 			for (int i = 0; i < allEventRule.size(); i++) {
 				SysEventRule rule=(SysEventRule)allEventRule.get(i);
+				List notify=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and n.eventRuleId="+rule.getId());
+				
 				sb.append("{\"ruleid\":" + rule.getId() + ",");
 				int level=rule.getEventLevel();
 				if(level==1){
@@ -596,6 +936,11 @@ public class EventAction {
 				
 				sb.append("\"resId\":" + rule.getResId() + ",");
 				sb.append("\"eventTypeId\":" + rule.getEventTypeId() + ",");
+				if(notify!=null&&notify.size()>0){
+					sb.append("\"isNotyfUser\":\"" + 1 + "\",");
+				}else{
+					sb.append("\"isNotyfUser\":\"" + 0 + "\",");
+				}
 				if(i==(allEventRule.size()-1)){
 					sb.append("\"repeat\":\"" + (rule.getRepeat().equals("0")?"否":"是") + "\"}");
 				}else{
@@ -893,5 +1238,151 @@ public class EventAction {
 		}
 		return "success";
 	}
-	
+	public String toAddAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		String ruleId=request.getParameter("ruleId");
+		if(resId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(resId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		List userList=userService.queryAll("from SysUserInfo u where u.deleted is null");
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("userList", userList);
+		requestMap.put("resId", resId);
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public String toModifyAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		String ruleId=request.getParameter("ruleId");
+		if(resId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(resId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		
+		List userList=userService.queryAll("from SysUserInfo u where u.deleted is null");
+		List notifyList=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and eventRuleId="+ruleId);
+		List notifyUser =new ArrayList();
+		
+		for(Object o:notifyList){
+			NotifyUserRule notify=(NotifyUserRule)o;
+			for(Object u:userList){
+				SysUserInfo user=(SysUserInfo)u;
+				if(user.getId()==notify.getUserId()){
+					notifyUser.add(user);
+				}
+			}
+		}
+		userList.removeAll(notifyUser);
+		System.out.println("-----------------------"+userList.size());
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("notifyUser", notifyUser);
+		requestMap.put("lastUser", userList);
+		requestMap.put("resId", resId);
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public String saveOrUpdateNotifyUser(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		String ruleId=request.getParameter("ruleId");
+		String userIds=request.getParameter("userIds");
+		System.out.println(userIds+"---------------------------------");
+		if(resId==null){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch resId failed , resId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(resId.trim().equals("")){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch resId failed , resId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId==null){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(userIds==null){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch userIds failed , userIds is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(userIds.trim().equals("")){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("fetch userIds failed , userIds is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		String[] userid=userIds.split(",");
+		boolean flag=notifyService.deleteAllNotifyUser(resId, ruleId);
+		if(!flag){
+			returnMsg = "系统错误，告警接收人保存失败！";
+			logger.info("delete old notifyUser failed !");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		for(int i=0;i<userid.length;i++){
+			NotifyUserRule notify=new NotifyUserRule();
+			notify.setResId(Long.parseLong(resId));
+			notify.setEventRuleId(Long.parseLong(ruleId));
+			notify.setUserId(Long.parseLong(userid[i]));
+			notifyService.save(notify);
+		}
+		return "success";
+	}
 }

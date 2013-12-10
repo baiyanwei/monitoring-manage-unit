@@ -315,4 +315,10 @@ public class SyslogRuleStorage extends BaseService implements SyslogRuleService{
 		}
 		return false;
 	}
+	public List getRawSyslogHitPage(Long resId,String startTime,String endTime,int pageSize,int pageNo){
+		return dao.getRawSyslogHitPage(resId, startTime, endTime, pageSize, pageNo);
+	}
+	public int getRawSyslogHitCount(Long resId,String startTime,String endTime){
+		return dao.getRawSyslogHitCount(resId, startTime, endTime);
+	}
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
@@ -216,7 +217,8 @@ public class UserAction {
 			return "failed";
 		}
 		SysUserInfo muser=(SysUserInfo)suiService.getObj(SysUserInfo.class, Long.parseLong(userid));
-		if(user==null){
+		
+		if(muser==null){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch user failed from database !");
 			backUrl = "viewUser.jsp";
@@ -233,6 +235,7 @@ public class UserAction {
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String passwd=request.getParameter("passwd");
+		String orgid=request.getParameter("orgid");
 		if(passwd==null){
 			returnMsg = "系统错误，用户修改失败！";
 			logger.info("fetch passwd failed , passwd is null !");
@@ -250,6 +253,25 @@ public class UserAction {
 			logger.info("fetch userid failed , userid is null !");
 			backUrl = "viewUserInfo.jsp";
 			return "failed";
+		}
+		Long orgId=0L;
+		
+		if(user.getOrgId()!=null){
+			orgId=user.getOrgId();
+		}else{
+			if(orgid==null){
+				returnMsg = "用户部门不能为空，保存失败！";
+				logger.info("fetch orgId failed , orgId is null !");
+				backUrl = "viewUserInfo.jsp";
+				return "failed";
+			}
+			if(orgid.equals("")){
+				returnMsg = "用户部门不能为空，保存失败！";
+				logger.info("fetch orgId failed , orgId is null !");
+				backUrl = "viewUserInfo.jsp";
+				return "failed";
+			}
+			orgId=Long.parseLong(orgid);
 		}
 		SysUserInfo u=(SysUserInfo)suiService.getObj(SysUserInfo.class, user.getId());
 		if(user.getPassword()==null){
@@ -293,13 +315,13 @@ public class UserAction {
 			return "failed";
 		}
 		u.setMobelTel(user.getMobelTel());
-		if(user.getOrgId()==null){
+		/*if(user.getOrgId()==null){
 			returnMsg = "用户组织ID不能为空，保存失败！";
 			logger.info("fetch orgid failed , orgid is null!");
 			backUrl = "viewUserInfo.jsp";
 			return "failed";
-		}
-		u.setOrgId(user.getOrgId());
+		}*/
+		u.setOrgId(orgId);
 		if(user.getEnableAccount()==null){
 			returnMsg = "用户启停状态不能为空，保存失败！";
 			logger.info("fetch EnableAccount failed , EnableAccount is null!");
@@ -310,7 +332,6 @@ public class UserAction {
 		u.setEnableAccount(user.getEnableAccount());
 		u.setOfficeTel(user.getOfficeTel());
 		u.setMdate(sdf.format(new Date()));
-		System.out.println(u.getId()+"----------------------------------");
 		suiService.update(u);
 		return "success";
 	}
@@ -379,5 +400,114 @@ public class UserAction {
 		orgService.queryAll("from SysOrg o where o.parent_id=1");
 		List roleList=suiService.getRoleByUser(Long.parseLong(userid));
 		//创建JSON
+	}
+	public String modifySelf(){
+		
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String passwd=request.getParameter("passwd");
+		String orgid=request.getParameter("orgid");
+		
+		if(passwd==null){
+			returnMsg = "系统错误，用户修改失败！";
+			logger.info("fetch passwd failed , passwd is null !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		if(passwd.trim().equals("")){
+			returnMsg = "系统错误，用户修改失败！";
+			logger.info("fetch passwd failed , passwd is '' !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		if(user.getId()==null){
+			returnMsg = "系统错误，用户修改失败！";
+			logger.info("fetch userid failed , userid is null !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		Long orgId=0L;
+		
+		if(user.getOrgId()!=null){
+			orgId=user.getOrgId();
+		}else{
+			if(orgid==null){
+				returnMsg = "用户部门不能为空，保存失败！";
+				logger.info("fetch orgId failed , orgId is null !");
+				backUrl = "first.jsp";
+				return "failed";
+			}
+			if(orgid.equals("")){
+				returnMsg = "用户部门不能为空，保存失败！";
+				logger.info("fetch orgId failed , orgId is null !");
+				backUrl = "first.jsp";
+				return "failed";
+			}
+			orgId=Long.parseLong(orgid);
+		}
+		SysUserInfo u=(SysUserInfo)suiService.getObj(SysUserInfo.class, user.getId());
+		
+		if(user.getPassword()==null){
+			returnMsg = "用户密码不能为空，保存失败！";
+			logger.info("fetch password failed , password is null !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		if(user.getPassword().trim().equals("")){
+			returnMsg = "用户密码不能为空，保存失败！";
+			logger.info("fetch password failed , password is ''!");
+			backUrl = "viewUserInfo.jsp";
+			return "failed";
+		}
+		if(!passwd.equals(user.getPassword())){
+			u.setPassword(MD5Builder.getMD5(user.getPassword()));
+		}
+		if(user.getUserName()==null){
+			returnMsg = "用户名不能为空，保存失败！";
+			logger.info("fetch username failed , username is null !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		if(user.getUserName().trim().equals("")){
+			returnMsg = "用户名不能为空，保存失败！";
+			logger.info("fetch username failed , username is ''!");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		u.setUserName(user.getUserName());
+		if(user.getMobelTel()==null){
+			returnMsg = "手机号不能为空，保存失败！";
+			logger.info("fetch mobelTel failed , mobelTel is null !");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		if(user.getMobelTel().trim().equals("")){
+			returnMsg = "用户名不能为空，保存失败！";
+			logger.info("fetch mobelTel failed , mobelTel is ''!");
+			backUrl = "first.jsp";
+			return "failed";
+		}
+		u.setMobelTel(user.getMobelTel());
+		/*if(user.getOrgId()==null){
+			returnMsg = "用户组织ID不能为空，保存失败！";
+			logger.info("fetch orgid failed , orgid is null!");
+			backUrl = "viewUserInfo.jsp";
+			return "failed";
+		}*/
+		u.setOrgId(orgId);
+		
+		u.setUserDesc(user.getUserDesc());
+		u.setOfficeTel(user.getOfficeTel());
+		u.setMdate(sdf.format(new Date()));
+		
+		suiService.update(u);
+		HttpSession session=request.getSession();
+		SysUserInfo olduser=(SysUserInfo)session.getAttribute("user");
+		Map app=olduser.getApp();
+		u.setApp(app);
+		session.setAttribute("user", u);
+		
+		return "success";
+		
 	}
 }

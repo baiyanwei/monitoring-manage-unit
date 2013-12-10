@@ -93,22 +93,22 @@ public class ConfigPolicyRuleAction {
 		if(typeCode==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch typeCode failed ,typeCode is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch typeCode failed ,typeCode is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch operation failed ,operation is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch operation failed ,operation is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		List ruleList=ruleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+typeCode+"'");
 		
@@ -159,12 +159,12 @@ public class ConfigPolicyRuleAction {
 		if(typeCode==null){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch typeCode failed ,typeCode is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch typeCode failed ,typeCode is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		List ruleList=ruleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+typeCode+"'");
 		if(ruleList!=null&&ruleList.size()>0){

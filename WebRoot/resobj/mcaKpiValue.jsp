@@ -41,11 +41,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<div>采集机当前指标信息：</div>
 	</div>
   	<table id="listDetail"></table>
-  	<div class="demo-info">
-		<div class="demo-tip icon-tip"></div>
-		<div>前一日任务执行情况：</div>
-	</div>
-	<table id="tasklistDetail"></table>
+  	
 	<script type="text/javascript">
 		$(function(){  
     $("#listDetail").datagrid({  
@@ -112,50 +108,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	});  
 	
 	
-		$(function(){  
-    $("#tasklistDetail").datagrid({  
-    	width:700,
-        heigth:700,     
-        idField:'mcaid',  
-         pageSize:10,
-   	 pageList:[10,20,50,100],
-        url:'queryMcaRaw.action',  
-        queryParams:{'resid':'${resid}'},  
-        singleSelect:false,  
-        fitColumns:true,  
-        nowrap:true,  
-        loadMsg:'数据加载中,请稍后……',  
-        rownumbers:true,
-        columns:[[  
-            
-            {field:'kpiName',title:'任务ID',width:100,editor:'text',sortable:true}, 
-            {field:'kpiName',title:'资源IP',width:100,editor:'text',sortable:true},
-            {field:'kpiName',title:'任务执行类型',width:100,editor:'text',sortable:true},  
-            {field:'kpiDesc',title:'任务计划时间',width:100,editor:'text',sortable:true},   
-            {field:'kpiDesc',title:'任务执行时间',width:100,editor:'text',sortable:true},   
-            {field:'kpiValue',title:'任务执行结果',width:100,editor:'text'}
-                ]],   
-       toolbar: [{   
-            text:'刷新',
-			iconCls:'icon-reload',
-			handler:function(){$('#listDetail').datagrid('reload'); }
-        },'-', {   
-            text: '创建任务',   
-            iconCls: 'icon-remove',   
-            handler: function () {   
-                if (confirm("确定重启采集端吗？")) {   
-				    var urll="restartMca.action?mcaid=${resid}&operation=start";  
-				 	window.location.href=urll;
-				}  
-
-            }   
-               
-        }
-        ]           
-       
-    }); 
 		
-	}); 
 		
 	</script>
 	

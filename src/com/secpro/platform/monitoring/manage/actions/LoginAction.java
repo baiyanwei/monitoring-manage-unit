@@ -1,5 +1,7 @@
 package com.secpro.platform.monitoring.manage.actions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -10,13 +12,24 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.secpro.platform.monitoring.manage.entity.Log;
 import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
+import com.secpro.platform.monitoring.manage.services.SysLogService;
 import com.secpro.platform.monitoring.manage.services.SysUserInfoService;
 import com.secpro.platform.monitoring.manage.util.MD5Builder;
 
 @Controller("LoginAction")
 public class LoginAction {
 	private SysUserInfoService suiService;
+	private SysLogService logService;
+	
+	public SysLogService getLogService() {
+		return logService;
+	}
+	@Resource(name = "SysLogServiceImpl")
+	public void setLogService(SysLogService logService) {
+		this.logService = logService;
+	}
 	public SysUserInfoService getSuiService() {
 		return suiService;
 	}
@@ -25,7 +38,7 @@ public class LoginAction {
 		this.suiService = suiService;
 	}
 	public String login(){
-		
+		 SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String account=request.getParameter("account");
 		String password=request.getParameter("password");
@@ -70,10 +83,21 @@ public class LoginAction {
 			requestMap.put("loginError", "账号已锁定，请解锁后登录！");
 			return "loginError";
 		}
+		Map logApp=logService.getLogApp();
 		user.setApp(suiService.getAllApp(user));
 		request.getSession().setAttribute("user", user);
-	 	
+	 	request.getSession().setAttribute("appLog", logApp);
+	 	Log log=new Log();
+	 	log.setAccount(user.getAccount());
+	 	log.setHandleDate(sdf.format(new Date()));
+	 	log.setUserIp(request.getRemoteAddr());
+	 	log.setHandleContent("登录系统");
+	 	logService.save(log);
 		return "success";
 	}
-	
+	public String logout(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		request.getSession().removeAttribute("user");
+		return "success";
+	}
 }

@@ -35,13 +35,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</script>
 </head>
 <body>
-	<div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()">修改保存</a>
+	<div style="padding:5px;border:1px solid #95B8E7;width:388px;background:#EFF5FF">
+		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" >修改保存</a>
 	</div>
 	<div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="modifyType.action" method="post">
+		    <form id="ff" name="ff" action="modifyType.action" method="post">
 		    <input type="hidden" name="company.typeId" value="${ devType.id}"/>
 		    <input type="hidden" name="company.companyCode" value="${ devType.companyCode}"/>
 		    	<table>

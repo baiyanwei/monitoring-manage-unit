@@ -5,19 +5,19 @@
     <constant name="struts.devMode" value="true" />
 
     <package name="default" extends="struts-default,json-default,jfreechart-default,spring-default">
-		<!-- 
-		 <interceptors>
-		   <interceptor name="loginedCheck"
-		    	class="com.secpro.platform.monitoring.manage.interceptor.LoginInterceptor" />
+		
+		<interceptors>
+		   <interceptor name="logCheck"
+		    	class="com.secpro.platform.monitoring.manage.interceptor.LogInterceptor" />
 		   <interceptor-stack name="mystack">
-		    <interceptor-ref name="loginedCheck" />
+		    <interceptor-ref name="logCheck" />
 		    <interceptor-ref name="defaultStack" />
 		   </interceptor-stack>
 		  </interceptors>
 		 
 		  
 		 <default-interceptor-ref name="mystack"></default-interceptor-ref>
-	 --> 
+		
         <default-action-ref name="index" />
 
         <global-results>
@@ -40,7 +40,7 @@
 			<result name="failed">/error.jsp</result>
 		</action>
 		<action name="saveSysObj" class="ResObjectAction" method="saveResObj">
-			<result name="success">/resobj/addResObj.jsp</result>
+			<result name="success">/error.jsp</result>
 			<result name="failed">/error.jsp</result>
 		</action>
 		<action name="toViewSysObj" class="ResObjectAction" method="getResObjInof">
@@ -98,11 +98,11 @@
 		</action>
 		<action name="saveCommand" class="SysDevAction" method="saveCommand">
 			<result name="failed">/error.jsp</result>
-			<result name="success">/devcompany/viewCommand.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
 		</action>
 		<action name="modifyCommand" class="SysDevAction" method="modifyCommand">
 			<result name="failed">/error.jsp</result>
-			<result name="success">/devcompany/viewCommand.jsp</result>
+			<result name="success">/devcompany/viewAllDevCompany.jsp</result>
 		</action>
 		<action name="toViewCommand" class="SysDevAction" method="toViewCommand">
 			<result name="failed">/error.jsp</result>
@@ -139,6 +139,10 @@
 		<action name="getResObjByCity" class="ResObjectAction" method="getResObjByCity">
 		</action>
 		<action name="getMcaByCity" class="ResObjectAction" method="getMcaByCity">
+		</action>
+		<action name="getConfigVersion" class="ResObjectAction" method="getConfigVersion">
+		</action>
+		<action name="configMatch" class="ResObjectAction" method="configMatch">
 		</action>
 		<!-- 城市架构 -->
 		<action name="getAllCity" class="CityTreeAction" method="getAllCity">			
@@ -182,7 +186,7 @@
 		</action>
 		<action name="saveBaseLineTemplate" class="BaseLineTemplateAction" method="saveBaseLineTemplate">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLineTemplate.jsp</result>
+			<result name="success">/baseline/viewBaseLineTemplate.jsp</result>
 		</action>
 		<action name="getAllBaseline" class="BaseLineTemplateAction" method="getAllBaseline">		
 		</action>
@@ -196,13 +200,13 @@
 		</action>
 		<action name="modifyBaseLineTemplate" class="BaseLineTemplateAction" method="modifyBaseLineTemplate">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLineTemplate.jsp</result>
+			<result name="success">/baseline/viewBaseLineTemplate.jsp</result>
 		</action>
 		<action name="getBaseLineTemplateByCompany" class="BaseLineTemplateAction" method="getBaseLineTemplateByCompany">					
 		</action>
 		<action name="templateResMapping" class="BaseLineTemplateAction" method="templateResMapping">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLineTemplate.jsp</result>
+			<result name="success">/baseline/viewBaseLineTemplate.jsp</result>
 		</action>
 		<!-- 基线类 -->
 		<action name="viewAllBaseline" class="BaseLineAction" method="getAllBaseline">		
@@ -210,28 +214,38 @@
 		</action>
 		<action name="saveBaseLine" class="BaseLineAction" method="saveBaseLine">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLine.jsp</result>
+			<result name="success">/baseline/viewBaseLine.jsp</result>
 		</action>
 		<action name="deleteBaseLine" class="BaseLineAction" method="deleteBaseLine">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLine.jsp</result>
+			<result name="success">/baseline/viewBaseLine.jsp</result>
 		</action>
 		<action name="toModifyBaseLine" class="BaseLineAction" method="toModifyBaseLine">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">modifyBaseLine.jsp</result>
+			<result name="success">/baseline/modifyBaseLine.jsp</result>
 		</action>
 		<action name="modifyBaseLine" class="BaseLineAction" method="modifyBaseLine">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewBaseLine.jsp</result>
+			<result name="success">/baseline/viewBaseLine.jsp</result>
 		</action>
 		<action name="baseLineRuleMapping" class="BaseLineAction" method="baseLineRuleMapping">		
 			<result name="failed">/error.jsp</result>
-			<result name="success">/rule/viewAllDevType.jsp</result>
+			<result name="success">/baseline/viewBaseLine.jsp</result>
 		</action>
 		<action name="getBaseLineRuleByDev" class="BaseLineAction" method="getBaseLineRuleByDev">		
 		</action>
 		<action name="toAddTemplateRule" class="BaseLineAction" method="toAddTemplateRule">		
 			<result name="success">/rule/addBaseLineRule.jsp</result>
+		</action>
+		<action name="queryBaseLineMatchScore" class="BaseLineAction" method="queryBaseLineMatchScore">			
+		</action>
+		<action name="queryResBaseLineMatchScore" class="BaseLineAction" method="queryResBaseLineMatchScore">			
+		</action>
+		<action name="queryResBaseLineScoreDatil" class="BaseLineAction" method="queryResBaseLineScoreDatil">			
+		</action>
+		<action name="toQueryMatchDatil" class="BaseLineAction" method="toQueryMatchDatil">	
+			<result name="failed">/error.jsp</result>
+			<result name="success">/baseline/viewMatchScoreDetail.jsp</result>
 		</action>
 		<!-- 规则类 -->
 		<action name="toChangeSyslogRule" class="SyslogRuleAction" method="toChangeSyslogRule">		
@@ -257,6 +271,8 @@
 		<action name="deleteConfigRule" class="ConfigPolicyRuleAction" method="deleteConfigRule">		
 			<result name="failed">/error.jsp</result>
 			<result name="success">/rule/viewAllDevType.jsp</result>
+		</action>
+		<action name="querySyslogHitByRes" class="SyslogRuleAction" method="querySyslogHitByRes">		
 		</action>
 		<!-- 用户类 -->
 		<action name="viewUserInfo" class="UserAction" method="viewUserInfo">		
@@ -334,7 +350,7 @@
 		<!-- 事件类 -->
 		<action name="saveEventType" class="EventAction" method="saveEventType">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewEventType.jsp</result>
+			<result name="success">/event/viewEventType.jsp</result>
 		</action>
 		<action name="toModifyEventType" class="EventAction" method="toModifyEventType">	
 			<result name="failed">/error.jsp</result>
@@ -364,7 +380,7 @@
 		</action>
 		<action name="modifyEventMsg" class="EventAction" method="modifyEventMsg">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">viewEventType.jsp</result>
+			<result name="success">/event/viewEventType.jsp</result>
 		</action>
 		<action name="getAllEventTypeByClass" class="EventAction" method="getAllEventTypeByClass">				
 		</action>
@@ -372,28 +388,67 @@
 		</action>
 		<action name="toAddEventRule" class="EventAction" method="toAddEventRule">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">addEventRule.jsp</result>
+			<result name="success">/event/addEventRule.jsp</result>
 		</action>
 		<action name="toModifyEventRule" class="EventAction" method="toModifyEventRule">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">modifyEventRule.jsp</result>
+			<result name="success">/event/modifyEventRule.jsp</result>
 		</action>
 		<action name="saveEventRule" class="EventAction" method="saveEventRule">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">eventRule.jsp</result>
+			<result name="success">/event/eventRule.jsp</result>
 		</action>
 		<action name="modifyEventRule" class="EventAction" method="modifyEventRule">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">eventRule.jsp</result>
+			<result name="success">/event/eventRule.jsp</result>
 		</action>
 		<action name="deleteEventRule" class="EventAction" method="deleteEventRule">	
 			<result name="failed">/error.jsp</result>
-			<result name="success">eventRule.jsp</result>
+			<result name="success">/event/eventRule.jsp</result>
+		</action>
+		<action name="getEventByEventId" class="EventAction" method="getEventByEventId">	
+			
+		</action>
+		<action name="toDealEvent" class="EventAction" method="toDealEvent">	
+			<result name="success">/event/dealEvent.jsp</result>
+		</action>
+		<action name="dealEvent" class="EventAction" method="dealEvent">	
+		</action>
+		<action name="getEventbyTime" class="EventAction" method="getEventbyTime">	
+		</action>
+		<action name="getEventbyResId" class="EventAction" method="getEventbyResId">	
+		</action>
+		<action name="toViewEvent" class="EventAction" method="toViewEvent">	
+			<result name="success">/event/findEventOfRes.jsp</result>
+		</action>
+		<action name="toAddAlarmReceive" class="EventAction" method="toAddAlarmReceive">	
+			<result name="success">/event/addNotifyUser.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="toModifyAlarmReceive" class="EventAction" method="toModifyAlarmReceive">	
+			<result name="success">/event/modifyNotifyUser.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="saveOrUpdateNotifyUser" class="EventAction" method="saveOrUpdateNotifyUser">	
+			<result name="success">/event/eventRule.jsp</result>
+			<result name="failed">/error.jsp</result>
 		</action>
 		<!-- 用户登录 -->
+		<action name="queryFwFileByRes" class="RawFwFileAction" method="queryFwFileByRes">	
+		</action>
 		<action name="login" class="LoginAction" method="login">	
 			<result name="loginError">/login.jsp</result>
-			<result name="success">/index.jsp</result>
+			<result name="success" type="redirect">/index.jsp</result>
+		</action>
+		<action name="logout" class="LoginAction" method="logout">	
+			<result name="success">/login.jsp</result>
+		</action>
+		<action name="modifySelf" class="UserAction" method="modifySelf">	
+			<result name="success">/first.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<!-- 系统日志 -->
+		<action name="viewLog" class="LogAction" method="viewLog">	
 		</action>
     </package>
     <constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />

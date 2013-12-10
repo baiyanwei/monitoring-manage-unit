@@ -16,29 +16,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="角色管理》角色应用关联";
+		adiv.innerText="角色管理>角色应用关联";
 	</script>
 </head>
 <body>
-	<div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()">修改保存</a>
+	<div style="padding:5px;border:1px solid #95B8E7;width:988px;background:#EFF5FF">
+		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="submitForm();">修改保存</a>
 	</div>
-	<form id="ff" action="roleAppMapping.action" method="post">
+	<form id="ff" name="ff" action="roleAppMapping.action" method="post">
 		<input id="appid" type="hidden" name="appid" value=""/>
 		<div class="easyui-panel" title="" style="width:1000px;height:400px;padding:0px;">
 		<div class="easyui-layout" data-options="fit:true">
@@ -160,7 +152,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			//获取隐藏的input，并设置他的value为选中的appid的拼接字符串
 			var inp=document.getElementById("appid");
 			inp.value=s;
-			$('#ff').form('submit');
+			
 		}
 		
 	</script>

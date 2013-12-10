@@ -17,20 +17,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="用户管理>角色列表";
@@ -64,7 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             text: '创建角色',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addRole.jsp";
+               window.location.href="<%=_contexPath%>/users/addRole.jsp";
             }   
         }, '-', {   
             text: '删除角色',   
@@ -113,7 +105,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             handler: function () {     
                	 
 				    
-				 	window.location.href="roleAppMapping.jsp";
+				 	window.location.href="<%=_contexPath%>/users/roleAppMapping.jsp";
 				}  
 
                

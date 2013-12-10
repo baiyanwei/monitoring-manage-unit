@@ -31,17 +31,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="用户管理》角色信息修改";
+		adiv.innerText="用户管理>角色信息修改";
 	</script>
 </head>
 <body>
-	<div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()">修改保存</a>
+	<div style="padding:5px;border:1px solid #95B8E7;width:388px;background:#EFF5FF">
+		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">修改保存</a>
 	</div>
 	<div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="modifyRole.action" method="post">
+		    <form id="ff" name="ff" action="modifyRole.action" method="post">
 		    <input type="hidden" name="role.id" value="${ mrole.id}"/>
 		    	<table>
 		    	<tr>

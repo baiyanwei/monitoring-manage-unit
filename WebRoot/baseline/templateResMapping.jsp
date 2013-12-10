@@ -17,20 +17,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+	
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="基线模板管理>模板资源映射";
@@ -93,23 +85,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</tr>
 		<tr>
 		<td>
-		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
-		</td>
-		<td>
-		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
-		</td>
+	    			<input type="submit" value="提交"/>
+	    			</td>
+	    			<td>
+	    			<input type="reset" value="重置"/>
+	    			</td>
 		<td></td>
 		</tr>
 	</table>
 	</form>
-	 <script>
-		function submitForm(){
-			$('#ff').form('submit');
-		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
-		
-	</script>
   </body>
 </html>

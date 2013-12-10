@@ -1,5 +1,7 @@
 package com.secpro.platform.monitoring.manage.services.impl;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -18,5 +20,11 @@ public class SysLogServiceImpl extends BaseService implements SysLogService{
 	@Resource(name="SysLogDaoImpl")
 	public void setDao(SysLogDao dao) {
 		this.dao = dao;
+	}
+	public Map getLogApp(){
+		return dao.getLogApp();
+	}
+	public long  getLogCount(){
+		return dao.getLogCount();
 	}
 }

@@ -45,8 +45,24 @@ public class SysResAuth {
 	private String snmpv3Priv;
 	@Column(name="snmpv3_privpass")
 	private String snmpv3Privpass;
+	@Column(name="filter_string")
+	private String filterString;
+	@Column(name="terminal_type")
+	private String terminalType;
 	@Column(name="res_id")
 	private Long resId;
+	public String getFilterString() {
+		return filterString;
+	}
+	public void setFilterString(String filterString) {
+		this.filterString = filterString;
+	}
+	public String getTerminalType() {
+		return terminalType;
+	}
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
+	}
 	public Long getId() {
 		return id;
 	}

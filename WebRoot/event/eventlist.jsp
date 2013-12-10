@@ -28,7 +28,7 @@
 			var timer1 ;
 			function confirmEvent(id)
 			{
-				window.open('/unionmon/event.do?method=viewEventFrame&id='+id);
+				window.open('toDealEvent.action?eventId='+id,'','width=900px,height=900px,left=10, top=10,toolbar=no, status=no, menubar=no, resizable=yes, scrollbars=yes');
 			}
 			DWREngine.setTimeout(10000);
       		DWREngine.setErrorHandler(function(){return;});
