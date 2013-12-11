@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.RawSyslogHit;
 import com.secpro.platform.monitoring.manage.services.SyslogRuleService;
 import com.secpro.platform.monitoring.manage.util.ApplicationConfiguration;
+import com.secpro.platform.monitoring.manage.util.MsuMangementAPI;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.secpro.platform.monitoring.manage.webservice.SyslogRuleWSClient;
 
@@ -134,15 +135,22 @@ public class SyslogRuleAction {
 	                  e.printStackTrace();
 	                  return "failed";
 	           }
-	           
-	           service.setRulePath(fullFileName);
+	         //调用任务模块，重新洗发规则
+		   		if(oper.equals("0")){//增加规则
+		   			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_ADD);
+		   		}else if(oper.equals("1")){//删除规则
+		   			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_UPDATE);
+		   		}else if(oper.equals("2")){//删除规则
+		   			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_REMOVE);
+		   		}
+	            service.setRulePath(fullFileName);
 				service.setTypeCode(typeCode);
 				service.setCrudOper(oper);
 				
 				boolean flag=service.ruleStorage();
 				
 				if(flag){
-					//调用WEBSERVICE
+					//调用WEBSERVICE通知核心处理重新加载规则
 					int count=0;
 					String res="";
 					
@@ -172,6 +180,7 @@ public class SyslogRuleAction {
 		}else{
 			return "failed";
 		}
+		
 		if(f){
 			return "success";
 		}else{

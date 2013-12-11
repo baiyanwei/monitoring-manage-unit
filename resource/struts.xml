@@ -176,6 +176,16 @@
 		</action>
 		<action name="findAllResClass" class="SysKpiInfoAction" method="findAllResClass">
 		</action>
+		<action name="toAddMidOid" class="SysKpiOidAction" method="toAddMidOid">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/addMibRule.jsp</result>
+		</action>
+		<action name="addOrUpdateMibOid" class="SysKpiOidAction" method="addOrUpdateMibOid">
+			<result name="failed">/error.jsp</result>
+			<result name="success">/resobj/viewKpiInfo.jsp</result>
+		</action>
+		<action name="queryMIb" class="SysKpiOidAction" method="queryMIb">
+		</action>
 		<!-- watchdog任务 -->
 		<action name="mcaOperation" class="SysKpiInfoAction" method="mcaOperation">
 			<result name="failed">/error.jsp</result>

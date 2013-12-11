@@ -348,16 +348,6 @@ public class SysDevAction extends ActionSupport {
 			logger.info("modify company failed , companyid is ''");
 			return "failed";
 		}
-		if(company.getCompanyCode()==null){
-			returnMsg="设备厂商更新失败！";
-			logger.info("modify company failed , companycode is null");
-			return "failed";
-		}
-		if(company.getCompanyCode().equals("")){
-			returnMsg="设备厂商更新失败！";
-			logger.info("modify company failed , companycode is ''");
-			return "failed";
-		}
 		if(company.getCompanyName()==null){
 			returnMsg="设备厂商更新失败！";
 			logger.info("modify company failed , companycode is null");
@@ -369,10 +359,8 @@ public class SysDevAction extends ActionSupport {
 			backUrl="toViewCompanyById.action?companyid="+company.getId();
 			return "failed";
 		}
-		SysDevCompany c=new SysDevCompany();
-		c.setId(Long.parseLong(company.getId()));
+		SysDevCompany c=(SysDevCompany)sdcs.getObj(SysDevCompany.class, Long.parseLong(company.getId()));
 		c.setCompanyName(company.getCompanyName());
-		c.setCompanyCode(company.getCompanyCode());
 		c.setCompanyDesc(company.getCompanyDesc());
 		sdcs.update(c);
 		return "success";
@@ -424,20 +412,10 @@ public class SysDevAction extends ActionSupport {
 			logger.info("fetch companyName failed is '' from web browser");
 			return "failed";
 		}
-		if(company.getCompanyCode()==null){
-			returnMsg="厂商编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch companyCode failed is null from web browser");
-			return "failed";
-		}
-		if(company.getCompanyCode().trim().equals("")){
-			returnMsg="厂商编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch companyCode failed is '' from web browser");
-			return "failed";
-		}
+		//自动添加COMPANYCODE
+		String companyCode=sdcs.createCompanyCode();
 		SysDevCompany c=new SysDevCompany();
-		c.setCompanyCode(company.getCompanyCode());
+		c.setCompanyCode(companyCode);
 		c.setCompanyName(company.getCompanyName());
 		c.setCompanyDesc(company.getCompanyDesc());
 		sdcs.save(c);
@@ -482,21 +460,10 @@ public class SysDevAction extends ActionSupport {
 			logger.info("fetch typeName failed is '' from web browser");
 			return "failed";
 		}
-		if(company.getTypeCode()==null){
-			returnMsg="设备编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch typeCode failed is null from web browser");
-			return "failed";
-		}
-		if(company.getTypeCode().trim().equals("")){
-			returnMsg="设备编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch typeCode failed is '' from web browser");
-			return "failed";
-		}
+		String typeCode=sdts.createTypeCode(company.getCompanyCode());
 		SysDevType sdt=new SysDevType();
 		sdt.setTypeName(company.getTypeName());
-		sdt.setTypeCode(company.getTypeCode());
+		sdt.setTypeCode(typeCode);
 		sdt.setTypeDesc(company.getTypeDesc());
 		sdt.setCompanyCode(company.getCompanyCode());
 		sdts.save(sdt);
@@ -673,23 +640,9 @@ public class SysDevAction extends ActionSupport {
 			return "failed";
 		}
 		
-		if(company.getTypeCode()==null){
-			returnMsg="设备编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch typeCode failed is null from web browser");
-			return "failed";
-		}
-		if(company.getTypeCode().trim().equals("")){
-			returnMsg="设备编码不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
-			logger.info("fetch typeCode failed is '' from web browser");
-			return "failed";
-		}
 		
-		SysDevType sdt=new SysDevType();
-		sdt.setCompanyCode(company.getCompanyCode());
-		sdt.setId(Long.parseLong(company.getTypeId()));
-		sdt.setTypeCode(company.getTypeCode());
+		
+		SysDevType sdt=(SysDevType)sdts.getObj(SysDevType.class, Long.parseLong(company.getTypeId()));
 		sdt.setTypeName(company.getTypeName());
 		sdt.setTypeDesc(company.getTypeDesc());
 		sdts.update(sdt);

@@ -93,7 +93,7 @@ public class OrgAction {
 				Object obj[]=(Object[])pageOrgs.get(i);
 				sb.append("{\"orgId\":" + obj[0] + ",");
 				sb.append("\"orgName\":\"" + obj[1] + "\",");
-				sb.append("\"orgDesc\":\"" + obj[2] + "\",");
+				sb.append("\"orgDesc\":\"" + (obj[2]==null?"":obj[2]) + "\",");
 				
 				sb.append("\"parentOrgId\":" + obj[3] + ",");
 				

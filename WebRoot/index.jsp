@@ -68,11 +68,11 @@
 											<a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商管理</a>
 										<% }if(app.get("查看规则")!=null) %>	
 											<a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a>
-										<% if(app.get("查看用户")!=null){ %>		
+										<% if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
 											<a href="javascript:usermanager();" class="easyui-linkbutton" data-options="plain:true">用户管理</a>
-										<% }if(app.get("查看角色")!=null){ %>		
+										<% }if(app.get("查看角色")!=null||user.getAccount().equals("admin")){ %>		
 											<a href="javascript:rolemanager();" class="easyui-linkbutton" data-options="plain:true">角色管理</a>
-										<% }if(app.get("查看部门")!=null){ %>		
+										<% }if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
 											<a href="javascript:orgmanager();" class="easyui-linkbutton" data-options="plain:true">部门管理</a>
 										<% }if(app.get("查看指标")!=null){ %>		
 											<a href="javascript:kpimanager();" class="easyui-linkbutton" data-options="plain:true">指标管理</a>

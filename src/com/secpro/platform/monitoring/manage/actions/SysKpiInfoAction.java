@@ -262,7 +262,7 @@ public class SysKpiInfoAction {
 			e.printStackTrace();
 		}
 		if(task==null){
-			returnMsg = "任务创建失败，请重新执行操作！";
+			returnMsg = "任务下发失败，请重新执行操作！";
 			logger.info("task is null ");
 			backUrl = "resobj/viewMca.jsp";
 			return "failed";
@@ -277,9 +277,13 @@ public class SysKpiInfoAction {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			returnMsg = "任务下发失败，请重新执行操作！";
+			logger.info("task is null ");
+			backUrl = "resobj/viewMca.jsp";
+			return "failed";
+		}finally{
+			hc.close();
 		}
-		
-		
 		//-------------------------------------------
 		return "success";
 	} 

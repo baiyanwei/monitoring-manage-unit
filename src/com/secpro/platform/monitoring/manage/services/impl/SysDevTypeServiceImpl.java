@@ -22,4 +22,7 @@ public class SysDevTypeServiceImpl extends BaseService implements SysDevTypeServ
 	public String deleteDevtypeByCompanyId(final String companyId){
 		return this.dao.deleteDevtypeByCompanyId(companyId);
 	}
+	public String createTypeCode(String companyCode){
+		return dao.createTypeCode(companyCode);
+	}
 }

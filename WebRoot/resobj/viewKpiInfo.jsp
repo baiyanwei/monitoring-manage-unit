@@ -100,10 +100,31 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改指标只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyKpi.action?kpiId="+rows[0].kpiId;  
+				    
+				 	window.location.href=urll;
+				}  
+
+               
+        },'-', 
+         <% }if(app.get("创建指标解析规则")!=null){ %>
+        {   
+            text: '创建指标解析规则',   
+            iconCls: 'icon-edit',   
+            handler: function () {     
+               	 var rows = $('#listDetail').datagrid('getSelections');  
+				     if (null == rows || rows.length == 0) {  
+				       alert('未选择条目');  
+				        return;  
+				     }  
+				     if (rows.length>1){
+				     	alert('创建指标解析规则,只能选择一个条目');
+				     	return;
+				     }
+				    var urll="toAddMidOid.action?kpiId="+rows[0].kpiId;  
 				    
 				 	window.location.href=urll;
 				}  

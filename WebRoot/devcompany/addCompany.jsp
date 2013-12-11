@@ -36,11 +36,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		
 	    		<tr>
-	    			<td><label>厂商编码：</label></td>
-	    			<td><input class="easyui-validatebox" type="text" missingMessage="请输入厂商编码" name="company.companyCode" data-options="required:true"></input></td>
-	    		</tr>
-	    		
-	    		<tr>
 	    			<td><label>厂商描述：</label></td>
 	    			<td><textarea class="datagrid-editable-input" name="company.companyDesc" style="resize:none;"></textarea></td>
 	    		</tr>

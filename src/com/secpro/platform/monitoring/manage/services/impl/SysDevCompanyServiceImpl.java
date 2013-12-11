@@ -19,5 +19,8 @@ public class SysDevCompanyServiceImpl extends BaseService implements SysDevCompa
 	public void setDao(SysDevCompanyDao dao) {
 		this.dao = dao;
 	}
+	public String createCompanyCode(){
+		return dao.createCompanyCode();
+	}
 	
 }

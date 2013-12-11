@@ -45,7 +45,7 @@ Map app=user.getApp();
     $("#listDetail").datagrid({  
     	width:900,
         heigth:700,     
-        idField:'mcaid',  
+        idField:'typeCode',  
          pageSize:10,
    	 pageList:[10,20,50,100],
         url:'getAllType.action',  

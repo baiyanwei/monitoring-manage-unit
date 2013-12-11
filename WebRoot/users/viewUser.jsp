@@ -62,7 +62,7 @@ Map app=user.getApp();
            	          	
         ]],   
        toolbar: [
-       <% if(app.get("创建用户")!=null){ %>
+       <% if(app.get("创建用户")!=null||user.getAccount().equals("admin")){ %>
        {   
             text: '创建用户',   
             iconCls: 'icon-add',   
@@ -71,7 +71,7 @@ Map app=user.getApp();
             }   
         }
         , '-',
-         <% }if(app.get("删除用户")!=null){ %>
+         <% }if(app.get("删除用户")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '删除用户',   
             iconCls: 'icon-remove',   
@@ -95,7 +95,7 @@ Map app=user.getApp();
 
             }   
         }, '-',
-        <% }if(app.get("修改用户")!=null){ %>
+        <% }if(app.get("修改用户")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '修改用户',   
             iconCls: 'icon-edit',   
@@ -116,7 +116,7 @@ Map app=user.getApp();
 
                
         },'-',
-         <% }if(app.get("用户权限关联")!=null){ %>
+         <% }if(app.get("用户权限关联")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '用户权限关联',   
             iconCls: 'icon-edit',   

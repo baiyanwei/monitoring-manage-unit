@@ -57,7 +57,7 @@ Map app=user.getApp();
            	          	
         ]],   
        toolbar: [
-        <% if(app.get("创建部门")!=null){ %>
+        <% if(app.get("创建部门")!=null||user.getAccount().equals("admin")){ %>
        {   
             text: '创建部门',   
             iconCls: 'icon-add',   
@@ -65,7 +65,7 @@ Map app=user.getApp();
                window.location.href="<%=_contexPath%>/users/addOrg.jsp";
             }   
         }, '-', 
-         <% }if(app.get("删除部门")!=null){ %>
+         <% }if(app.get("删除部门")!=null||user.getAccount().equals("admin")){ %>
         {   
             text: '删除部门',   
             iconCls: 'icon-remove',   
@@ -89,7 +89,7 @@ Map app=user.getApp();
 
             }   
         }, '-',
-        <% }if(app.get("修改部门")!=null){ %>
+        <% }if(app.get("修改部门")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '修改部门',   
             iconCls: 'icon-edit',   
