@@ -62,7 +62,7 @@ public class SysKpiOidAction {
 	}
 	public String toAddMidOid(){
 		HttpServletRequest request=ServletActionContext.getRequest();
-		String kpiId=request.getParameter("kipId");
+		String kpiId=request.getParameter("kpiId");
 		if(kpiId==null){
 			returnMsg="系统错误,页面跳转失败！";
 			backUrl="resobj/viewKpiInfo.jsp";
@@ -126,6 +126,7 @@ public class SysKpiOidAction {
 			return "failed";
 		}
 		if(oid.getId()==null){
+			oid.setMiboid(this.midDeal(oid.getMiboid()));
 			oidService.save(oid);
 		}else{
 			SysKpiOid mib=(SysKpiOid)oidService.getObj(SysKpiOid.class, oid.getId());
@@ -138,7 +139,7 @@ public class SysKpiOidAction {
 			mib.setCompanyCode(oid.getCompanyCode());
 			mib.setKpiId(oid.getKpiId());
 			mib.setTypeCode(oid.getTypeCode());
-			mib.setMiboid(oid.getMiboid());
+			mib.setMiboid(this.midDeal(oid.getMiboid()));
 			mib.setRule(oid.getRule());
 			oidService.update(mib);
 		}
@@ -207,6 +208,13 @@ public class SysKpiOidAction {
 				pw.close();
 			}
 		}	
+	}
+	private String midDeal(String rule){
+		if(rule.startsWith(".")){
+			int i=rule.indexOf(".");
+			rule=rule.substring(i+1);
+		}
+		return rule;
 	}
 	
 }

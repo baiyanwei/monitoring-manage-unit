@@ -748,7 +748,7 @@ public class ResObjectAction extends ActionSupport {
 			}
 			sb.append("{\"mcaid\":"+objs[0]+",");
 			sb.append("\"resName\":\""+objs[1]+"\",");
-			sb.append("\"resDesc\":\""+objs[2]+"\",");
+			sb.append("\"resDesc\":\""+(objs[2]==null?" ":objs[2])+"\",");
 			sb.append("\"cdate\":\""+date+"\",");
 			sb.append("\"resIp\":\""+objs[4]+"\",");
 			sb.append("\"mcapaused\":\""+objs[5]+"\",");

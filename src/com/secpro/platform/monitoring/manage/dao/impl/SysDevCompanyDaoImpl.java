@@ -36,7 +36,9 @@ public class SysDevCompanyDaoImpl extends BaseDao implements SysDevCompanyDao{
 			sta=con.createStatement();
 			rs=sta.executeQuery("SELECT max(company_code) from sys_dev_company");
 			if(rs.next()){
-				companyCode=Long.parseLong(rs.getString(1))+1000;
+				if(rs.getString(1)!=null){
+					companyCode=Long.parseLong(rs.getString(1))+1000;
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

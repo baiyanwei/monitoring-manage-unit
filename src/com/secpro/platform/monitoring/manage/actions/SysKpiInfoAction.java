@@ -251,40 +251,28 @@ public class SysKpiInfoAction {
 		}
 		SysResObj mca=(SysResObj)objService.getObj(SysResObj.class, Long.parseLong(mcaid));
 		String mcaurl="http://"+mca.getResIp()+":"+ApplicationConfiguration.WATCHDOGPORT+ApplicationConfiguration.WATCHDOGSERVERPATH;
+		System.out.println(mcaurl+"====================================");
+		HttpClient hc = new HttpClient();
+		ChannelPipeline line;
 		JSONObject task=null;
 		try {
 			JSONObject json=new JSONObject();
 			json.put("operation", operation);
 			task=new JSONObject();
 			task.put("watchdog", json);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(task==null){
-			returnMsg = "任务下发失败，请重新执行操作！";
-			logger.info("task is null ");
-			backUrl = "resobj/viewMca.jsp";
-			return "failed";
-		}
-		//-----------------下发及时任务到watchdog-------------------
-		System.out.println("---------------------------"+task.toString());
-		HttpClient hc = new HttpClient();
-		ChannelPipeline line;
-		try {
 			line = hc.post(mcaurl, task);
 			line.addLast("handler", new HttpResponseHandler());
+			Thread.sleep(4000);
+			hc.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			returnMsg = "任务下发失败，请重新执行操作！";
-			logger.info("task is null ");
-			backUrl = "resobj/viewMca.jsp";
-			return "failed";
-		}finally{
-			hc.close();
+			e.printStackTrace();		
+				returnMsg = "任务下发失败，请重新执行操作！";
+				logger.info("task is null ");
+				backUrl = "resobj/viewMca.jsp";
+				return "failed";
+			
 		}
-		//-------------------------------------------
 		return "success";
 	} 
 	public String saveKpiInfo(){

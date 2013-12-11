@@ -64,9 +64,11 @@ public class SysDevTypeDaoImpl extends BaseDao implements SysDevTypeDao{
 			sta=con.createStatement();
 			rs=sta.executeQuery("SELECT max(type_code) from sys_dev_type d where d.company_code='"+companyCode+"'");
 			if(rs.next()){
-				typeCode=Long.parseLong(rs.getString(1))+1;
-			}else{
-				typeCode=Long.parseLong(companyCode)+1;
+				if(rs.getString(1)!=null){
+					typeCode=Long.parseLong(rs.getString(1))+1;
+				}else{
+					typeCode=Long.parseLong(companyCode)+1;
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

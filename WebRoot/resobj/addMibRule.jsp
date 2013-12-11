@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
 
   <body>
-  <div class="easyui-panel" title="指标：${kpiName}" style="width:400px">
+  <div class="easyui-panel" title="指标：${kpiName}" style="width:800px">
 		<div style="padding:10px 0 10px 60px">
 		    <form id="ff" action="addOrUpdateMibOid.action" method="post">
 		    	<input type="hidden" name="oid.kpiId" value="${kpiId }"/>
@@ -42,7 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							onSelect: function(rec){ 
 
 							var url = 'findDevTypeByCompanyCode?companyCode='+rec.id; 
-
+							$('#cc2').combobox('clear');
 							$('#cc2').combobox('reload', url); 
 
 						}" /> 
@@ -52,18 +52,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			<td><label>设备型号：</label></td>
 	    			<td><input id="cc2" class="easyui-combobox" name="oid.typeCode" data-options="required:true,valueField:'id',textField:'text',
 	    				onSelect: function(rec){
-	    					$.post('queryMIb.action', {kpiId:${kpiId },typeCode:rec.id},function(data){
-				 						if(data.id!=null){
-				 							var id1=document.getElementById("id1");
+	    					$.post('queryMIb.action', {kpiId:'${kpiId }',typeCode:rec.id},function(data){
+				 						if(data.id!=undefined){
+				 							var id1=document.getElementById('id1');
 				 							id1.value=data.id;
-				 							var mib=document.getElementById("mib");
-				 							mib.innerText=data.miboid;
-				 							var rule=document.getElementById("rule");
-				 							rule.innerText=data.rule;
+				 							if(data.miboid!=undefined){
+					 							var mib=document.getElementById('mib');
+					 							mib.innerText=data.miboid;
+					 						}else{
+					 							var mib=document.getElementById('mib');
+					 							mib.innerText='';
+					 						}
+					 						if(data.rule!=undefined){
+					 							var rule=document.getElementById('rule');
+					 							rule.innerText=data.rule;
+					 						}else{
+					 							var rule=document.getElementById('rule');
+					 							rule.innerText='';
+					 						}
+				 						}else{
+				 							var id1=document.getElementById('id1');
+				 							id1.value='';
 				 						}
 				 						
-									});
-	    					
+									});    					
 	    			}" /></td>
 	    		</tr>
 	    		<tr>
@@ -75,9 +87,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			<td><textarea id="rule" class="datagrid-editable-input"   name="oid.rule" style="resize:none;width=300;height=100"></textarea>
 	    			</td>
 	    		</tr>
-	    		</tbody>
-	    		</table>
-	    		<tr>
+	    		
+	    		
 	    		<tr>
 	    			<td>
 	    			&nbsp;
@@ -94,6 +105,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
+	    	</tbody>
 	    	</table>
 		    </form>		     
     	</div>

@@ -101,7 +101,7 @@ public class UserAction {
 				sb.append("\"mobelTel\":\"" + (obj[3]==null?"":obj[3]) + "\",");
 				sb.append("\"officeTel\":\"" + (obj[4]==null?"":obj[4])+ "\",");
 				sb.append("\"enableAccount\":\"" + (obj[5].equals("0")?"启用":"暂停") + "\",");
-				sb.append("\"userDesc\":\"" + (obj[6]==null?"":obj[6]) + "\",");
+				sb.append("\"userDesc\":\"" + (obj[6]==null?" ":obj[6]) + "\",");
 				sb.append("\"userName\":\"" + obj[9] + "\",");
 				sb.append("\"email\":\"" + obj[10] + "\",");
 				sb.append("\"orgid\":" + obj[7] + ",");

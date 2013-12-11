@@ -413,6 +413,7 @@ public class SysDevAction extends ActionSupport {
 			return "failed";
 		}
 		//自动添加COMPANYCODE
+		
 		String companyCode=sdcs.createCompanyCode();
 		SysDevCompany c=new SysDevCompany();
 		c.setCompanyCode(companyCode);
@@ -460,7 +461,9 @@ public class SysDevAction extends ActionSupport {
 			logger.info("fetch typeName failed is '' from web browser");
 			return "failed";
 		}
+		System.out.println(company.getCompanyCode()+"---------------------------");
 		String typeCode=sdts.createTypeCode(company.getCompanyCode());
+		System.out.println(typeCode+"---------------------------");
 		SysDevType sdt=new SysDevType();
 		sdt.setTypeName(company.getTypeName());
 		sdt.setTypeCode(typeCode);
