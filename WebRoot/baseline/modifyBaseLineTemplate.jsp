@@ -66,7 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	</table>
 	    	<table id="listDetail">
 	    	</table>
-		        
+		     </form>	   
     	</div>
   </div>
   <script>
@@ -162,6 +162,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		
 	</script>
-	</form>	
+	
   </body>
 </html>

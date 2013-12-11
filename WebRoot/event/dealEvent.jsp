@@ -60,6 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			</td>
 	    			
 				</tr>
+				<tr>
 	    			<td ><label>事件内容：</label></td>
 	    			<td>
 	    				 <textarea class="datagrid-editable-input"  name="message" style="resize:none;"></textarea>
