@@ -93,26 +93,26 @@ public class SyslogRuleAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String typeCode = request.getParameter("typeCode");
 		String operation= request.getParameter("oper");
-		System.out.println(typeCode+"-------------"+operation);
+		
 		if(typeCode==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch typeCode failed ,typeCode is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch typeCode failed ,typeCode is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch operation failed ,operation is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch operation failed ,operation is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
@@ -195,22 +195,22 @@ public class SyslogRuleAction {
 		if(typeCode==null){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch typeCode failed ,typeCode is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch typeCode failed ,typeCode is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation==null){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch operation failed ,operation is null ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		if(operation.trim().equals("")){
 			returnMsg = "系统错误，删除规则失败！";
 			logger.info("fetch operation failed ,operation is '' ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 		}
 		service.setRulePath(null);
 		service.setTypeCode(typeCode1);
@@ -252,7 +252,7 @@ public class SyslogRuleAction {
 		}else{
 			returnMsg = "系统错误，远程方法调用失败！";
 			logger.info("syslogrule webservice error ");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "rule/viewAllDevType.jsp";
 			return "failed";
 		}
 	}
@@ -276,7 +276,7 @@ public class SyslogRuleAction {
 			pageNum=Integer.parseInt(page); 
 		}
 		String resId=request.getParameter("resId");
-		System.out.println(from+"------------"+to+"------------"+resId);
+		
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
 		try {

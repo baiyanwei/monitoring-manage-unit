@@ -206,7 +206,7 @@ public class SysRoleAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String[] roleids=request.getParameterValues("roleid");
 		String appid=request.getParameter("appid");
-		System.out.println(roleids+"------------------------"+appid);
+		
 		if(roleids==null){
 			returnMsg = "系统错误，角色应用映射失败！";
 			logger.info("fetch roleid failed , roleid is null!");
@@ -251,7 +251,7 @@ public class SysRoleAction {
 	public void getAppTree(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String id=request.getParameter("id");
-		System.out.println("----------------------------------");
+		
 		String hql="";
 		if(id==null){
 			hql="from SysApp a where a.parentId=0";

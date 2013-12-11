@@ -678,27 +678,9 @@ public class ResObjectAction extends ActionSupport {
 		//String operation=request.getParameter("operation");
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
-		/*String mcaCityCode=sysService.getOuterParentCityCode(cityCode);
-		if(mcaCityCode.equals("")){
-			
-			logger.info("fetch mcaCityCode  by  one CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员，点击确定返回首页！");	
-			return "failed";
-		}
-		List mcas=sysService.queryAll("select s.id from SysResObj s, SysResClass c  where s.cityCode='"+mcaCityCode+"' and s.classId=c.id and c.className='mca'");
-		if(mcas==null){	
-			logger.info("fetch mca by CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员,点击确定返回首页！");	
-			return "failed";
-		}
-		if(mcas.size()==0){
-			logger.info("fetch mca by CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员,点击确定返回首页！");	
-			return "failed";
-		}*/
+		
 		requestMap.put("cityCode", cityCode);
-	//	requestMap.put("mca",mcas.get(0));
-		//request.getSession().setAttribute("operation", operation);
+	
 		return "toAddSysObj";
 	}
 	public String viewAllMca(){
@@ -794,32 +776,32 @@ public class ResObjectAction extends ActionSupport {
 		if(mcaId==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(mcaId.trim().equals("")){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(paused==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch paused failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(paused.trim().equals("")){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch paused failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		SysResObj mca=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(mcaId));
 		if(mca==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mca failed by mcaid "+mcaId);
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResPaused(paused);
@@ -832,13 +814,13 @@ public class ResObjectAction extends ActionSupport {
 		if(mcaId==null){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(mcaId.trim().equals("")){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		SysResObj mca=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(mcaId));
@@ -846,7 +828,7 @@ public class ResObjectAction extends ActionSupport {
 		if(mca==null){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mca failed by mcaId "+mcaId);
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		List cityList=cityService.queryAll("from SysCity s where s.cityCode='"+mca.getCityCode()+"'");
@@ -885,13 +867,13 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getResId()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResId().trim().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		
@@ -901,13 +883,13 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getCityCode()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch citycode failed ,citycode is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getCityCode().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch citycode failed ,citycode is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setCityCode(resObjForm.getCityCode());
@@ -917,39 +899,39 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getResIp1()==null||resObjForm.getResIp2()==null||resObjForm.getResIp3()==null||resObjForm.getResIp4()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch ip failed ,one of ip is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResIp1().equals("")||resObjForm.getResIp2().equals("")||resObjForm.getResIp3().equals("")||resObjForm.getResIp4().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch ip failed ,one of ip is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResIp(resObjForm.getResIp1()+"."+resObjForm.getResIp2()+"."+resObjForm.getResIp3()+"."+resObjForm.getResIp4());
 		if(resObjForm.getResName()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resName failed ,one of ip is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResName().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resName failed ,one of ip is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResName(resObjForm.getResName());
 		if(resObjForm.getResPaused()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resPaused failed ,resPaused is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResPaused().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resPaused failed ,resPaused is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResPaused(resObjForm.getResPaused());
@@ -996,7 +978,7 @@ public class ResObjectAction extends ActionSupport {
 				if(resList!=null&&resList.size()>0){
 					logger.info("MCA has FW , mcaId is "+mcaIds[i]);
 					returnMsg=("请先删除归属采集端的防火墙资源在进行删除，删除失败！");	
-					backUrl="/resobj/viewMca.jsp";
+					backUrl="resobj/viewMca.jsp";
 					return "failed";
 				}
 			}
@@ -1123,7 +1105,7 @@ public class ResObjectAction extends ActionSupport {
 		
 		String page=request.getParameter("page");
 		String maxRow=request.getParameter("maxRow");
-		System.out.println(resId+"=================================="+page+"------------"+maxRow);
+	
 		int pageN=1;
 		int MaxP=5;
 		if(page!=null&&!resId.trim().equals("")){
@@ -1210,7 +1192,7 @@ public class ResObjectAction extends ActionSupport {
 			
 			RawConfigPolicy config1 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId1));
 			RawConfigPolicy config2 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId2));
-			System.out.println(config1.getConfigPolicyInfo()+"-=-=-=-=-=-=-=-=-");
+			
 			String containRegex="#configuration#(.*?)#configuration#";
 			Pattern pattern = Pattern.compile(containRegex);
 			String conf1="";
@@ -1230,11 +1212,9 @@ public class ResObjectAction extends ActionSupport {
 			if(!conf2.endsWith("^")){
 				conf2+="^";
 			}
-			System.out.println("---------------------");
-			System.out.println(conf1+"----");
-			System.out.println(conf2+"========");
+			
 			String[] res=FWVersionMatch.versionMatch(conf2, conf1, "\\^");
-			System.out.println("---------------------"+res[0]);
+			
 			JSONObject json=new JSONObject();
 			if(res==null){
 				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");

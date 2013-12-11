@@ -93,7 +93,7 @@ public class OrgAction {
 				Object obj[]=(Object[])pageOrgs.get(i);
 				sb.append("{\"orgId\":" + obj[0] + ",");
 				sb.append("\"orgName\":\"" + obj[1] + "\",");
-				sb.append("\"orgDesc\":\"" + (obj[2]==null?"":obj[2]) + "\",");
+				sb.append("\"orgDesc\":\"" + (obj[2]==null?" ":obj[2]) + "\",");
 				
 				sb.append("\"parentOrgId\":" + obj[3] + ",");
 				
@@ -120,13 +120,13 @@ public class OrgAction {
 		if(org.getOrgName()==null){
 			returnMsg = "组织名称不能为空，组织添加失败！";
 			logger.info("fetch orgName failed , orgName is null!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		if(org.getOrgName().trim().equals("")){
 			returnMsg = "组织名称不能为空，组织添加失败！";
 			logger.info("fetch orgName failed , orgName is ''!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		org.setHasLeaf("0");
@@ -144,20 +144,20 @@ public class OrgAction {
 		if(orgId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch orgId failed , orgId is null!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		if(orgId.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch orgId failed , orgId is ''!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		SysOrg o=(SysOrg)orgService.getObj(SysOrg.class, Long.parseLong(orgId));
 		if(o==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch SysOrg failed from database!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -175,20 +175,20 @@ public class OrgAction {
 		if(org.getId()==null){
 			returnMsg = "系统错误，组织修改失败！";
 			logger.info("fetch orgId failed , orgId is null!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		if(org.getOrgName()==null){
 			returnMsg = "组织名称不能为空，组织修改失败！";
 			logger.info("fetch orgName failed , orgName is null!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		if(org.getOrgName().trim().equals("")){
 			
 			returnMsg = "组织名称不能为空，组织修改失败！";
 			logger.info("fetch orgName failed , orgName is ''!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		
@@ -208,13 +208,13 @@ public class OrgAction {
 		if(orgid==null){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch orgids failed , orgids is null!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		if(orgid.trim().equals("")){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch orgids failed , orgids is ''!");
-			backUrl = "viewOrg.jsp";
+			backUrl = "users/viewOrg.jsp";
 			return "failed";
 		}
 		String[] orgids=orgid.split(",");
@@ -222,7 +222,7 @@ public class OrgAction {
 			List users=suiService.queryAll("from SysUserInfo s where s.orgId="+Long.parseLong(orgids[i]));
 			if(users!=null&&users.size()>0){
 				returnMsg="部分组织下存在用户，请先删除用户！";
-				backUrl = "viewOrg.jsp";
+				backUrl = "users/viewOrg.jsp";
 				return "failed";
 			}else{
 				
@@ -230,7 +230,7 @@ public class OrgAction {
 				List childList=orgService.queryAll("from SysOrg s where s.parentOrgId="+o.getId());
 				if(childList!=null && childList.size()>0){
 					returnMsg="请先删除子部门！";
-					backUrl = "viewOrg.jsp";
+					backUrl = "users/viewOrg.jsp";
 					return "failed";
 				}
 				orgService.delete(o);

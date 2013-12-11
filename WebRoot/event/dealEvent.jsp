@@ -18,26 +18,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+	
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
+	
 	
   </head>
   <body>
   	<div class="easyui-panel" title="" style="width:600px,height:900px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="dealEvent.action" method="post">
+		    <form id="ff" action="dealEvent.action" method="post" onsubmit="return submitForm();">
 		    	<input type="hidden"  name="se.id" value="${eventId}"/>
 		    	<table>
 		    	<tr>
@@ -60,6 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			</td>
 	    			
 				</tr>
+				<tr>
 	    			<td ><label>事件内容：</label></td>
 	    			<td>
 	    				 <textarea class="datagrid-editable-input"  name="message" style="resize:none;"></textarea>
@@ -125,11 +120,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			 						dealMsg1.innerText=data.dealMsg;
 								});
 		function submitForm(){
-			$('#ff').form('submit');
+			return $('#ff').form('validate');
 		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
+		
   </script>
   </body>
   </html>

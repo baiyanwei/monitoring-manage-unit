@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveMca.action" method="post">
+		    <form id="ff" action="saveMca.action" method="post" onsubmit="return submitForm();">
 		    
 		    	<table>
 		    	<tbody>
@@ -65,7 +65,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		
 	    		</tbody>
 	    		</table>
-	    		<tr>
+	    		<table>
+	    		
 	    		<tr>
 	    			<td>
 	    			&nbsp;
@@ -86,4 +87,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    </form>		     
     	</div>
   </div>
+  <script>
+ 
+		function submitForm(){
+			return $('#ff').form('validate');
+		}
+	</script>
+  </body>
 </html>

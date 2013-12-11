@@ -114,13 +114,13 @@ public class SysKpiInfoAction {
 		if (resid == null) {
 			returnMsg = "查询指标失败！";
 			logger.info("fetch resid failed ,resid is null");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		if (resid.trim().equals("")) {
 			returnMsg = "查询指标失败！";
 			logger.info("fetch resid failed ,resid is ''");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		
@@ -133,17 +133,17 @@ public class SysKpiInfoAction {
 	public String queryMcaRaw() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String resid = request.getParameter("resid");
-		System.out.println("---------------44444444444 "+ resid);
+		
 		if (resid == null) {
 			returnMsg = "查询指标失败！";
 			logger.info("fetch resid failed ,resid is null");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		if (resid.trim().equals("")) {
 			returnMsg = "查询指标失败！";
 			logger.info("fetch resid failed ,resid is ''");
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 			return "failed";
 		}
 		SysResObj res = (SysResObj) objService.getObj(SysResObj.class,
@@ -153,7 +153,7 @@ public class SysKpiInfoAction {
 		if (kpiList == null) {
 			returnMsg = "查询指标失败！";
 			logger.info("fetch kpi failed ,classid is " + res.getClassId());
-			backUrl = "/resobj/viewMca.jsp";
+			backUrl = "resobj/viewMca.jsp";
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -174,7 +174,7 @@ public class SysKpiInfoAction {
 								+ kpi.getId()
 								+ " and r.resId=" + res.getId());
 				sb.append("{\"kpiName\":\"" + kpi.getKpiName() + "\",");
-				sb.append("\"kpiDesc\":\"" + kpi.getKpiDesc() + "\",");
+				sb.append("\"kpiDesc\":\"" + (kpi.getKpiDesc()==null?" ":kpi.getKpiDesc()) + "\",");
 				
 				if (i != (kpiList.size() - 1)) {
 					if (l != null && l.size() != 0) {
@@ -224,7 +224,7 @@ public class SysKpiInfoAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String mcaid = request.getParameter("mcaid");
 		String operation = request.getParameter("operation");
-		System.out.println("=================="+mcaid+"--------"+operation);
+		
 		if(mcaid==null){
 			returnMsg = "操作失败！";
 			logger.info("fetch mcaid failed ,mcaid is null");
@@ -251,7 +251,7 @@ public class SysKpiInfoAction {
 		}
 		SysResObj mca=(SysResObj)objService.getObj(SysResObj.class, Long.parseLong(mcaid));
 		String mcaurl="http://"+mca.getResIp()+":"+ApplicationConfiguration.WATCHDOGPORT+ApplicationConfiguration.WATCHDOGSERVERPATH;
-		System.out.println(mcaurl+"====================================");
+		
 		HttpClient hc = new HttpClient();
 		ChannelPipeline line;
 		JSONObject task=null;
@@ -279,32 +279,32 @@ public class SysKpiInfoAction {
 		if(kpiInfo.getKpiName()==null){
 			returnMsg = "指标名称不能为空，指标保存失败！";
 			logger.info("fetch kpiName failed , kpiName is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiName().equals("")){
 			returnMsg = "指标名称不能为空，指标保存失败！";
 			logger.info("fetch kpiName failed , kpiName is ''!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiType()==null){
 			returnMsg = "指标类型不能为空，指标保存失败！";
 			logger.info("fetch kpiType failed , kpiName is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiType().equals("")){
 			returnMsg = "指标类型不能为空，指标保存失败！";
 			logger.info("fetch kpiType failed , kpiName is ''!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getClassId()==0){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is 0!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		kpiService.save(kpiInfo);
 		return "success";
@@ -313,37 +313,37 @@ public class SysKpiInfoAction {
 		if(kpiInfo.getId()==null){
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiId failed , kpiId is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiName()==null){
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiName failed , kpiName is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiName().equals("")){
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiName failed , kpiName is ''!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiType()==null){
 			returnMsg = "指标类型不能为空，指标修改失败！";
 			logger.info("fetch kpiType failed , kpiName is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getKpiType().equals("")){
 			returnMsg = "指标类型不能为空，指标修改失败！";
 			logger.info("fetch kpiType failed , kpiName is ''!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiInfo.getClassId()==0){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is 0!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		SysKpiInfo kpi=(SysKpiInfo)kpiService.getObj(SysKpiInfo.class, kpiInfo.getId());
 		kpi.setKpiName(kpiInfo.getKpiName());
@@ -359,12 +359,12 @@ public class SysKpiInfoAction {
 		if(kpiId==null){
 			returnMsg = "系统错误，指标删除改失败！";
 			logger.info("fetch kpiId failed , kpiId is null!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		if(kpiId.equals("")){
 			returnMsg = "系统错误，指标删除改失败！";
 			logger.info("fetch kpiId failed , kpiId is ''!");
-			backUrl = "/resobj/viewKpiInfo.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 		}
 		String[] kpiIds=kpiId.split(",");
 		for(int i=0;i<kpiIds.length;i++){
@@ -434,20 +434,20 @@ public class SysKpiInfoAction {
 		if(kpiId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch kpiId failed , kpiId is null!");
-			backUrl = "viewKpi.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 			return "failed";
 		}
 		if(kpiId.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch kpiId failed , kpiId is ''!");
-			backUrl = "viewKpi.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 			return "failed";
 		}
 		SysKpiInfo kpi=(SysKpiInfo)kpiService.getObj(SysKpiInfo.class, Long.parseLong(kpiId));
 		if(kpi==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database!!");
-			backUrl = "viewKpi.jsp";
+			backUrl = "resobj/viewKpiInfo.jsp";
 			return "failed";
 		}
 		SysResClass resClass=(SysResClass)classService.getObj(SysResClass.class, kpi.getClassId());

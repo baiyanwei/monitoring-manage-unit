@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveSysObj.action" method="post">
+		    <form id="ff" action="saveSysObj.action" method="post" onsubmit="return submitForm();">
 		   
 		    <input type="hidden" name="resObjForm.cityCode" value="${cityCode}"/>
 		    	<table>
@@ -206,5 +206,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    </form>		     
     	</div>
   </div>
+   <script>
+ 
+		function submitForm(){
+			return $('#ff').form('validate');
+		}
+	</script>
   </body>
 </html>

@@ -42,13 +42,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="deitable()">编辑内容</a>
-		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  disabled=true>修改提交</a>
+		<a id="sub" href="javascript:if(document.ff.onsubmit()!=false)document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  disabled=true>修改提交</a>
 	</div>
   
   <div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" name="ff" action="modifyCommand.action" method="post">
+		    <form id="ff" name="ff" action="modifyCommand.action" method="post" onsubmit="return submitForm();">
 		    <input type="hidden" name="sc.id" value="${ ssc.id}"/>
 		    <input type="hidden" name="sc.typeCode" value="${ ssc.typeCode}"/>
 		    	<table>
@@ -78,12 +78,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </div>
   <script>
 		function submitForm(){
-			$('#ff').form('submit');
+			return $('#ff').form('validate');
 		}
-		function clearForm(){
-			$('#ff').form('reset');
-		}
-		
 	</script>
   </body>
 </html>

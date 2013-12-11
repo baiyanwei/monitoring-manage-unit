@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveKpiInfo.action" method="post">
+		    <form id="ff" action="saveKpiInfo.action" method="post" onsubmit="return submitForm();">
 		    	<table>
 		    	<tr>
 	    			<td><label>指标名称：</label></td>
@@ -79,5 +79,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    </form>		     
     	</div>
   </div>
+   <script>
+ 
+		function submitForm(){
+			return $('#ff').form('validate');
+		}
+	</script>
   </body>
 </html>

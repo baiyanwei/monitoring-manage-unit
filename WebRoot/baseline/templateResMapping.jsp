@@ -29,7 +29,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</script>
   </head>
     <body>
-    <form id="ff" action="templateResMapping.action" method="post">
+    <form id="ff" action="templateResMapping.action" method="post" onsubmit="return submitForm();">
     <table>
     	<tr>
     		<td>
@@ -94,5 +94,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</tr>
 	</table>
 	</form>
+	<script>
+ 
+		function submitForm(){
+			return $('#ff').form('validate');
+		}
+	</script>
   </body>
 </html>

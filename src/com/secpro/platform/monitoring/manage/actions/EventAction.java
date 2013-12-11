@@ -201,7 +201,7 @@ public class EventAction {
 		if(se.getId()==null){
 			return ;
 		}
-		System.out.println("-------------------------"+se.getId());
+		
 		if(type.equals("0")){
 			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, se.getId());
 			SysEventDealMsg smsg=(SysEventDealMsg)dealMsgService.getObj(SysEventDealMsg.class, se.getId());
@@ -265,7 +265,7 @@ public class EventAction {
 			pageNum=Integer.parseInt(page); 
 		}
 		String resId=request.getParameter("resId");
-		System.out.println("================================"+resId);
+		
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -344,7 +344,7 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		String resId=request.getParameter("resId");
-		System.out.println("-------------------------------"+resId);
+		
 		if(resId.contains("_")){
 			requestMap.put("resId", resId.split("_")[1]);
 			return "success";
@@ -376,7 +376,7 @@ public class EventAction {
 				pw.flush();
 				return;
 			}
-			System.out.println("=--=-=-=-=-=-=-=-="+eventId);
+			
 			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, Long.parseLong(eventId));
 			if(event==null){
 				result.append("{}");
@@ -488,7 +488,7 @@ public class EventAction {
 			
 				to=sdf.format(new Date());
 			}
-			System.out.println(from+"-------------------------"+to);
+			
 			List eventList=sysEventHisService.queryAll("from SysEventHis s where s.cdate>='"+from+"' and s.cdate <='"+to+"' and s.resId="+resId);
 			List pageEvent=sysEventHisService.queryByPage("from SysEventHis s where s.cdate>='"+from+"' and s.cdate <='"+to+"' and s.resId="+resId,pageNum,maxPage);
 			if (eventList == null) {
@@ -542,25 +542,25 @@ public class EventAction {
 		if(eventType.getEventTypeName()==null){
 			returnMsg = "类型名称不能为空，事件类型保存失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventTypeName().trim().equals("")){
 			returnMsg = "事件类型名称不能为空，事件类型保存失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventRecover()==null){
 			returnMsg = "事件类型是否可恢复不能为空，事件类型保存失败！";
 			logger.info("fetch EventRecover failed , EventRecover is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventRecover().trim().equals("")){
 			returnMsg = "事件类型是否可恢复不能为空，事件类型保存失败！";
 			logger.info("fetch EventRecover failed , EventRecover is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		eventTypeService.save(eventType);
@@ -572,13 +572,13 @@ public class EventAction {
 		if(eventTypeId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventTypeId.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		EventType et=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
@@ -591,38 +591,38 @@ public class EventAction {
 		if(eventType.getId()==null){
 			returnMsg = "系统错误，事件类型修改失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventTypeName()==null){
 			returnMsg = "类型名称不能为空，事件类型修改失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventTypeName().trim().equals("")){
 			returnMsg = "事件类型名称不能为空，事件类型修改失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventRecover()==null){
 			returnMsg = "事件类型是否可恢复不能为空，事件类型修改失败！";
 			logger.info("fetch EventRecover failed , EventRecover is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(eventType.getEventRecover().trim().equals("")){
 			returnMsg = "事件类型是否可恢复不能为空，事件类型修改失败！";
 			logger.info("fetch EventRecover failed , EventRecover is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		EventType et=(EventType)eventTypeService.getObj(EventType.class, eventType.getId());
 		if(et==null){
 			returnMsg = "系统错误，事件类型修改失败！";
 			logger.info("fetch EventType failed from database!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		et.setEventRecover(eventType.getEventRecover());
@@ -662,7 +662,7 @@ public class EventAction {
 				EventType et=(EventType)pageEventType.get(i);
 				sb.append("{\"eventTypeId\":" + et.getId() + ",");
 				sb.append("\"eventTypeName\":\"" + et.getEventTypeName() + "\",");
-				sb.append("\"eventTypeDesc\":\"" + et.getEventTypeDesc() + "\",");
+				sb.append("\"eventTypeDesc\":\"" + (et.getEventTypeDesc()==null?" ":et.getEventTypeDesc()) + "\",");
 				
 				List msgList=msgService.queryAll("from EventMsg m where m.eventTypeId="+et.getId());
 				if(msgList!=null&&msgList.size()>0){
@@ -799,26 +799,26 @@ public class EventAction {
 		if(msg.getId()==null){
 			returnMsg = "系统错误，事件消息格式修改失败！";
 			logger.info("fetch id failed , eventTypeId is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(msg.getMsgFormat()==null){
 			returnMsg = "消息格式不能为空，事件消息格式修改失败！";
 			logger.info("fetch msgFormat failed , msgFormat is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(msg.getMsgFormat().trim().equals("")){
 			returnMsg = "消息格式不能为空，事件消息格式修改失败！";
 			logger.info("fetch msgFormat failed , msgFormat is ''!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		
 		if(msg.getEventTypeId()==null){
 			returnMsg = "系统错误，事件消息格式修改失败！";
 			logger.info("fetch EventTypeId failed , EventTypeId is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		msgService.update(msg);
@@ -967,25 +967,25 @@ public class EventAction {
 		if(resId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch resId failed , resId is null!");
-			backUrl = "viewEventType.jsp";
+			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
 		if(resId.equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch resId failed , resId is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventTypeId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventTypeId.equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		
@@ -994,13 +994,13 @@ public class EventAction {
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(kpiList.size()==0){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		List ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
@@ -1041,13 +1041,13 @@ public class EventAction {
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(kpiList.size()==0){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -1061,73 +1061,73 @@ public class EventAction {
 		if(eventRule.getEventLevel()==null){
 			returnMsg = "告警级别不能为空，规则保存失败！";
 			logger.info("fetch EventLevel failed , EventLevel is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getEventTypeId()==null){
 			returnMsg = "系统错误，规则保存失败！";
 			logger.info("fetch EventTypeId failed , EventTypeId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getResId()==null){
 			returnMsg = "系统错误，规则保存失败！";
 			logger.info("fetch ResId failed , ResId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRecoverSetMsg()==null){
 			returnMsg = "是否产生恢复告警不能为空，规则保存失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRecoverSetMsg().equals("")){
 			returnMsg = "是否产生恢复告警不能为空，规则保存失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRepeat()==null){
 			returnMsg = "是否重复告警不能为空，规则保存失败！";
 			logger.info("fetch Repeat failed , Repeat is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRepeat().equals("")){
 			returnMsg = "是否重复告警不能为空，规则保存失败！";
 			logger.info("fetch Repeat failed , Repeat is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getSetMsg()==null){
 			returnMsg = "是否产生告警短信不能为空，规则保存失败！";
 			logger.info("fetch SetMsg failed , SetMsg is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getSetMsg().equals("")){
 			returnMsg = "是否产生告警短信不能为空，规则保存失败！";
 			logger.info("fetch SetMsg failed , SetMsg is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdOpr()==null){
 			returnMsg = "操作符不能为空，规则保存失败！";
 			logger.info("fetch ThresholdOpr failed , ThresholdOpr is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdOpr().equals("")){
 			returnMsg = "操作符不能为空，规则保存失败！";
 			logger.info("fetch ThresholdOpr failed , ThresholdOpr is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdValue()==null){
 			returnMsg = "阀值不能为空，规则保存失败！";
 			logger.info("fetch ThresholdValue failed , ThresholdValue is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		eventRuleService.save(eventRule);
@@ -1137,79 +1137,79 @@ public class EventAction {
 		if(eventRule.getId()==null){
 			returnMsg = "系统错误，规则修改失败！";
 			logger.info("fetch EventLevel failed , EventLevel is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getEventLevel()==null){
 			returnMsg = "告警级别不能为空，规则修改失败！";
 			logger.info("fetch EventLevel failed , EventLevel is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getEventTypeId()==null){
 			returnMsg = "系统错误，规则修改失败！";
 			logger.info("fetch EventTypeId failed , EventTypeId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getResId()==null){
 			returnMsg = "系统错误，规则修改失败！";
 			logger.info("fetch ResId failed , ResId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRecoverSetMsg()==null){
 			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRecoverSetMsg().equals("")){
 			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRepeat()==null){
 			returnMsg = "是否重复告警不能为空，规则修改失败！";
 			logger.info("fetch Repeat failed , Repeat is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getRepeat().equals("")){
 			returnMsg = "是否重复告警不能为空，规则修改失败！";
 			logger.info("fetch Repeat failed , Repeat is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getSetMsg()==null){
 			returnMsg = "是否产生告警短信不能为空，规则修改失败！";
 			logger.info("fetch SetMsg failed , SetMsg is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getSetMsg().equals("")){
 			returnMsg = "是否产生告警短信不能为空，规则修改失败！";
 			logger.info("fetch SetMsg failed , SetMsg is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdOpr()==null){
 			returnMsg = "操作符不能为空，规则修改失败！";
 			logger.info("fetch ThresholdOpr failed , ThresholdOpr is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdOpr().equals("")){
 			returnMsg = "操作符不能为空，规则修改失败！";
 			logger.info("fetch ThresholdOpr failed , ThresholdOpr is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(eventRule.getThresholdValue()==null){
 			returnMsg = "阀值不能为空，规则修改失败！";
 			logger.info("fetch ThresholdValue failed , ThresholdValue is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		eventRuleService.update(eventRule);
@@ -1221,13 +1221,13 @@ public class EventAction {
 		if(ruleId==null){
 			returnMsg = "系统错误，规则删除失败！";
 			logger.info("fetch ruleId failed , ruleId is null!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		if(ruleId.equals("")){
 			returnMsg = "系统错误，规则删除失败！";
 			logger.info("fetch ruleId failed , ruleId is ''!");
-			backUrl = "eventRule.jsp";
+			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
 		String[] ruleIds=ruleId.split(",");
@@ -1317,7 +1317,7 @@ public class EventAction {
 			}
 		}
 		userList.removeAll(notifyUser);
-		System.out.println("-----------------------"+userList.size());
+		
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("notifyUser", notifyUser);
@@ -1331,7 +1331,7 @@ public class EventAction {
 		String resId=request.getParameter("resId");
 		String ruleId=request.getParameter("ruleId");
 		String userIds=request.getParameter("userIds");
-		System.out.println(userIds+"---------------------------------");
+		
 		if(resId==null){
 			returnMsg = "系统错误，告警接收人保存失败！";
 			logger.info("fetch resId failed , resId is null!");

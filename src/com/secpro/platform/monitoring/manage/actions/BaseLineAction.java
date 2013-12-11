@@ -81,10 +81,10 @@ public class BaseLineAction {
 					sb.append("\"blackWhite\":\"" + (baseline.getBaselineBlackWhite().equals("0") ? "白名单":"黑名单") + "\",");
 					sb.append("\"score\":\"10\",");
 					if(i==(baselineList.size()-1)){
-						sb.append("\"baselineDesc\":\"" + baseline.getBaselineDesc()
+						sb.append("\"baselineDesc\":\"" + (baseline.getBaselineDesc()==null?" ":baseline.getBaselineDesc())
 								+ "\"}");
 					}else{
-						sb.append("\"baselineDesc\":\"" + baseline.getBaselineDesc()
+						sb.append("\"baselineDesc\":\"" + (baseline.getBaselineDesc()==null?" ":baseline.getBaselineDesc())
 								+ "\"},");
 					}
 				}
@@ -108,37 +108,37 @@ public class BaseLineAction {
 		if(sbl.getBaselineDesc()==null){
 			returnMsg = "基线描述不能为空，保存失败！";
 			logger.info("fetch baselineDesc failed ,baselineDesc is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineDesc().trim().equals("")){
 			returnMsg = "基线描述不能为空，删除失败！";
 			logger.info("fetch baselineDesc failed ,baselineDesc is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineBlackWhite()==null){
 			returnMsg = "基线黑白名单不能为空，保存失败！";
 			logger.info("fetch baseBlackWhite failed ,baseBlackWhite is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineBlackWhite().trim().equals("")){
 			returnMsg = "基线黑白名单不能为空，删除失败！";
 			logger.info("fetch baseBlackWhite failed ,baseBlackWhite is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineType()==null){
 			returnMsg = "基线类型不能为空，保存失败！";
 			logger.info("fetch baseType failed ,baseBlackWhite is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineType().trim().equals("")){
 			returnMsg = "基线类型不能为空，删除失败！";
 			logger.info("fetch baseType failed ,baseBlackWhite is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		sbService.save(sbl);
@@ -150,13 +150,13 @@ public class BaseLineAction {
 		if(baseLineId==null){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch baseLineId failed ,templateId is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baseLineId.trim().equals("")){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch baseLineId failed ,templateId is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		String[] baseLineIds=baseLineId.split(",");
@@ -164,7 +164,7 @@ public class BaseLineAction {
 		if(!flag){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("delete baseline error ");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		return "success";
@@ -175,20 +175,20 @@ public class BaseLineAction {
 		if(baseLineId==null){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch baseLineId failed ,templateId is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baseLineId.trim().equals("")){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("fetch baseLineId failed ,templateId is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		SysBaseline sbl=(SysBaseline)sbService.getObj(SysBaseline.class, Long.parseLong(baseLineId));
 		if(sbl==null){
 			returnMsg = "系统错误，跳转页面失败！";
 			logger.info("query baseLine failed by baseLineId = "+baseLineId);
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -201,43 +201,43 @@ public class BaseLineAction {
 		if(sbl.getId()==null){
 			returnMsg = "基线描述不能为空，保存失败！";
 			logger.info("fetch baseLineId failed ,baseLineId is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineDesc()==null){
 			returnMsg = "基线描述不能为空，保存失败！";
 			logger.info("fetch baselineDesc failed ,baselineDesc is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineDesc().trim().equals("")){
 			returnMsg = "基线描述不能为空，删除失败！";
 			logger.info("fetch baselineDesc failed ,baselineDesc is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineBlackWhite()==null){
 			returnMsg = "基线黑白名单不能为空，保存失败！";
 			logger.info("fetch baseBlackWhite failed ,baseBlackWhite is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineBlackWhite().trim().equals("")){
 			returnMsg = "基线黑白名单不能为空，删除失败！";
 			logger.info("fetch baseBlackWhite failed ,baseBlackWhite is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineType()==null){
 			returnMsg = "基线类型不能为空，保存失败！";
 			logger.info("fetch baseType failed ,baseBlackWhite is null");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(sbl.getBaselineType().trim().equals("")){
 			returnMsg = "基线类型不能为空，删除失败！";
 			logger.info("fetch baseType failed ,baseBlackWhite is ''");
-			backUrl = "viewBaseLine.jsp";
+			backUrl = "baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		sbService.update(sbl);
@@ -347,7 +347,6 @@ public class BaseLineAction {
 			pageNum=Integer.parseInt(page); 
 		}
 		String resId=request.getParameter("resId");
-		System.out.println(resId+"----------"+from+"--------"+to+"--------"+rows+"----------"+page);
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -435,7 +434,7 @@ public class BaseLineAction {
 		if(page!=null&&!page.trim().equals("")){
 			pageNum=Integer.parseInt(page); 
 		}
-		System.out.println(from+"--------"+to+"--------"+rows+"----------"+page);
+		
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -572,13 +571,13 @@ public class BaseLineAction {
 		if(resId_taskCode==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch resId_taskCode failed ,resId_taskCode is null");
-			backUrl = "/baseline/viewMatchScore.jsp";
+			backUrl = "baseline/viewMatchScore.jsp";
 			return "failed";
 		}
 		if(resId_taskCode.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch resId_taskCode failed ,resId_taskCode is null");
-			backUrl = "/baseline/viewMatchScore.jsp";
+			backUrl = "baseline/viewMatchScore.jsp";
 			return "failed";
 		}
 		String[] rt=resId_taskCode.split("_");

@@ -28,12 +28,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 <body>
 	<div style="padding:5px;border:1px solid #95B8E7;width:388px;background:#EFF5FF">
-		<a id="sub" href="javascript:document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="return submitForm();">修改保存</a>
+		<a id="sub" href="javascript:if(document.ff.onsubmit()!=false)document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="return submitForm();">修改保存</a>
 	</div>
 	<div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" name="ff" action="modifyEventRule.action" method="post">
+		    <form id="ff" name="ff" action="modifyEventRule.action" method="post" onsubmit="return submitForm();">
 		     <input type="hidden" name="eventRule.id" value="${eRule.id }"/>
 		   <input type="hidden" name="eventRule.resId" value="${eRule.resId }"/>
 		    	<input type="hidden" name="eventRule.eventTypeId" value="${eRule.eventTypeId }"/>
@@ -172,6 +172,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </div>
   <script>
 		function submitForm(){
+			var flag=$('#ff').form('validate');
+			if(!flag){
+				return flag;
+			}
 			var thresholdValue=document.getElementById("thresholdValue");
 			var thresholdValue1=document.getElementById("thresholdValue1");
 			var thresholdOpr=document.getElementById("thresholdOpr");

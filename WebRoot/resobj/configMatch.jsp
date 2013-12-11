@@ -25,7 +25,7 @@ Map app=user.getApp();
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-
+	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="数据展示>配置文件比对";
 	</script>

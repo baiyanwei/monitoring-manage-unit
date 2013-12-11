@@ -294,7 +294,7 @@ public class SysDevAction extends ActionSupport {
 				
 				returnMsg="删除厂商前，请先删除属于此厂商的防火墙资源！";
 				logger.info("delete company failed ,one of company has fwRes companyid is "+companyId[i]);
-				backUrl="viewAllDevCompany.jsp";
+				backUrl="devcompany/viewAllDevCompany.jsp";
 				return "failed";
 			}
 		}
@@ -314,22 +314,26 @@ public class SysDevAction extends ActionSupport {
 		if(companyCode==null){
 			returnMsg="查询设备型号失败！";
 			logger.info("fetch companyCode failed ,companyCode is null");
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(companyCode.equals("")){
 			returnMsg="查询设备型号失败！";
 			logger.info("fetch companyCode failed ,companyCode is null");
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		List devTypes=sdts.queryAll("from SysDevType s where s.companyCode='"+companyCode+"'");
 		if(devTypes==null){
 			returnMsg="查询设备型号失败！";
 			logger.info("fetch devType failed by companyCode is "+companyCode);
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(devTypes.size()==0){
 			returnMsg="查询设备型号失败！";
 			logger.info("fetch devType failed by companyCode is "+companyCode);
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -341,22 +345,25 @@ public class SysDevAction extends ActionSupport {
 		if(company.getId()==null){
 			returnMsg="设备厂商更新失败！";
 			logger.info("modify company failed , companyid is null");
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(company.getId().equals("")){
 			returnMsg="设备厂商更新失败！";
 			logger.info("modify company failed , companyid is ''");
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(company.getCompanyName()==null){
 			returnMsg="设备厂商更新失败！";
 			logger.info("modify company failed , companycode is null");
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(company.getCompanyName().trim().equals("")){
 			returnMsg="设备厂商更新失败！";
 			logger.info("modify company failed , companycode is ''");
-			backUrl="toViewCompanyById.action?companyid="+company.getId();
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		SysDevCompany c=(SysDevCompany)sdcs.getObj(SysDevCompany.class, Long.parseLong(company.getId()));
@@ -402,13 +409,13 @@ public class SysDevAction extends ActionSupport {
 	public String saveCompany(){
 		if(company.getCompanyName()==null){
 			returnMsg="厂商名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyName failed is null from web browser");
 			return "failed";
 		}
 		if(company.getCompanyName().trim().equals("")){
 			returnMsg="厂商名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyName failed is '' from web browser");
 			return "failed";
 		}
@@ -427,7 +434,7 @@ public class SysDevAction extends ActionSupport {
 		String companyCode=request.getParameter("companyCode");
 		if(companyCode==null){
 			returnMsg="跳转添加防火墙型号页面失败";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyCode failed is null from web browser");
 			return "failed";
 		}
@@ -439,31 +446,31 @@ public class SysDevAction extends ActionSupport {
 	public String saveDevType(){
 		if(company.getCompanyCode()==null){
 			returnMsg="厂商编码获取失败，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyCode failed is null from web browser");
 			return "failed";
 		}
 		if(company.getCompanyCode().trim().equals("")){
 			returnMsg="厂商编码获取失败，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyCode failed is '' from web browser");
 			return "failed";
 		}
 		if(company.getTypeName()==null){
 			returnMsg="设备类型名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeName failed is null from web browser");
 			return "failed";
 		}
 		if(company.getTypeName().trim().equals("")){
 			returnMsg="设备类型名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeName failed is '' from web browser");
 			return "failed";
 		}
-		System.out.println(company.getCompanyCode()+"---------------------------");
+		
 		String typeCode=sdts.createTypeCode(company.getCompanyCode());
-		System.out.println(typeCode+"---------------------------");
+		
 		SysDevType sdt=new SysDevType();
 		sdt.setTypeName(company.getTypeName());
 		sdt.setTypeCode(typeCode);
@@ -478,13 +485,13 @@ public class SysDevAction extends ActionSupport {
 		
 		if(devTypeId==null){
 			returnMsg="设备类型删除失败，请重试！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch devTypeId failed is null from web browser");
 			return "failed";
 		}
 		if(devTypeId.trim().equals("")){
 			returnMsg="设备类型删除失败，请重试！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch devTypeId failed is '' from web browser");
 			return "failed";
 		}
@@ -574,13 +581,13 @@ public class SysDevAction extends ActionSupport {
 		String devTypeId=request.getParameter("devTypeId");
 		if(devTypeId==null){
 			returnMsg="跳转失败，请重试！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch devTypeId failed is null from web browser");
 			return "failed";
 		}
 		if(devTypeId.trim().equals("")){
 			returnMsg="跳转失败，请重试，请重试！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch devTypeId failed is '' from web browser");
 			return "failed";
 		}
@@ -588,13 +595,13 @@ public class SysDevAction extends ActionSupport {
 		if(devTypes==null){
 			returnMsg="查询设备类型失败！";
 			logger.info("fetch devType failed ,by companyid is "+devTypeId.split("_")[0]);
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		if(devTypes.size()==0){
 			returnMsg="查询设备类型失败！";
 			logger.info("fetch devType failed ,by companyid is "+devTypeId.split("_")[0]);
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -606,39 +613,39 @@ public class SysDevAction extends ActionSupport {
 		
 		if(company.getCompanyCode()==null){
 			returnMsg="厂商编码获取失败，修改失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyCode failed is null from web browser");
 			return "failed";
 		}
 		if(company.getCompanyCode().trim().equals("")){
 			returnMsg="厂商编码获取失败，修改失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch companyCode failed is '' from web browser");
 			return "failed";
 		}
 		
 		if(company.getTypeId()==null){
 			returnMsg="设备类型ID获取失败，修改失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeId failed is null from web browser");
 			return "failed";
 		}
 		if(company.getTypeId().trim().equals("")){
 			returnMsg="设备类型ID获取失败，修改失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeId failed is '' from web browser");
 			return "failed";
 		}
 		
 		if(company.getTypeName()==null){
 			returnMsg="设备类型名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeName failed is null from web browser");
 			return "failed";
 		}
 		if(company.getTypeName().trim().equals("")){
 			returnMsg="设备类型名称不能为空，保存失败！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch typeName failed is '' from web browser");
 			return "failed";
 		}
@@ -658,7 +665,7 @@ public class SysDevAction extends ActionSupport {
 		List sysCommand=scService.queryAll("from SysCommand s where s.typeCode='"+typeCode+"'");
 		if(sysCommand!=null&&sysCommand.size()>0){
 			returnMsg="此设备类型已经存在采集命令！";
-			backUrl="viewType.jsp?companyCode="+companyCode;
+			backUrl="devcompany/viewType.jsp?companyCode="+companyCode;
 			return "failed";
 		}
 		ActionContext actionContext = ActionContext.getContext(); 
@@ -729,7 +736,7 @@ public class SysDevAction extends ActionSupport {
 			ssc=(SysCommand)commandList.get(0);
 		}else{
 			returnMsg="请先添加采集命令！";
-			backUrl="viewAllDevCompany.jsp";
+			backUrl="devcompany/viewAllDevCompany.jsp";
 			logger.info("fetch SysCommand from database failed");
 			return "failed";
 		}

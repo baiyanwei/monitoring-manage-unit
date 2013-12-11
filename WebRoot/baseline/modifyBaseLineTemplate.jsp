@@ -66,7 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	</table>
 	    	<table id="listDetail">
 	    	</table>
-		        
+		     </form>	   
     	</div>
   </div>
   <script>
@@ -140,6 +140,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	 
 	
 		function submitForm(){
+			var flag=$('#ff').form('validate');
+			if(!flag){
+				return flag;
+			}
 			var templateName=document.getElementById("templateName");
 			var companyCode=document.getElementById("companyCode");
 			if(templateName.value!=''&&companyCode!=''){
@@ -162,6 +166,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		
 	</script>
-	</form>	
+	
   </body>
 </html>

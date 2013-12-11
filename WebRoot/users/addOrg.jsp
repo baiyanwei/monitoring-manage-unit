@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveOrg.action" method="post">
+		    <form id="ff" action="saveOrg.action" method="post" onsubmit="return submitForm();">
 		    	<table>
 		    	<tr>
 	    			<td><label>部门名称：</label></td>
@@ -72,14 +72,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
  
 		function submitForm(){
-			$('#ff').form('submit');
+			return $('#ff').form('validate');
 		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
-		
-		 
-		
 	</script>
   </body>
 </html>

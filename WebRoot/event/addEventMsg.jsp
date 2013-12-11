@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	<form id="ff" action="saveEventMsg.action" method="post" target="contextMain">
+  	<form id="ff" action="saveEventMsg.action" method="post" target="contextMain" onsubmit="return submitForm();">
     		<input type="hidden" name="msg.eventTypeId" value="${eventTypeId }"/>
     		
   			<div id="p" class="easyui-panel" title="基线规则" style="width:500px;height:300px;padding:10px;">
@@ -58,5 +58,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</table>
 			</div>
 		</form>
+	<script>
+ 
+		function submitForm(){
+			return $('#ff').form('validate');
+		}
+	</script>
   </body>
   </html>

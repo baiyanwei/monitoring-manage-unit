@@ -147,7 +147,7 @@ public class ConfigPolicyRuleAction {
 			ConfigPolicyRule config=new ConfigPolicyRule();
 			config.setRulePath(fullFileName);
 			config.setTypeCode(typeCode);
-			System.out.println(containConflictRule+"------------------------------");
+			
 			config.setContainConflictRule(containConflictRule);
 			ruleService.save(config);
 		}
