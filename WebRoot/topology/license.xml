@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license version="1.1">
+  <product>yFiles FLEX</product>
+  <company>The UltraPower Software Co., Ltd.</company>
+  <contact>Liu Hao / Howard Liu</contact>
+  <email>liuhao@ultrapower.com.cn</email>
+  <type>site</type>
+  <sitename>22F NorthStar-Ultrapower Building, Beijing, China 100107</sitename>
+  <version>1.6</version>
+  <date>02/08/2012</date>
+  <subscription>02/07/2013</subscription>
+  <domains>
+    <domain>*</domain>
+  </domains>
+  <localhost>true</localhost>
+  <key>4c04c8fdce688fb3675a16903596a21995ddd5e1</key>
+</license>
+
+
