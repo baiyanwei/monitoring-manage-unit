@@ -17,6 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.secpro.platform.monitoring.manage.util.DBConfig;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 @Service("TreeAjax")
 public class TreeAjax {
@@ -109,8 +110,8 @@ public class TreeAjax {
 			// TODO Auto-generated catch block
 			logger.error("fetch datesource error", e);
 			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-				conn=DriverManager.getConnection("jdbc:oracle:thin:@192.168.138.128:1521:unionmon","fcvst","fcvst");
+				Class.forName(DBConfig.DRIVER);
+				conn=DriverManager.getConnection(DBConfig.URL,DBConfig.USERNAME,DBConfig.PASSWORD);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

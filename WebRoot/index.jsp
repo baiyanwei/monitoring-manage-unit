@@ -9,6 +9,7 @@
 %>
 <head>
 	<title>防火墙核查系统</title>
+	<link rel="fcvst icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
@@ -18,6 +19,153 @@
 	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script src="js/ueframe/main.js"></script>
+	<style>/* Root = Horizontal, Secondary = Vertical */
+ul#navmenu-h {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  width: 500px; /*For KHTML*/
+  list-style: none;
+  height: 24px;
+}
+
+ul#navmenu-h li {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  float: left; /*For Gecko*/
+  display: inline;
+  list-style: none;
+  position: relative;
+  height: 24px;
+}
+
+ul#navmenu-h ul {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  width: 160px;
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 24px;
+  left: 0;
+}
+
+ul#navmenu-h ul:after /*From IE 7 lack of compliance*/{
+  clear: both;
+  display: block;
+  font: 1px/0px serif;
+  content: ".";
+  height: 0;
+  visibility: hidden;
+}
+
+ul#navmenu-h ul li {
+  width: 160px;
+  float: left; /*For IE 7 lack of compliance*/
+  display: block !important;
+  display: inline; /*For IE*/
+}
+
+/* Root Menu */
+ul#navmenu-h a {
+  border: 1px solid #FFF; 
+  border-right-color: #CCC;
+  border-bottom-color: #CCC; 
+  padding: 0 6px;
+  float: none !important; /*For Opera*/
+  float: left; /*For IE*/
+  display: block;
+ /* background: #EEE; */
+  color: #666;
+  font: bold 10px/22px Verdana, Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  height: auto !important;
+  height: 1%; /*For IE*/
+}
+
+/* Root Menu Hover Persistence */
+ul#navmenu-h a:hover,
+ul#navmenu-h li:hover a,
+ul#navmenu-h li.iehover a {
+  background: #CCC;
+  color: #FFF;
+}
+
+/* 2nd Menu */
+ul#navmenu-h li:hover li a,
+ul#navmenu-h li.iehover li a {
+  float: none;
+  background: #EEE;
+  color: #666;
+}
+
+/* 2nd Menu Hover Persistence */
+ul#navmenu-h li:hover li a:hover,
+ul#navmenu-h li:hover li:hover a,
+ul#navmenu-h li.iehover li a:hover,
+ul#navmenu-h li.iehover li.iehover a {
+  background: #CCC;
+  color: #FFF;
+}
+
+/* 3rd Menu */
+ul#navmenu-h li:hover li:hover li a,
+ul#navmenu-h li.iehover li.iehover li a {
+  background: #EEE;
+  color: #666;
+}
+
+/* 3rd Menu Hover Persistence */
+ul#navmenu-h li:hover li:hover li a:hover,
+ul#navmenu-h li:hover li:hover li:hover a,
+ul#navmenu-h li.iehover li.iehover li a:hover,
+ul#navmenu-h li.iehover li.iehover li.iehover a {
+  background: #CCC;
+  color: #FFF;
+}
+
+/* 4th Menu */
+ul#navmenu-h li:hover li:hover li:hover li a,
+ul#navmenu-h li.iehover li.iehover li.iehover li a {
+  background: #EEE;
+  color: #666;
+}
+
+/* 4th Menu Hover */
+ul#navmenu-h li:hover li:hover li:hover li a:hover,
+ul#navmenu-h li.iehover li.iehover li.iehover li a:hover {
+  background: #CCC;
+  color: #FFF;
+}
+
+ul#navmenu-h ul ul,
+ul#navmenu-h ul ul ul {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 160px;
+}
+
+/* Do Not Move - Must Come Before display:block for Gecko */
+ul#navmenu-h li:hover ul ul,
+ul#navmenu-h li:hover ul ul ul,
+ul#navmenu-h li.iehover ul ul,
+ul#navmenu-h li.iehover ul ul ul {
+  display: none;
+}
+
+ul#navmenu-h li:hover ul,
+ul#navmenu-h ul li:hover ul,
+ul#navmenu-h ul ul li:hover ul,
+ul#navmenu-h li.iehover ul,
+ul#navmenu-h ul li.iehover ul,
+ul#navmenu-h ul ul li.iehover ul {
+  display: block;
+}
+
+</style>
 	<script language="javascript">
 		window.onresize = function() {
 			setCenter(4, 80);
@@ -25,6 +173,20 @@
 		window.onload = function() {
 			setCenter(4, 80);
 		}
+		
+		//动态菜单JS
+		navHover = function() {
+    var lis = document.getElementById("navmenu-h").getElementsByTagName("LI");
+	    for (var i=0; i<lis.length; i++) {
+	        lis[i].onmouseover=function() {
+	            this.className+=" iehover";
+	        }
+	        lis[i].onmouseout=function() {
+	            this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+	        }
+	    }
+	}
+	if (window.attachEvent) window.attachEvent("onload", navHover);
 	</script>
 </head>
 <body class="easyui-layout">
@@ -52,41 +214,72 @@
 								<tr>
 									<td class="page_bar_bg" >
 										<div align="left" style="padding-left: 10px;">
+										<ul id="navmenu-h">
 										<% if(app.get("首页查看")!=null){ %>
-											<a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a>
-										<% }if(app.get("基线查看")!=null){ %>	
-											<a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线管理</a>
+											<li><a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a></li>
+										<% }if(app.get("基线菜单")!=null){ %>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线规则管理</a></li>
+											<ul>
+												<% if(app.get("基线模板查看")!=null){ %>		
+													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板</a></li>
+												<% }if(app.get("基线查看")!=null){ %>	
+													<li><a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线操作</a></li>
+												<% }if(app.get("查看规则")!=null) {%>	
+													<li><a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
+												
+												<%} %>	
+											</ul>
 										<% }if(app.get("采集端查看")!=null){ %>	
-											<a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a>
-										<% }if(app.get("基线模板查看")!=null){ %>		
-											<a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源数据管理</a></li>
+											<ul>
+												<% if(app.get("采集端查看")!=null){ %>	
+													<li><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></li>
+												<% }if(app.get("防火墙配置查看")!=null){ %>		
+													<li><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">配置文件</a></li>
+												<% }if(app.get("SYSLOG命中查看")!=null){ %>	
+													<li><a href="javascript:hitmanager();" class="easyui-linkbutton" data-options="plain:true">SYSLOG命中</a></li>
+												<% }if(app.get("基线比对查看")!=null){ %>		
+													<li><a href="javascript:matchscoremanager();" class="easyui-linkbutton" data-options="plain:true">基线比对结果</a></li>
+												<%} %>
+													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>		
+											</ul>
+										
 										<% }if(app.get("系统管理")!=null) {%>	
-											<a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a></li>
+												<ul>
+														<% if(app.get("查看厂商")!=null){ %>		
+														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
+														<% }if(app.get("系统管理")!=null) {%>	
+														<li><a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">操作日志</a></li>
+														<%} %>
+												</ul>
 										<% }if(app.get("查看事件类型")!=null) {%>		
-											<a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">告警策略管理</a>
-										<% }if(app.get("查看厂商")!=null){ %>		
-											<a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商管理</a>
-										<% }if(app.get("查看规则")!=null) %>	
-											<a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a>
-										<% if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
-											<a href="javascript:usermanager();" class="easyui-linkbutton" data-options="plain:true">用户管理</a>
-										<% }if(app.get("查看角色")!=null||user.getAccount().equals("admin")){ %>		
-											<a href="javascript:rolemanager();" class="easyui-linkbutton" data-options="plain:true">角色管理</a>
-										<% }if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
-											<a href="javascript:orgmanager();" class="easyui-linkbutton" data-options="plain:true">部门管理</a>
-										<% }if(app.get("查看指标")!=null){ %>		
-											<a href="javascript:kpimanager();" class="easyui-linkbutton" data-options="plain:true">指标管理</a>
-										<% }if(app.get("查看告警规则")!=null){ %>		
-											<a href="javascript:eventrulemanager();" class="easyui-linkbutton" data-options="plain:true">告警规则管理</a>
-										<% }if(app.get("基线比对查看")!=null){ %>		
-											<a href="javascript:matchscoremanager();" class="easyui-linkbutton" data-options="plain:true">基线比对</a>
-										<% }if(app.get("防火墙配置查看")!=null){ %>		
-											<a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">配置文件</a>
-										<% }if(app.get("SYSLOG命中查看")!=null){ %>	
-											<a href="javascript:hitmanager();" class="easyui-linkbutton" data-options="plain:true">SYSLOG命中</a>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">事件告警管理</a></li>
+												<ul>
+													<% if(app.get("查看事件类型")!=null) {%>		
+														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件管理</a></li>
+													<% }if(app.get("查看告警规则")!=null){ %>		
+													    <li><a href="javascript:eventrulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
+													<% }if(app.get("查看指标")!=null){ %>		
+														<li><a href="javascript:kpimanager();" class="easyui-linkbutton" data-options="plain:true">指标管理</a></li>
+													<%} %>
+												</ul>
+										
+										<% }if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">用户管理</a></li>
+											<ul>
+												<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
+													<li><a href="javascript:orgmanager();" class="easyui-linkbutton" data-options="plain:true">部门管理</a></li>
+												<% }if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
+													<li><a href="javascript:usermanager();" class="easyui-linkbutton" data-options="plain:true">用户管理</a></li>
+												<% }if(app.get("查看角色")!=null||user.getAccount().equals("admin")){ %>		
+													<li><a href="javascript:rolemanager();" class="easyui-linkbutton" data-options="plain:true">角色管理</a></li>
+												<%} %>	
+											</ul>
+										
 										<%} %>
-											<a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a>
-											
+																		
+										</ul>								
 										</div>
 									</td>
 								</tr>

@@ -8,7 +8,10 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
-  
+  <icon>   
+   <small-icon>/favicon.ico</small-icon> 
+   <large-icon>/favicon.ico</large-icon> 
+   </icon>
   <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>com.secpro.platform.monitoring.manage.servlet.LoginFilter</filter-class>

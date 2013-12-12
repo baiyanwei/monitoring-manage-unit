@@ -1,7 +1,7 @@
 package com.secpro.platform.monitoring.manage.dwr;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -39,6 +39,7 @@ public class EventAjax {
 		List newEventList=service.queryAll("from SysEvent s order by s.cdate desc");
 		StringBuffer buffer = new StringBuffer();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		int counter = 0;
 		if(newEventList==null){
 			return "";
@@ -47,7 +48,14 @@ public class EventAjax {
 			SysEvent se=(SysEvent)newEventList.get(i);
 			if (counter <=100) {
 				
-				String time = se.getCdate();
+				String time="";
+				try {
+					time = formatter.format(formatter1.parse(se.getCdate()));
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				String str = "<div id=a" + se.getId()
 						+ " ><a href='#' onClick='confirmEvent("
 						+ se.getId() + ")'>";
@@ -128,7 +136,8 @@ public class EventAjax {
 		hql+=" order by s.cdate desc";
 		List newEventList=service.queryAll(hql);
 			StringBuffer buffer = new StringBuffer();
-		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+			SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		int counter = 0;
 		if(newEventList==null){
 			return "";
@@ -137,7 +146,14 @@ public class EventAjax {
 			SysEvent se=(SysEvent)newEventList.get(i);
 			if (counter <=100) {
 				
-				String time = se.getCdate();
+				String time="";
+				try {
+					time = formatter.format(formatter1.parse(se.getCdate()));
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				String str = "<div id=a" + se.getId()
 						+ " ><a href='#' onClick='confirmEvent("
 						+ se.getId() + ")'>";
@@ -193,9 +209,10 @@ public class EventAjax {
 		return "";
 	}
 	public String getNewEventListByType(String typeName){
-		List newEventList=service.queryAll("select s from SysEvent as s, EventType as t where s.eventTypeId=t.id and t.eventTypeName='"+typeName+"' order by s.cdate desc");
+		List newEventList=service.queryAll("select s from SysEvent as s, EventType as t where s.eventTypeId=t.id and t.eventTypeName like '"+typeName+"%' order by s.cdate desc");
 		StringBuffer buffer = new StringBuffer();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		int counter = 0;
 		if(newEventList==null){
 			return "";
@@ -204,7 +221,14 @@ public class EventAjax {
 			SysEvent se=(SysEvent)newEventList.get(i);
 			if (counter <=100) {
 				
-				String time = se.getCdate();
+				String time="";
+				try {
+					time = formatter.format(formatter1.parse(se.getCdate()));
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				String str = "<div id=a" + se.getId()
 						+ " ><a href='#' onClick='confirmEvent("
 						+ se.getId() + ")'>";
@@ -263,10 +287,11 @@ public class EventAjax {
 				}
 			}
 		}
-		hql+=") and s.eventTypeId=t.id and t.eventTypeName='"+typeName+"' order by s.cdate desc";
+		hql+=") and s.eventTypeId=t.id and t.eventTypeName like '"+typeName+"%' order by s.cdate desc";
 		List newEventList=service.queryAll(hql);
 			StringBuffer buffer = new StringBuffer();
-		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+			SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		int counter = 0;
 		if(newEventList==null){
 			return "";
@@ -275,7 +300,14 @@ public class EventAjax {
 			SysEvent se=(SysEvent)newEventList.get(i);
 			if (counter <=100) {
 				
-				String time = se.getCdate();
+				String time="";
+				try {
+					time = formatter.format(formatter1.parse(se.getCdate()));
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				String str = "<div id=a" + se.getId()
 						+ " ><a href='#' onClick='confirmEvent("
 						+ se.getId() + ")'>";
