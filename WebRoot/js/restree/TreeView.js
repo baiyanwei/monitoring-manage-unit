@@ -348,12 +348,6 @@ function _onMouseDown(obj,e){
     		      //事件    
     		      bindings: 
     	          {
-    	            'resinfo': function(t) {
-    	            	alert("resinfo");
-    	            },
-    	            'modify': function(t) {
-    	              alert('modify');
-    	            },
     	            'delete': function(t) {
     	            	if(confirm("资源删除操作。\n\n请注意：此操作不可恢复。确定删除？")){
     	            		window.location.href="ResObjectDelete.action?resId="+obj.id;
@@ -363,8 +357,12 @@ function _onMouseDown(obj,e){
     	            	}
       	            },
       	            'catevent': function(t) {
-      	              alert('catevent');
+      	            	window.parent.frames["contextMain"].location.href="toViewEvent.action?resId="+obj.id;
       	            },
+      	            'taskview': function(t) {
+      	            	
+    	            	window.parent.frames["contextMain"].location.href="../task/taskView.jsp?resId="+obj.id;
+    	            },
       	            'refresh': function(t) {
       	            	window.location.reload();
       	            }
@@ -398,7 +396,7 @@ function _onMouseDown(obj,e){
   		      bindings: 
   	          {
   	            'add': function(t) {
-  	            	window.parent.frames["contextMain"].location.href="toAddSysObj?cityCode="+obj.id;
+  	            	window.parent.frames["contextMain"].location.href="toAddSysObj.action?cityCode="+obj.id;
   	            },
   	            'refresh': function(t) {
   	            	window.location.reload();

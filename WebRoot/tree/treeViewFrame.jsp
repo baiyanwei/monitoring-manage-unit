@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%@ page import = "java.util.*" %>
 <%@ page import = "java.io.*" %>
 <%@ page import = "com.vandagroup.common.includes.*" %>
@@ -10,6 +10,8 @@
 	response.setHeader("Pragma","no-cache");
 	response.setHeader("Catch-Control","no-cache");
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
+	SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+	Map app=user.getApp();
 %>
 <script>
   _contexPath='<%=_contexPath%>';
@@ -243,7 +245,9 @@ function clickFolder() {
 
 <div class="contextMenu" id="citymenu" style="display :none;">
       <ul>
+       <% if(app.get("创建防火墙")!=null){ %>
         <li id="add"><img src="<%=_contexPath%>/style/app/images/dynamic_group_add.png" /> 添加资源</li>
+       <%} %>
         <li id="refresh"><img src="<%=_contexPath%>/style/app/images/refresh.png" /> 树刷新</li>
       </ul>
 </div>
@@ -256,10 +260,13 @@ function clickFolder() {
 
 <div class="contextMenu" id="resmenu" style="display :none;">
       <ul>
-        <li id="resinfo"><img src="<%=_contexPath%>/style/app/images/resource.png" /> 查看资源</li>
-        <li id="modify"><img src="<%=_contexPath%>/style/app/images/modify.png" /> 修改资源</li>
+      <% if(app.get("删除防火墙")!=null){ %>
         <li id="delete"><img src="<%=_contexPath%>/style/app/images/delete.png" /> 删除资源</li>
+     <% }if(app.get("查看防火墙告警")!=null){ %>  
         <li id="catevent"><img src="<%=_contexPath%>/style/app/images/deregulation_affair.png" /> 查看告警</li>
+       <%}if(app.get("查看防火墙任务")!=null){  %>
+        <li id="taskview"><img src="<%=_contexPath%>/style/app/images/workspace.png" /> 查看任务</li>
+       <%} %>
         <li id="refresh"><img src="<%=_contexPath%>/style/app/images/refresh.png" /> 树刷新</li>
       </ul>
 </div>

@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</script>
   </head>
     <body>
-    	<form id="ff" action="configRule.action" method="post" target="contextMain" enctype="multipart/form-data">
+    	<form id="ff" action="configRule.action" method="post" target="contextMain" enctype="multipart/form-data" onsubmit="return submitForm();">
     		<input type="hidden" name="typeCode" value="${typeCode }"/>
     		<input type="hidden" name="oper" value="${oper }"/>
   			<div id="p" class="easyui-panel" title="请上传规则" style="width:500px;height:300px;padding:10px;">
@@ -65,10 +65,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    		<tr>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			<input type="submit" value="提交"/>
 	    			</td>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
 				</table>
@@ -80,8 +80,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var t=document.getElementById("ccr");
 			if(t.value==""){
 				$.messager.alert('错误提示','请输入包含比对规则','error');
+				return false;
 			}
-			$('#ff').form('submit');
+			return true;
 		}
 		function clearForm(){
 			$('#ff').form('clear');

@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -17,19 +20,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="厂商管理>厂商列表";
@@ -59,13 +54,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'companyname',title:'厂商名称',width:100,editor:'text'},  
             {field:'companydesc',title:'厂商描述',width:100,editor:'text'}    
         ]],   
-       toolbar: [{   
+       toolbar: [
+       <% if(app.get("添加厂商")!=null){ %>
+       {   
             text: '添加厂商',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addCompany.jsp";
+               window.location.href="<%=_contexPath%>/devcompany/addCompany.jsp";
             }   
-        }, '-', {   
+        }, '-', 
+        <% }if(app.get("删除厂商")!=null){ %>
+        {   
             text: '删除厂商',   
             iconCls: 'icon-remove',   
             handler: function () {   
@@ -87,7 +86,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
+        }, '-', 
+        <% }if(app.get("修改厂商")!=null){ %>
+        {   
             text: '修改厂商',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -106,7 +107,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        },  '-', {   
+        },  '-', 
+        <% }if(app.get("添加防火墙型号")!=null){ %>
+        {   
             text: '添加防火墙型号',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -125,7 +128,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-', 
+        <% }if(app.get("查看防火墙型号")!=null){ %>
+        {   
             text: '查看防火墙型号',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -139,13 +144,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				     	return;
 				     }
 				     
-				    var urll="viewType.jsp?companyCode="+rows[0].companycode;  
+				    var urll="<%=_contexPath%>/devcompany/viewType.jsp?companyCode="+rows[0].companycode;  
 				    
 				 	window.location.href=urll;
 				}  
 
                
-        }, '-', {   
+        }, '-',
+        
+        <%}%>
+         {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }

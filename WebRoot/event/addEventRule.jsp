@@ -18,20 +18,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+	
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>创建告警规则";
@@ -41,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
   <div class="easyui-panel" title="" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveEventRule.action" method="post">
+		    <form id="ff" action="saveEventRule.action" method="post" onsubmit="return submitForm();">
 		    	<input type="hidden" name="eventRule.resId" value="${resId }"/>
 		    	<input type="hidden" name="eventRule.eventTypeId" value="${type.id }"/>
 		    	<table>
@@ -126,10 +119,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    		<tr>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			<input type="submit" value="提交"/>
 	    			</td>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
 	    	</table>
@@ -140,6 +133,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
  
 		function submitForm(){
+			var flag=$('#ff').form('validate');
+			if(!flag){
+				return flag;
+			}
 			var thresholdValue=document.getElementById("thresholdValue");
 			var thresholdValue1=document.getElementById("thresholdValue1");
 			var thresholdOpr=document.getElementById("thresholdOpr");
@@ -151,16 +148,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			}
 			if(thresholdValue1!=null&&isNaN(thresholdValue1.value)){
 				alert("阀值请输入数字！");
-				return ;
+				return false;
 			}
-			$('#ff').form('submit');
-		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
-		
-		 
-		
+			return true;
+		}	
 	</script>
   </body>
 </html>

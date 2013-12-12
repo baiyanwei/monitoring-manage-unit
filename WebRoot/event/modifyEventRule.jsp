@@ -16,32 +16,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>告警规则修改";
 	</script>
 </head>
 <body>
-	<div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()">修改保存</a>
+	<div style="padding:5px;border:1px solid #95B8E7;width:388px;background:#EFF5FF">
+		<a id="sub" href="javascript:if(document.ff.onsubmit()!=false)document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="return submitForm();">修改保存</a>
 	</div>
 	<div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="modifyEventRule.action" method="post">
+		    <form id="ff" name="ff" action="modifyEventRule.action" method="post" onsubmit="return submitForm();">
 		     <input type="hidden" name="eventRule.id" value="${eRule.id }"/>
 		   <input type="hidden" name="eventRule.resId" value="${eRule.resId }"/>
 		    	<input type="hidden" name="eventRule.eventTypeId" value="${eRule.eventTypeId }"/>
@@ -180,20 +172,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </div>
   <script>
 		function submitForm(){
+			var flag=$('#ff').form('validate');
+			if(!flag){
+				return flag;
+			}
 			var thresholdValue=document.getElementById("thresholdValue");
 			var thresholdValue1=document.getElementById("thresholdValue1");
 			var thresholdOpr=document.getElementById("thresholdOpr");
 			if(thresholdValue!=null){
 				if(thresholdValue.value=='null'&&thresholdOpr.value=='=='){
 					alert("只有选择不等于时，阀值才能未字符串null");
-					return;
+					return false;
 				}
 			}
 			if(thresholdValue1!=null&&isNaN(thresholdValue1.value)){
 				alert("阀值请输入数字！");
-				return ;
+				return false;
 			}
-			$('#ff').form('submit');
+			return true;
 		}
 		
 	</script>

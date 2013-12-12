@@ -1,77 +1,96 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <base href="<%=basePath%>">
-    <%
-	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
-%>
-    <title>创建模板</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
-	<link rel="stylesheet" type="text/css" href="css/easyui.css">
-	<link rel="stylesheet" type="text/css" href="css/icon.css">
-	<link rel="stylesheet" type="text/css" href="css/demo.css">
-	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
-	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
-	<script>
+	<head>
+		<base href="<%=basePath%>">
+		<%
+			String _contexPath = request.getContextPath().equals("/") ? ""
+					: request.getContextPath();
+		%>
+		<title>创建模板</title>
+
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="cache-control" content="no-cache">
+		<meta http-equiv="expires" content="0">
+
+		<link rel="stylesheet" type="text/css" href="css/easyui.css">
+		<link rel="stylesheet" type="text/css" href="css/icon.css">
+		<link rel="stylesheet" type="text/css" href="css/demo.css">
+		<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
+
+		<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="基线模板管理>创建模板";
 	</script>
-  </head>
-  
-  <body>
-  <div class="easyui-panel" title="" style="width:700px">
-  
-		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="saveBaseLineTemplate.action" method="post">
-		    	<table>
-	    		<tr>
-	    			<td><label>模板名称：</label></td>
-	    			<td><input id="templateName" class="easyui-validatebox" type="text" missingMessage="请输入模板名称" name="templateName" data-options="required:true"></input></td>
-	    		</tr>
-	    		
-	    		<tr>
-	    			<td><label>模板描述：</label></td>
-	    			<td><textarea class="datagrid-editable-input" name="templateDesc" style="resize:none;"></textarea></td>
-	    		</tr>
-	    		<tr>
-	    			<td><label>防火墙厂商：</label></td>
-	    			<td><input id="companyCode" name="companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany'" /> 
-	    			</td>
-	    		</tr>
-	    		<tr>
-	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
-	    			</td>
-	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
-	    			</td>
-	    		<tr>
-	    		
-	    	</table>
-	    	<table id="listDetail">
-	    	</table>
-		        
-    	</div>
-  </div>
-  <script>
+	</head>
+
+	<body>
+		<div class="easyui-panel" title="" style="width: 700px">
+
+			<div style="padding: 10px 0 10px 60px">
+				<form id="ff" action="saveBaseLineTemplate.action"
+					onsubmit="return submitForm();" method="post">
+					<table>
+						<tr>
+							<td>
+								<label>
+									模板名称：
+								</label>
+							</td>
+							<td>
+								<input id="templateName" class="easyui-validatebox" type="text"
+									missingMessage="请输入模板名称" name="templateName"
+									data-options="required:true"></input>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<label>
+									模板描述：
+								</label>
+							</td>
+							<td>
+								<textarea class="datagrid-editable-input" name="templateDesc"
+									style="resize: none;"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>
+									防火墙厂商：
+								</label>
+							</td>
+							<td>
+								<input id="companyCode" name="companyCode" id="cc1" missingMessage="请选择厂商"
+									class="easyui-combobox"
+									data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany'" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="submit" value="提交" />
+							</td>
+							<td>
+								<input type="reset" value="重置" />
+							</td>
+						<tr>
+					</table>
+					<table id="listDetail">
+					</table>
+				</form>
+			</div>
+		</div>
+		<script>
   $(function(){  
     $("#listDetail").datagrid({  
     	width:700,
@@ -129,6 +148,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	 
 	
 		function submitForm(){
+			var flag=$('#ff').form('validate');
+			if(!flag){
+				return flag;
+			}
 			var templateName=document.getElementById("templateName");
 			var companyCode=document.getElementById("companyCode");
 			if(templateName.value!=''&&companyCode!=''){
@@ -145,14 +168,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}
 			}
 			
-			$('#ff').form('submit');
-		}
-		function clearForm(){
-			$('#ff').form('clear');
+			return true;
 		}
 		
 		
 	</script>
-	</form>	
-  </body>
+
+	</body>
 </html>

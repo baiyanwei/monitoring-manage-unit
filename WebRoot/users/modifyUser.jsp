@@ -16,34 +16,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+	
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
+	
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="用户管理》用户信息修改";
+		adiv.innerText="用户管理>用户信息修改";
 	</script>
 </head>
 <body>
-	<div style="padding:5px;border:1px solid #95B8E7;width:400px;background:#EFF5FF">
-		<a id="sub" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"  onclick="submitForm()">修改保存</a>
+	<div style="padding:5px;border:1px solid #95B8E7;width:388px;background:#EFF5FF">
+		<a id="sub" href="javascript:if(document.ff.onsubmit()!=false)document.ff.submit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" >修改保存</a>
 	</div>
 	<div class="easyui-panel" title="" style="width:400px">
   
 		<div style="padding:10px 0 10px 60px">
-		    <form id="ff" action="modifyUser.action" method="post">
+		    <form id="ff" name="ff" action="modifyUser.action" method="post" onsubmit="return submitForm();">
 		    <input type="hidden" name="user.id" value="${ muser.id}"/>
 		    <input type="hidden" name="passwd" value="${ muser.password}"/>
+		    <input type="hidden" name="orgid" value="${muser.orgId }"/>
 		    	<table>
 		    	<tr>
 	    			<td><label>账号：</label></td>
@@ -77,7 +72,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    			<td><label>部门：</label></td>
 	    			<td> 
-	    			<input class="easyui-combotree" name="user.orgId" missingMessage="请选择部门" data-options="url:'allOrgRree.action',required:true" style="width:200px;">
+	    			<input class="easyui-combotree" name="user.orgId" missingMessage="请选择部门" data-options="url:'allOrgRree.action'" style="width:200px;">
 	    			</td>
 	    		</tr>
 	    		<tr>
@@ -104,9 +99,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </div>
   <script>
 		function submitForm(){
-			$('#ff').form('submit');
-		}
 		
+			return $('#ff').form('validate');
+		}
 	</script>
 </body>
 </html>

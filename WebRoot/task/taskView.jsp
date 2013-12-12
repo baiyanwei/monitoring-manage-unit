@@ -5,6 +5,15 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String _contexPath = request.getContextPath().equals("/")? "": request.getContextPath();
+	String oldResId=request.getParameter("resId");
+	String resId="";
+	if(oldResId!=null&&!oldResId.trim().equals("")){
+		if(oldResId.contains("_"))
+		resId=oldResId.split("_")[1];
+		else
+		resId=oldResId;
+	}
+	
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -14,19 +23,14 @@
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
-<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-<meta http-equiv="description" content="This is my page">
 <link rel="stylesheet" type="text/css" href="css/easyui.css">
 <link rel="stylesheet" type="text/css" href="css/icon.css">
 <link rel="stylesheet" type="text/css" href="css/demo.css">
 <script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 <script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="采集管理>采集端列表";
+		adiv.innerText="任务管理>任务列表";
 		function mcapaused(url){
 			window.location.href=url;
 		}
@@ -46,7 +50,7 @@
 					pageSize : 10,
 					pageList : [10, 20, 50, 100],
 					url : 'viewTaskTaskScheduleAction.action',
-					// queryParams:{'viewType':'RK','RKD_ID':_rkdId},
+					 queryParams:{'resId':'<%=resId%>'},
 					singleSelect : false,
 					fitColumns : true,
 					nowrap : true,
@@ -117,7 +121,7 @@
 						text : '添加任务',
 						iconCls : 'icon-add',
 						handler : function() {
-							window.location.href = "task/taskSave.jsp?operationType=new&&resId=62";
+							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=new&&resId=<%=resId%>";
 						}
 					}, '-', {
 						text : '删除任务',

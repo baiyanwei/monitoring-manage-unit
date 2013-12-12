@@ -101,8 +101,9 @@ public class BaseLineTemplateAction {
 				if(bt.getBaseLineList().size()==0){
 					sb.append("{\"templateId\":" + bt.getId() + ",");
 					sb.append("\"templateName\":\"" + bt.getTemplateName() + "\",");
-					sb.append("\"templateDesc\":\"" + bt.getTemplateDesc() + "\",");
-					sb.append("\"companyName\":\"" + (bt.getCompanyName()==null?"":bt.getCompanyName()) + "\",");
+					
+					sb.append("\"templateDesc\":\"" + (bt.getTemplateDesc()==null?" ":bt.getTemplateDesc()) + "\",");
+					sb.append("\"companyName\":\"" + (bt.getCompanyName()==null?" ":bt.getCompanyName()) + "\",");
 					sb.append("\"baselineDesc\":\"\",");
 					sb.append("\"baselineType\":\"\",");
 					if(i==(templateList.size()-1)){
@@ -114,7 +115,7 @@ public class BaseLineTemplateAction {
 					for (int j = 0; j < bt.getBaseLineList().size(); j++) {
 						sb.append("{\"templateId\":" + bt.getId() + ",");
 						sb.append("\"templateName\":\"" + bt.getTemplateName() + "\",");
-						sb.append("\"templateDesc\":\"" + bt.getTemplateDesc() + "\",");
+						sb.append("\"templateDesc\":\"" + (bt.getTemplateDesc()==null?" ":bt.getTemplateDesc()) + "\",");
 						sb.append("\"companyName\":\"" + (bt.getCompanyName()==null?"":bt.getCompanyName()) + "\",");
 						SysBaseline sbl = (SysBaseline) bt.getBaseLineList().get(j);
 						sb.append("\"baselineDesc\":\"" + sbl.getBaselineDesc()
@@ -162,37 +163,37 @@ public class BaseLineTemplateAction {
 		if(ll!=null && ll.size()>0){
 			returnMsg = "模板名字不能重名，模板保存失败！";
 			logger.info("basetemplate is Exist !");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if (companyCode == null) {
 			returnMsg = "模板保存失败！";
 			logger.info("fetch companyCode failed ,companyCode is null");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if (companyCode.trim().equals("")) {
 			returnMsg = "模板保存失败！";
 			logger.info("fetch companyCode failed ,companyCode is ''");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if (templateName == null) {
 			returnMsg = "模板保存失败！";
 			logger.info("fetch templateName failed ,templateName is null");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if (templateName.trim().equals("")) {
 			returnMsg = "模板保存失败！";
 			logger.info("fetch templateName failed ,templateName is ''");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if (baselineIds == null) {
 			returnMsg = "模板保存失败！";
 			logger.info("fetch baselineIds failed ,baselineIds is null");
-			backUrl = "addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		BaselineTemplate bt=new BaselineTemplate();
@@ -213,7 +214,7 @@ public class BaseLineTemplateAction {
 			btService.delete(bt);
 			returnMsg = "模板保存失败！";
 			logger.info("save baseline_template_mapping failed");
-			backUrl = "/baseline/addBaseLineTemplate.jsp";
+			backUrl = "baseline/addBaseLineTemplate.jsp";
 			return "failed";
 		}
 		return "success";
@@ -264,13 +265,13 @@ public class BaseLineTemplateAction {
 		if(templateId==null){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch templateId failed ,templateId is null");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(templateId.trim().equals("")){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("fetch templateId failed ,templateId is ''");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		String templateIds[]=templateId.split(",");
@@ -278,7 +279,7 @@ public class BaseLineTemplateAction {
 		if(!flag){
 			returnMsg = "系统错误，删除失败！";
 			logger.info("delete failed");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		return "success";
@@ -289,26 +290,26 @@ public class BaseLineTemplateAction {
 		if(templateId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch templateId failed ,templateId is null");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(templateId.trim().equals("")){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch templateId failed ,templateId is ''");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		List templateList=btService.queryAll("select b.id,b.templateName,b.templateDesc,b.companyCode,s.companyName from BaselineTemplate b,SysDevCompany s where b.companyCode=s.companyCode and b.id="+templateId);
 		if(templateList==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("query BaselineTemplate failed from datebase");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(templateList.size()==0){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("query BaselineTemplate failed from datebase");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		BaselineTemplate stt=new BaselineTemplate();
@@ -498,32 +499,32 @@ public class BaseLineTemplateAction {
 		if(resId==null){
 			returnMsg = "系统错误，映射关系保存失败！";
 			logger.info("fetch resId failed , resId is null!");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(resId.trim().equals("")){
 			returnMsg = "系统错误，映射关系保存失败！";
 			logger.info("fetch resId failed , resId is ''!");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(templateId==null){
 			returnMsg = "系统错误，映射关系保存失败！";
 			logger.info("fetch templateId failed , templateId is null!");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		if(templateId.trim().equals("")){
 			returnMsg = "系统错误，映射关系保存失败！";
 			logger.info("fetch templateId failed , templateId is ''!");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		SysResObj res=(SysResObj)resService.getObj(SysResObj.class, Long.parseLong(resId));
 		if(res==null){
 			returnMsg = "系统错误，映射关系保存失败！";
 			logger.info("fetch resObj failed from database!");
-			backUrl = "viewBaseLineTemplate.jsp";
+			backUrl = "baseline/viewBaseLineTemplate.jsp";
 			return "failed";
 		}
 		res.setTemplateId(Long.parseLong(templateId));

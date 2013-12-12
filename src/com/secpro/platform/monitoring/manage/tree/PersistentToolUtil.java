@@ -19,12 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.secpro.platform.monitoring.manage.util.DBConfig;
 import com.vandagroup.common.bean.BaseBean;
 import com.vandagroup.common.util.ReadProperties;
 import com.vandagroup.common.util.StringUtil;
@@ -179,9 +176,8 @@ public class PersistentToolUtil {
 	public Connection getConnection() throws Exception {
 			Connection conn=null;
 			try{	
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-				conn=DriverManager.getConnection("jdbc:oracle:thin:@192.168.18.161:1521:orcl","secpro","secpro");
-				
+				Class.forName(DBConfig.DRIVER);
+				conn=DriverManager.getConnection(DBConfig.URL,DBConfig.USERNAME,DBConfig.PASSWORD);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

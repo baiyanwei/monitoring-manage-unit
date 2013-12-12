@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -17,19 +20,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="采集管理>采集端列表";
@@ -65,7 +60,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'resIp',title:'IP地址',width:100,editor:'text'},  
             {field:'resDesc',title:'描述',width:100,editor:'text'},   
             {field:'cityName',title:'所属城市',width:100,editor:'text'},
-            {field:'cdate',title:'创建时间',width:150,editor:'text'},  
+            {field:'cdate',title:'创建时间',width:150,editor:'text'}
+            <% if(app.get("暂停启动采集端")!=null){ %>
+            ,  
            	{
   				 field : 'mcapaused',
   				 title : '启动/暂停',
@@ -73,15 +70,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    				formatter:function(value,row,index){
 					var d;
 					if(row.mcapaused=='0'){
-    					d = '<a href="#"  class="easyui-linkbutton l-btn l-btn-plain" onclick = mcapaused("'
-       					+  'updateMcaPaused.action?mcaid=' + row.mcaid +'&paused=1")>' + "<font color='blue'>暂停</font></a>&nbsp;<font color='#808080'>启动</font>"; 
+    					d = '<a href="updateMcaPaused.action?mcaid=' + row.mcaid +'&paused=1"  class="easyui-linkbutton l-btn l-btn-plain"' + "<font color='blue'>暂停</font></a>&nbsp;<font color='#808080'>启动</font>"; 
        				}else{
-       					d = '<a href="#" class="easyui-linkbutton l-btn l-btn-plain" onclick = mcapaused("'
-       					+ 'updateMcaPaused.action?mcaid=' + row.mcaid +'&paused=0")>' + "<font color='blue'>启动</font>" + "</a>&nbsp;<font color='#808080'>暂停</font>"; 
+       					d = '<a href="updateMcaPaused.action?mcaid=' + row.mcaid +'&paused=0" class="easyui-linkbutton l-btn l-btn-plain"' + "<font color='blue'>启动</font>" + "</a>&nbsp;<font color='#808080'>暂停</font>"; 
        				}
     				return d; 
     			}
-    		},
+    		}
+    		<%}%>
+    		,
     		{
   				 field : 'maxLevel',
   				 title : '健康状态',
@@ -105,7 +102,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					}
     				return d; 
     			}
-    		},
+    		}
+    		<% if(app.get("启停采集端")!=null){ %>
+    		,
     		{
   				 field : 'opt',
   				 title : '操作',
@@ -117,14 +116,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     				return d; 
     			}
     		}
+    		<%}%>
         ]],   
-       toolbar: [{   
+       toolbar: [
+       <% if(app.get("添加采集端")!=null){ %>
+       {   
             text: '添加采集端',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addMca.jsp";
+               window.location.href="<%=_contexPath%>/resobj/addMca.jsp";
             }   
-        }, '-', {   
+        }, '-', 
+         <% }if(app.get("删除采集端")!=null){ %>
+        {   
             text: '删除采集端',   
             iconCls: 'icon-remove',   
             handler: function () {   
@@ -146,7 +150,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
+        }, '-',
+        <% }if(app.get("修改采集端")!=null){ %>
+         {   
             text: '修改采集端',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -163,48 +169,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				    
 				 	window.location.href=urll;
 				}  
-
+			
                
-        },  '-', {   
-            text: '添加采集任务',   
-            iconCls: 'icon-edit',   
-            handler: function () {     
-               	 var rows = $('#listDetail').datagrid('getSelections');  
-				     if (null == rows || rows.length == 0) {  
-				       alert('未选择条目');  
-				        return;  
-				     }  
-				     if (rows.length>1){
-				     	alert('添加防火墙型号只能选择一个条目');
-				     	return;
-				     }
-				    var urll="toAddType.action?companyCode="+rows[0].companycode;  
-				    
-				 	window.location.href=urll;
-				}  
-
-               
-        }, '-', {   
-            text: '查看采集任务',   
-            iconCls: 'icon-edit',   
-            handler: function () {     
-               	 var rows = $('#listDetail').datagrid('getSelections');  
-				     if (null == rows || rows.length == 0) {  
-				       alert('未选择条目');  
-				        return;  
-				     }  
-				     if (rows.length>1){
-				     	alert('查看防火墙型号只能选择一个条目');
-				     	return;
-				     }
-				     
-				    var urll="viewType.jsp?companyCode="+rows[0].companycode;  
-				    
-				 	window.location.href=urll;
-				}  
-
-               
-        }, '-', {   
+        },  '-', 
+        <%}%>
+         {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }

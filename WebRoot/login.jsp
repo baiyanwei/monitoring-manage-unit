@@ -18,7 +18,6 @@
 		}
 	}
 	function myFormSubmit(form) {
-		alert(checkOwnRule(form));
 		if (checkOwnRule(form)) {
 			form.submit();
 		}

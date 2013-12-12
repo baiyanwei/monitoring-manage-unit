@@ -8,28 +8,35 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.secpro.platform.monitoring.manage.actions.forms.ResObjForm;
+import com.secpro.platform.monitoring.manage.entity.RawConfigPolicy;
 import com.secpro.platform.monitoring.manage.entity.SysCity;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
 import com.secpro.platform.monitoring.manage.entity.SysResClass;
 import com.secpro.platform.monitoring.manage.entity.SysResObj;
 import com.secpro.platform.monitoring.manage.entity.TelnetSshDict;
 import com.secpro.platform.monitoring.manage.services.CityTreeService;
+import com.secpro.platform.monitoring.manage.services.RawConfigPolicyService;
 import com.secpro.platform.monitoring.manage.services.SysEventService;
 import com.secpro.platform.monitoring.manage.services.SysResAuthService;
 import com.secpro.platform.monitoring.manage.services.SysResClassService;
 import com.secpro.platform.monitoring.manage.services.SysResObjService;
 import com.secpro.platform.monitoring.manage.services.TelnetSshDictService;
+import com.secpro.platform.monitoring.manage.util.FWVersionMatch;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 /**
  * 
@@ -48,8 +55,18 @@ public class ResObjectAction extends ActionSupport {
 	private SysResClassService classService;
 	private TelnetSshDictService telnetSshService;
 	private SysResAuthService resAuthService;
+	private RawConfigPolicyService configService;
 	private String returnMsg;
 	private String backUrl;
+	
+	
+	public RawConfigPolicyService getConfigService() {
+		return configService;
+	}
+	@Resource(name="RawConfigPolicyServiceImpl")
+	public void setConfigService(RawConfigPolicyService configService) {
+		this.configService = configService;
+	}
 	public String getReturnMsg() {
 		return returnMsg;
 	}
@@ -313,27 +330,6 @@ public class ResObjectAction extends ActionSupport {
 			return "failed";
 		}
 		res.setId(Long.parseLong(resObjForm.getResId()));
-		if(resObjForm.getMcaId()==null){
-			returnMsg="修改失败，修改值获取失败！";
-			if(flag){
-				backUrl="toViewSysObj.action?resid="+resObjForm.getResId();
-			}else{
-				
-			}
-			logger.info("fetch mcaId failed from web browser");
-			return "failed";
-		}
-		if(resObjForm.getMcaId().equals("")){
-			returnMsg="修改失败，修改值获取失败！";
-			if(flag){
-				backUrl="toViewSysObj.action?resid="+resObjForm.getResId();
-			}else{
-				
-			}
-			logger.info("fetch mcaId failed from web browser");
-			return "failed";
-		}
-		res.setMcaId(Long.parseLong(resObjForm.getMcaId()));
 		res.setResDesc(resObjForm.getResDesc());
 		if(resObjForm.getResIp1()==null||resObjForm.getResIp2()==null||resObjForm.getResIp3()==null||resObjForm.getResIp4()==null){
 			returnMsg=("修改失败，修改值获取失败！");
@@ -502,7 +498,9 @@ public class ResObjectAction extends ActionSupport {
 			auth.setPassPrompt(tsd.getPassPrompt());
 			auth.setPrompt(tsd.getPrompt());
 			auth.setSepaWord(tsd.getSepaWord());
-			auth.setUserPrompt(tsd.getUserPrompt());		
+			auth.setUserPrompt(tsd.getUserPrompt());	
+			auth.setTerminalType(tsd.getTerminalType());
+			auth.setFilterString(tsd.getFilterString());
 		}
 		auth.setCommunity(resObjForm.getCommuinty());
 		if(resObjForm.getPassword()==null){
@@ -600,17 +598,19 @@ public class ResObjectAction extends ActionSupport {
 	}
 	//添加保存资源
 	public String saveResObj() throws Exception{
+		
 		SysResObj res=new SysResObj();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		res.setCityCode(resObjForm.getCityCode());
 		res.setCompanyCode(resObjForm.getCompany());
 		res.setConfigOperation(resObjForm.getConfigOperation());
-		if(resObjForm.getMcaId()==null){
+		/*if(resObjForm.getMcaId()==null){
 			returnMsg=("系统错误，资源保存失败！");		
 			logger.info("mca id is null ");
 			return "failed";
-		}
-		res.setMcaId(Long.parseLong(resObjForm.getMcaId()));
+		}*/
+		//res.setMcaId(Long.parseLong(resObjForm.getMcaId()));
+		
 		res.setResDesc(resObjForm.getResDesc());
 		res.setResIp(resObjForm.getResIp1()+"."+resObjForm.getResIp2()+"."+resObjForm.getResIp3()+"."+resObjForm.getResIp4());
 		res.setResName(resObjForm.getResName());
@@ -652,6 +652,8 @@ public class ResObjectAction extends ActionSupport {
 		resAuth.setExecPrompt(tsd.getExecPrompt());
 		resAuth.setNextPrompt(tsd.getNextPrompt());
 		resAuth.setPassPrompt(tsd.getPassPrompt());
+		resAuth.setTerminalType(tsd.getTerminalType());
+		resAuth.setFilterString(tsd.getFilterString());
 		resAuth.setPassword(resObjForm.getPassword());
 		resAuth.setPrompt(tsd.getPrompt());
 		resAuth.setSepaWord(tsd.getSepaWord());
@@ -664,6 +666,8 @@ public class ResObjectAction extends ActionSupport {
 		resAuth.setUserPrompt(tsd.getUserPrompt());
 		resAuth.setResId(res.getId());
 		resAuthService.save(resAuth);
+		returnMsg=("资源保存成功，刷新资源树后展示！");	
+		backUrl="/first.jsp";
 		return "success";
 	}
 	//跳转到添加资源页面
@@ -671,30 +675,12 @@ public class ResObjectAction extends ActionSupport {
 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String cityCode=request.getParameter("cityCode");
-		String operation=request.getParameter("operation");
+		//String operation=request.getParameter("operation");
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
-		String mcaCityCode=sysService.getOuterParentCityCode(cityCode);
-		if(mcaCityCode.equals("")){
-			
-			logger.info("fetch mcaCityCode  by  one CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员，点击确定返回首页！");	
-			return "failed";
-		}
-		List mcas=sysService.queryAll("select s.id from SysResObj s, SysResClass c  where s.cityCode='"+mcaCityCode+"' and s.classId=c.id and c.className='mca'");
-		if(mcas==null){	
-			logger.info("fetch mca by CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员,点击确定返回首页！");	
-			return "failed";
-		}
-		if(mcas.size()==0){
-			logger.info("fetch mca by CiyeCode filed , the CiyeCode ="+cityCode);
-			returnMsg=("系统错误，请重新登录或联系维护人员,点击确定返回首页！");	
-			return "failed";
-		}
+		
 		requestMap.put("cityCode", cityCode);
-		requestMap.put("mca",mcas.get(0));
-		request.getSession().setAttribute("operation", operation);
+	
 		return "toAddSysObj";
 	}
 	public String viewAllMca(){
@@ -744,7 +730,7 @@ public class ResObjectAction extends ActionSupport {
 			}
 			sb.append("{\"mcaid\":"+objs[0]+",");
 			sb.append("\"resName\":\""+objs[1]+"\",");
-			sb.append("\"resDesc\":\""+objs[2]+"\",");
+			sb.append("\"resDesc\":\""+(objs[2]==null?" ":objs[2])+"\",");
 			sb.append("\"cdate\":\""+date+"\",");
 			sb.append("\"resIp\":\""+objs[4]+"\",");
 			sb.append("\"mcapaused\":\""+objs[5]+"\",");
@@ -790,32 +776,32 @@ public class ResObjectAction extends ActionSupport {
 		if(mcaId==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(mcaId.trim().equals("")){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(paused==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch paused failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(paused.trim().equals("")){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch paused failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		SysResObj mca=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(mcaId));
 		if(mca==null){
 			returnMsg="修改采集端状态失败！";
 			logger.info("fetch mca failed by mcaid "+mcaId);
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResPaused(paused);
@@ -828,13 +814,13 @@ public class ResObjectAction extends ActionSupport {
 		if(mcaId==null){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(mcaId.trim().equals("")){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		SysResObj mca=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(mcaId));
@@ -842,7 +828,7 @@ public class ResObjectAction extends ActionSupport {
 		if(mca==null){
 			returnMsg="跳转修改页面失败！";
 			logger.info("fetch mca failed by mcaId "+mcaId);
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		List cityList=cityService.queryAll("from SysCity s where s.cityCode='"+mca.getCityCode()+"'");
@@ -881,13 +867,13 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getResId()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch mcaId failed ,mcaId is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResId().trim().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch mcaId failed ,mcaId is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		
@@ -897,13 +883,13 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getCityCode()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch citycode failed ,citycode is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getCityCode().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch citycode failed ,citycode is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setCityCode(resObjForm.getCityCode());
@@ -913,39 +899,39 @@ public class ResObjectAction extends ActionSupport {
 		if(resObjForm.getResIp1()==null||resObjForm.getResIp2()==null||resObjForm.getResIp3()==null||resObjForm.getResIp4()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch ip failed ,one of ip is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResIp1().equals("")||resObjForm.getResIp2().equals("")||resObjForm.getResIp3().equals("")||resObjForm.getResIp4().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch ip failed ,one of ip is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResIp(resObjForm.getResIp1()+"."+resObjForm.getResIp2()+"."+resObjForm.getResIp3()+"."+resObjForm.getResIp4());
 		if(resObjForm.getResName()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resName failed ,one of ip is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResName().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resName failed ,one of ip is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResName(resObjForm.getResName());
 		if(resObjForm.getResPaused()==null){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resPaused failed ,resPaused is null");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		if(resObjForm.getResPaused().equals("")){
 			returnMsg="修改失败，修改值获取失败！";
 			logger.info("fetch resPaused failed ,resPaused is ''");
-			backUrl="/resobj/viewMca.jsp";
+			backUrl="resobj/viewMca.jsp";
 			return "failed";
 		}
 		mca.setResPaused(resObjForm.getResPaused());
@@ -992,7 +978,7 @@ public class ResObjectAction extends ActionSupport {
 				if(resList!=null&&resList.size()>0){
 					logger.info("MCA has FW , mcaId is "+mcaIds[i]);
 					returnMsg=("请先删除归属采集端的防火墙资源在进行删除，删除失败！");	
-					backUrl="/resobj/viewMca.jsp";
+					backUrl="resobj/viewMca.jsp";
 					return "failed";
 				}
 			}
@@ -1103,6 +1089,149 @@ public class ResObjectAction extends ActionSupport {
 			pw.println(result.toString());
 			pw.flush();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public void getConfigVersion(){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String resId=request.getParameter("resId");
+		
+		String page=request.getParameter("page");
+		String maxRow=request.getParameter("maxRow");
+	
+		int pageN=1;
+		int MaxP=5;
+		if(page!=null&&!resId.trim().equals("")){
+			pageN=Integer.parseInt(page);
+		}
+		if(maxRow!=null&&!maxRow.trim().equals("")){
+			MaxP=Integer.parseInt(maxRow);
+		}
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			
+			pw = resp.getWriter();
+			if(resId==null){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(resId.trim().equals("")){
+				result.append("[]");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			List config = configService.queryByPage("from RawConfigPolicy c where c.resId="+resId+" order by c.cdate desc", pageN, MaxP);
+			JSONArray array=new JSONArray();
+			for(Object o:config){
+				RawConfigPolicy conf=(RawConfigPolicy)o;
+				JSONObject json=new JSONObject();
+				json.put("id", conf.getId());
+				json.put("text", "版本"+sdf1.format(sdf.parse(conf.getCdate())));
+				array.put(json);
+			}
+			pw.println(array.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public void configMatch(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String configId1=request.getParameter("configId1");
+		String configId2=request.getParameter("configId2");
+		
+		StringBuilder result = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			
+			pw = resp.getWriter();
+			if(configId1==null){
+				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");					
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(configId1.trim().equals("")){
+				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");					
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(configId2==null){
+				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			if(configId2.trim().equals("")){
+				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");				
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			
+			RawConfigPolicy config1 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId1));
+			RawConfigPolicy config2 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId2));
+			
+			String containRegex="#configuration#(.*?)#configuration#";
+			Pattern pattern = Pattern.compile(containRegex);
+			String conf1="";
+			String conf2="";
+			
+			Matcher mat1 = pattern.matcher(config1.getConfigPolicyInfo());
+			if (mat1.find()) {
+				conf1=mat1.group(1);
+			}
+			Matcher mat2 = pattern.matcher(config2.getConfigPolicyInfo());
+			if (mat2.find()) {
+				conf2=mat2.group(1);
+			}
+			if(!conf1.endsWith("^")){
+				conf1+="^";
+			}
+			if(!conf2.endsWith("^")){
+				conf2+="^";
+			}
+			
+			String[] res=FWVersionMatch.versionMatch(conf2, conf1, "\\^");
+			
+			JSONObject json=new JSONObject();
+			if(res==null){
+				result.append("{\"add\":\"\",\"del\":\"\",\"conf1\":\"\",\"conf2\":\"\"}");
+				pw.println(result.toString());
+				pw.flush();
+				return;
+			}
+			
+			
+			json.put("add", res[0]);
+			json.put("del", res[1]);
+			json.put("conf1", conf1.replace("^", "\n\r"));
+			json.put("conf2", conf2.replace("^", "\n\r"));
+			System.out.println(json.toString());
+			pw.println(json.toString());
+			pw.flush();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {

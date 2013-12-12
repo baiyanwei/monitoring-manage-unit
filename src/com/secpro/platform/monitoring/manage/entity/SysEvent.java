@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity(name="SysEvent")
 @Table(name="sys_event")
@@ -34,7 +35,15 @@ public class SysEvent {
 	private Long resId;
 	@Column(name="EVENT_TYPE_ID", nullable=true)
 	private Long eventTypeId;
+	@Transient
+	private SysEventDealMsg dealMsg;
 	
+	public SysEventDealMsg getDealMsg() {
+		return dealMsg;
+	}
+	public void setDealMsg(SysEventDealMsg dealMsg) {
+		this.dealMsg = dealMsg;
+	}
 	public Long getEventTypeId() {
 		return eventTypeId;
 	}

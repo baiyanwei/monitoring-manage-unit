@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -17,20 +20,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="用户管理>部门列表";
@@ -61,13 +56,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'parentName',title:'上级部门',width:100,editor:'text'}
            	          	
         ]],   
-       toolbar: [{   
+       toolbar: [
+        <% if(app.get("创建部门")!=null||user.getAccount().equals("admin")){ %>
+       {   
             text: '创建部门',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addOrg.jsp";
+               window.location.href="<%=_contexPath%>/users/addOrg.jsp";
             }   
-        }, '-', {   
+        }, '-', 
+         <% }if(app.get("删除部门")!=null||user.getAccount().equals("admin")){ %>
+        {   
             text: '删除部门',   
             iconCls: 'icon-remove',   
             handler: function () {   
@@ -89,7 +88,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
+        }, '-',
+        <% }if(app.get("修改部门")!=null||user.getAccount().equals("admin")){ %>
+         {   
             text: '修改部门',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -108,7 +109,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-', 
+        <%}%>
+        {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }

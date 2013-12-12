@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -12,24 +15,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>资源查看</title>
+    <title>事件规则</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>告警规则设置";
@@ -82,7 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</td>
 			<td>
 				<lable>&nbsp;事件类型：</lable>
-				<input id="cc4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url: 'getAllEventTypeByClass.action?resclass=fw',
+				<input id="cc4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url:'getAllEventTypeByClass.action?resclass=fw',
 					onSelect: function(rec){ 
 								var eventType=document.getElementById('eventType');			
 								eventType.value=rec.id;
@@ -123,8 +118,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'tvalue',title:'阀值',width:150,editor:'text'},
             {field:'repeat',title:'是否重复告警',width:150,editor:'text'},
             {field:'recoverSetMsg',title:'是否产生恢复短信',width:150,editor:'text'}
+            <% if(app.get("增加修改告警接收人")!=null){ %>
+            ,
+           	{
+  				 field : 'soperation',
+  				 title : '操作',
+   				width : 160,
+   				formatter:function(value,row,index){
+					var d;
+					var res=document.getElementById("resobj");
+					var resId=res.value;
+					if(row.setMsg=='是'){
+						if(row.isNotyfUser=='0'){
+    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
+       					}else{
+	       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
+	       					
+       					}
+       				}
+    				return d; 
+    			}
+    		}
+    		<%}%>
         ]],   
-       toolbar: [{   
+       toolbar: [
+       <% if(app.get("添加告警规则")!=null){ %>
+       {   
             text: '添加告警规则',   
             iconCls: 'icon-add',   
             handler: function () {  
@@ -136,8 +155,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             	}
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
-        }, '-', {   
-            text: '删除基线',   
+        }, '-', 
+        <% }if(app.get("删除告警规则")!=null){ %>
+        {   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -160,8 +181,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
-            text: '修改基线',   
+        }, '-', 
+        <% }if(app.get("修改告警规则")!=null){ %>
+        {   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -179,7 +202,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-', 
+        <%}%>
+        {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }
@@ -272,8 +297,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'tvalue',title:'阀值',width:150,editor:'text'},
             {field:'repeat',title:'是否重复告警',width:150,editor:'text'},
             {field:'recoverSetMsg',title:'是否产生恢复短信',width:150,editor:'text'}
+            <% if(app.get("增加修改告警接收人")!=null){ %>
+            ,
+           	{
+  				 field : 'soperation',
+  				 title : '操作',
+   				width : 160,
+   				formatter:function(value,row,index){
+					var d;
+					var res=document.getElementById("resobj");
+					var resId=res.value;
+					if(row.setMsg=='是'){
+						if(row.isNotyfUser=='0'){
+    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
+       					}else{
+	       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
+	       					
+       					}
+       				}
+    				return d; 
+    			}
+    		}
+    		<%}%>
         ]],   
-       toolbar: [{   
+       toolbar: [
+        <% if(app.get("添加告警规则")!=null){ %>
+       {   
             text: '添加告警规则',   
             iconCls: 'icon-add',   
             handler: function () {  
@@ -285,8 +334,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             	}
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
-        }, '-', {   
-            text: '删除基线',   
+        }, '-',
+        <% }if(app.get("删除告警规则")!=null){ %>
+         {   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -309,8 +360,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
-            text: '修改基线',   
+        }, '-', 
+        <% }if(app.get("修改告警规则")!=null){ %>
+        {   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#mcaDetail').datagrid('getSelections');  
@@ -328,7 +381,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-',
+        <%}%>
+         {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#mcaDetail').datagrid('reload'); }

@@ -16,19 +16,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>创建事件消息格式";
@@ -36,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	<form id="ff" action="saveEventMsg.action" method="post" target="contextMain">
+  	<form id="ff" action="saveEventMsg.action" method="post" target="contextMain" onsubmit="return submitForm();">
     		<input type="hidden" name="msg.eventTypeId" value="${eventTypeId }"/>
     		
   			<div id="p" class="easyui-panel" title="基线规则" style="width:500px;height:300px;padding:10px;">
@@ -57,26 +49,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    		<tr>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    			<input type="submit" value="提交"/>
 	    			</td>
 	    			<td>
-	    			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+	    			<input type="reset" value="重置"/>
 	    			</td>
 	    		<tr>
 				</table>
 			</div>
 		</form>
-		<script>
+	<script>
  
 		function submitForm(){
-			$('#ff').form('submit');
+			return $('#ff').form('validate');
 		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
-		
-		 
-		
 	</script>
   </body>
   </html>

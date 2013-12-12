@@ -203,13 +203,10 @@
 </script>
 </head>
 <body onload="operationChange();">
-	<div class="content">
-		<div class="content_title_bg">
-			<div class="content_title">
-				<%=operationTitle%></div>
-		</div>
-		<div class="about_title"></div>
-		<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
+	
+		
+		
+		
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 				<tr>
 					<td valign="top">
@@ -486,8 +483,5 @@
 						</fieldset></td>
 				</tr>
 			</table>
-
-		</div>
-	</div>
 </body>
 </html>

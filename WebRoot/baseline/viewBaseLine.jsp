@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -17,20 +20,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+	
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
-	<link rel="stylesheet" type="text/css" href="css/demo.css">
+	
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/main.css" />
-	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
-	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
+	
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="基线管理>基线列表";
@@ -59,6 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'blackWhite',title:'黑白名单',width:200,editor:'text'} ,
             {field:'baselineDesc',title:'基线描述',width:100,editor:'textarea'}, 
             {field:'score',title:'分数(默认10分，点击修改)',width:150,editor:'text'}
+           <% if(app.get("添加基线规则")!=null){ %> 
             ,{
   				 field : 'boperation',
   				 title : '基线规则操作',
@@ -71,14 +69,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     				return d; 
     			}
     		}
+    		<%}%>
         ]],   
-       toolbar: [{   
+       toolbar: [
+       <% if(app.get("添加基线")!=null){ %>
+       {   
             text: '添加基线',   
             iconCls: 'icon-add',   
             handler: function () {   
-               window.location.href="addBaseLine.jsp";
+               window.location.href="<%=_contexPath%>/baseline/addBaseLine.jsp";
             }   
-        }, '-', {   
+        }, '-',
+         <% }if(app.get("删除基线")!=null){ %>
+         {   
             text: '删除基线',   
             iconCls: 'icon-remove',   
             handler: function () {   
@@ -101,7 +104,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
+        }, '-',
+        <% }if(app.get("修改基线")!=null){ %>
+         {   
             text: '修改基线',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -120,7 +125,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-',
+        <%}%>
+         {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }

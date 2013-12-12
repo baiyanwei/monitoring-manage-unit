@@ -8,12 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity(name="SysEventHis")
 @Table(name="sys_event_his")
 public class SysEventHis {
 	@Id
 	@Column  
-	@GeneratedValue(strategy = GenerationType.AUTO)   
+	@GeneratedValue(generator ="_assigned")   
+	@GenericGenerator( name ="_assigned",strategy="assigned")
 	private Long id;
 	@Column(name="EVENT_LEVEL", nullable=true)
 	private int eventLevel;
@@ -29,8 +32,6 @@ public class SysEventHis {
 	private String clearUser;
 	@Column(name="CLEAR_DATE")
 	private String clearDate;
-	@Column(name="CLEAR_DESC")
-	private String clear_desc;
 	@Column(name="RES_ID", nullable=true)
 	private Long resId;
 	@Column(name="EVENT_TYPE_ID", nullable=true)
@@ -96,11 +97,6 @@ public class SysEventHis {
 	public void setResId(Long resId) {
 		this.resId = resId;
 	}
-	public String getClear_desc() {
-		return clear_desc;
-	}
-	public void setClear_desc(String clear_desc) {
-		this.clear_desc = clear_desc;
-	}
+	
 	
 }

@@ -2,8 +2,11 @@ package com.secpro.platform.monitoring.manage.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -11,9 +14,9 @@ import javax.sql.DataSource;
 
 import org.springframework.stereotype.Repository;
 
-
 import com.secpro.platform.monitoring.manage.common.dao.impl.BaseDao;
 import com.secpro.platform.monitoring.manage.dao.SyslogRuleDao;
+import com.secpro.platform.monitoring.manage.entity.RawSyslogHit;
 import com.secpro.platform.monitoring.manage.entity.SyslogBean;
 import com.secpro.platform.monitoring.manage.util.JdbcUtil;
 
@@ -146,5 +149,59 @@ public class SyslogRuleDaoImpl extends BaseDao implements SyslogRuleDao{
 			JdbcUtil.close(conn );
 		}
 		return false;
+	}
+	public List getRawSyslogHitPage(Long resId,String startTime,String endTime,int pageSize,int pageNo){
+		Connection con=null;
+		PreparedStatement sta=null;
+		ResultSet rs=null;
+		List hitList=new ArrayList();
+		try {
+			con=dataSource.getConnection();
+			sta=con.prepareStatement("select t2.POLICY_INFO,t2.HIT_COUNT,t2.START_DATE,t2.END_DATE,t2.RES_ID from (select rownum r,t1.POLICY_INFO,t1.HIT_COUNT,t1.START_DATE,t1.END_DATE,t1.RES_ID from RAW_SYSLOG_HIT t1 where t1.RES_ID=? and t1.START_DATE > ? and t1.END_DATE< ? and  rownum<?) t2 where t2.r>? ");
+			sta.setLong(1, resId);
+			sta.setString(2, startTime);
+			sta.setString(3, endTime);
+			sta.setInt(4, pageNo*pageSize+1);
+			sta.setInt(5, pageSize*(pageNo-1));
+			rs=sta.executeQuery();
+			while(rs.next()){
+				RawSyslogHit hit=new RawSyslogHit();
+				hit.setPolicyInfo(rs.getString(1));
+				hit.setHitCount(rs.getLong(2));
+				hit.setStartDate(rs.getString(3));
+				hit.setEndDate(rs.getString(4));
+				hit.setResId(rs.getLong(5));
+				hitList.add(hit);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			JdbcUtil.close( con,sta,rs);
+		}
+		return hitList;	
+	}
+	public int getRawSyslogHitCount(Long resId,String startTime,String endTime){
+		Connection con=null;
+		PreparedStatement sta=null;
+		ResultSet rs=null;
+		int count=0;
+		try {
+			con=dataSource.getConnection();
+			sta=con.prepareStatement("select count(t1.POLICY_INFO) from RAW_SYSLOG_HIT t1 where t1.RES_ID=? and t1.START_DATE > ? and t1.END_DATE< ?");
+			sta.setLong(1, resId);
+			sta.setString(2, startTime);
+			sta.setString(3, endTime);
+			rs=sta.executeQuery();
+			if(rs.next()){
+				count=rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			JdbcUtil.close( con,sta,rs);
+		}
+		return count;
 	}
 }
