@@ -161,24 +161,24 @@ public class TopologyBuilder {
 	 * @param nodeTipArray
 	 * @param currentResource
 	 */
-	public void buildDefaultNodeTip(ArrayList<ArrayList<String>> nodeTipDataList, JSONObject currentResource) {
+	public void buildDefaultNodeTip(ArrayList<ArrayList<Object>> nodeTipDataList, JSONObject currentResource) {
 		if (nodeTipDataList == null || currentResource == null) {
 			return;
 		}
-		ArrayList<String> defaultTipData = new ArrayList<String>();
+		ArrayList<Object> defaultTipData = new ArrayList<Object>();
 		nodeTipDataList.add(defaultTipData);
 		// 资源名称，资源IP，采集器，健康度，监控状态
 		// 标题
 		JSONArray titleObject = new JSONArray();
 		titleObject.put("default");
 		titleObject.put("默认");
-		defaultTipData.add(titleObject.toString());
+		defaultTipData.add(titleObject);
 		// 内容
-		defaultTipData.add("资源名称:" + "AA");
-		defaultTipData.add("资源标识:");
-		defaultTipData.add("采集器:");
-		defaultTipData.add("健康度:");
-		defaultTipData.add("监控状态:");
+		defaultTipData.add("资源名称:AA");
+		defaultTipData.add("资源标识:AA");
+		defaultTipData.add("采集器:AA");
+		defaultTipData.add("健康度:AA");
+		defaultTipData.add("监控状态:AA");
 	}
 
 	/**
@@ -188,19 +188,19 @@ public class TopologyBuilder {
 	 * @param currentResource
 	 */
 	@SuppressWarnings("unchecked")
-	public void buildNodeTipEvent(ArrayList<ArrayList<String>> nodeTipDataList, JSONObject currentResource) {
+	public void buildNodeTipEvent(ArrayList<ArrayList<Object>> nodeTipDataList, JSONObject currentResource) {
 		if (nodeTipDataList == null || currentResource == null) {
 			return;
 		}
-		ArrayList<String> eventTipData = new ArrayList<String>();
+		ArrayList<Object> eventTipData = new ArrayList<Object>();
 		//
 		int lastActionIndex = -1;
 		for (int i = 0; i < nodeTipDataList.size(); i++) {
-			ArrayList<String> colList = nodeTipDataList.get(i);
+			ArrayList<Object> colList = nodeTipDataList.get(i);
 			if (colList == null || colList.isEmpty()) {
 				continue;
 			}
-			if (colList.get(0).startsWith("[\"action\",")) {
+			if (colList.get(0).toString().startsWith("[\"action\",")) {
 				lastActionIndex = i;
 			}
 		}
@@ -211,39 +211,37 @@ public class TopologyBuilder {
 		}
 		// 查询最新的事件
 		//
-		//HashMap<String, Object> eventMap = resourceProvider.getEventList(currentResource);
+		HashMap<String, Object> eventMap = resourceProvider.getEventList(currentResource);
 		// 标题
-		// JSONArray titleObject = new JSONArray();
-		// titleObject.add("event");
-		// if (eventMap.containsKey("total") == false) {
-		// titleObject.add("事件(0)");
-		// } else {
-		// titleObject.add("事件(" + eventMap.get("total") + ")");
-		// }
-		// eventTipData.add(titleObject.toString());
-		// if (eventMap == null || eventMap.isEmpty()) {
-		// return;
-		// }
-		// List<EventView> eventList = (List<EventView>) eventMap.get("event");
-		// if (eventList == null || eventList.isEmpty()) {
-		// return;
-		// }
-		// for (int i = 0; i < eventList.size(); i++) {
-		// if (eventList.get(i) == null) {
-		// continue;
-		// }
-		// EventView view = eventList.get(i);
-		// JSONArray eventLevelArray = new JSONArray();
-		// eventLevelArray.add("(" +
-		// resourceProvider.getUsableStatusDescr(view.getLevel()) + "," +
-		// view.getTime() + ")");
-		// eventLevelArray.add(String.valueOf(view.getLevel()));
-		// eventTipData.add(eventLevelArray.toString());
-		// eventLevelArray.clear();
-		// eventLevelArray.add("\t" + view.getMsg());
-		// eventLevelArray.add(String.valueOf(view.getLevel()));
-		// eventTipData.add(eventLevelArray.toString());
-		// }
+		JSONArray titleObject = new JSONArray();
+		titleObject.put("event");
+		if (eventMap.containsKey("total") == false) {
+			titleObject.put("事件(0)");
+		} else {
+			titleObject.put("事件(" + eventMap.get("total") + ")");
+		}
+		eventTipData.add(titleObject);
+		if (eventMap == null || eventMap.isEmpty()) {
+			return;
+		}
+		List<JSONObject> eventList = (List<JSONObject>) eventMap.get("event");
+		if (eventList == null || eventList.isEmpty()) {
+			return;
+		}
+		for (int i = 0; i < eventList.size(); i++) {
+			if (eventList.get(i) == null) {
+				continue;
+			}
+			JSONObject view = eventList.get(i);
+//			JSONArray eventLevelArray = new JSONArray();
+//			eventLevelArray.add("(" + resourceProvider.getUsableStatusDescr(view.getLevel()) + "," + view.getTime() + ")");
+//			eventLevelArray.add(String.valueOf(view.getLevel()));
+//			eventTipData.add(eventLevelArray.toString());
+//			eventLevelArray.clear();
+//			eventLevelArray.add("\t" + view.getMsg());
+//			eventLevelArray.add(String.valueOf(view.getLevel()));
+//			eventTipData.add(eventLevelArray.toString());
+		}
 
 	}
 

@@ -247,9 +247,12 @@ public class ResourceProvider {
 			userTarget.put("l", resObj.getString(TopologyNode.NODE_LABEL_NAME));
 			userTarget.put("id", resObj.getString(TopologyNode.NODE_ID_NAME));
 			if (Assert.isEmptyString(resObj.getString(TopologyNode.NODE_TYPE_NAME)) == false) {
-				userTarget.put("i", "/mmu/topology/images/node/"+resObj.getString(TopologyNode.NODE_TYPE_NAME)+".png");
+				userTarget.put("i", "/mmu/topology/images/node/" + resObj.getString(TopologyNode.NODE_TYPE_NAME) + ".png");
 			} else {
 				userTarget.put("i", "/mmu/topology/images/node/node.png");
+			}
+			if (resObj.getString(TopologyNode.NODE_TYPE_NAME).equals(TopologyAdapter.NodeType.FIREWALL_NODE)) {
+				userTarget.put("status", "1");
 			}
 		} catch (JSONException e) {
 			logger.exception(e);
@@ -355,13 +358,13 @@ public class ResourceProvider {
 	 * @param pageNo
 	 * @return
 	 */
-	public HashMap<String, Object> getEventList(SysResObj resourceNode) {
+	public HashMap<String, Object> getEventList(JSONObject resourceNode) {
 		HashMap<String, Object> dataMap = new HashMap<String, Object>();
-		// List<EventView> eventList = new ArrayList<EventView>();
-		// if (resourceNode == null) {
-		// return null;
-		// }
-		// // 定义查询条件
+		List<JSONObject> eventList = new ArrayList<JSONObject>();
+		if (resourceNode == null) {
+			return null;
+		}
+		// 定义查询条件
 		// EventSearchConditionValueX condValue = new
 		// EventSearchConditionValueX();
 		// // 取新事件
@@ -403,8 +406,8 @@ public class ResourceProvider {
 		// view.setTime(configuration.getEventDataStr(value.getOccurTime()));
 		// eventList.add(view);
 		// }
-		// dataMap.put("total", eventArray[0]);
-		// dataMap.put("event", eventList);
+		dataMap.put("total", "0");
+		dataMap.put("event", eventList);
 		return dataMap;
 	}
 
@@ -468,5 +471,17 @@ public class ResourceProvider {
 
 		}
 		return nodeList;
+	}
+
+	public List<String[]> getResourceEventStatusByNodeID(String nodeIDs) {
+		if (Assert.isEmptyString(nodeIDs) == true) {
+			return null;
+		}
+		ArrayList<String[]> statusList = new ArrayList<String[]>();
+		String[] nodeIDArray = nodeIDs.split(",");
+		for (int i = 0; i < nodeIDArray.length; i++) {
+			statusList.add(new String[] { nodeIDArray[i], "5" });
+		}
+		return statusList;
 	}
 }

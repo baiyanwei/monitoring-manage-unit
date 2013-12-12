@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -91,37 +92,35 @@ public class TopologyAdapter {
 			return;
 		}
 		// 当前查看的资源节点
-		JSONObject nodeResource = ResourceProvider.getInstance().getCityObjByNodeID(nodeID);
+		JSONObject nodeResource = new JSONObject();
+		// JSONObject nodeResource =
+		// ResourceProvider.getInstance().getCityObjByNodeID(nodeID);
 		if (nodeResource == null) {
 			writeResponseMessage(response, "ID[" + nodeID + "]对应的资源不存在", 500);
 			return;
 		}
-		//String nodeTypeID = String.valueOf(nodeResource.getResValue().getResTypeId());
-		ArrayList<ArrayList<String>> nodeTipDataList = new ArrayList<ArrayList<String>>();
+		// String nodeTypeID =
+		// String.valueOf(nodeResource.getResValue().getResTypeId());
+		ArrayList<ArrayList<Object>> nodeTipDataList = new ArrayList<ArrayList<Object>>();
 		// 处理默认属性
 		topologyBuilder.buildDefaultNodeTip(nodeTipDataList, nodeResource);
-		/*
 		// 处理定制属性，指标，动作
-		ArrayList<String[]> cfgTipList = TopologyConfiguration.getInstance().getNodeTooltipCfg(nodeTypeID);
-		// System.out.println("request for node tooltip >> typeID:" +
-		// nodeTypeID);
-		if (cfgTipList != null && cfgTipList.isEmpty() == false) {
-			for (int i = 0; i < cfgTipList.size(); i++) {
-				String[] cfgRaw = cfgTipList.get(i);
-				if (cfgRaw == null) {
-					continue;
-				}
-				// 0 type 1 name 2 values
-				ArrayList<String> groupTipList = topologyBuilder.buildNodeTipByGroup(cfgRaw, nodeResource, true);
-				if (groupTipList == null || groupTipList.isEmpty()) {
-					continue;
-				}
-				nodeTipDataList.add(groupTipList);
-			}
-		}
+		/*
+		 * ArrayList<String[]> cfgTipList =
+		 * TopologyConfiguration.getInstance().getNodeTooltipCfg(nodeTypeID); //
+		 * System.out.println("request for node tooltip >> typeID:" + //
+		 * nodeTypeID);
+		 * 
+		 * if (cfgTipList != null && cfgTipList.isEmpty() == false) { for (int i
+		 * = 0; i < cfgTipList.size(); i++) { String[] cfgRaw =
+		 * cfgTipList.get(i); if (cfgRaw == null) { continue; } // 0 type 1 name
+		 * 2 values ArrayList<String> groupTipList =
+		 * topologyBuilder.buildNodeTipByGroup(cfgRaw, nodeResource, true); if
+		 * (groupTipList == null || groupTipList.isEmpty()) { continue; }
+		 * nodeTipDataList.add(groupTipList); } }
+		 */
 		// 处理TIP中的事件
 		topologyBuilder.buildNodeTipEvent(nodeTipDataList, nodeResource);
-		*/
 		// 找到最长的列
 		int maxLen = 0;
 		for (int i = 0; i < nodeTipDataList.size(); i++) {
@@ -143,6 +142,7 @@ public class TopologyAdapter {
 			nodeTipArray.put(rawArray);
 		}
 		// 写响应
+		System.out.println("TIP:" + nodeTipArray.toString());
 		writeResponseMessage(response, nodeTipArray.toString(), 200);
 	}
 
@@ -164,26 +164,17 @@ public class TopologyAdapter {
 			writeResponseMessage(response, "无效的nodeIDs", 500);
 			return;
 		}
-		String[] nodeIDArray = nodeIDs.split(",");
 		//
 		JSONObject nodesStatus = new JSONObject();
-		ResourceProvider resourceProvider = ResourceProvider.getInstance();
-		for (int i = 0; i < nodeIDArray.length; i++) {
-			// 如果NODE在JS自定义拓扑图中TYPE类别的NODE的ID为FID_TYPEID需要过滤掉
-			if (nodeIDArray[i] == null || nodeIDArray[i].length() == 0 || nodeIDArray[i].indexOf("_") != -1) {
-				continue;
+		try {
+			List<String[]> resourceStatusListResource = ResourceProvider.getInstance().getResourceEventStatusByNodeID(nodeIDs);
+			if (resourceStatusListResource != null) {
+				for (int i = 0; i < resourceStatusListResource.size(); i++) {
+					nodesStatus.put(resourceStatusListResource.get(i)[0], resourceStatusListResource.get(i)[1]);
+				}
 			}
-			try {
-				// Resource nodeResource =
-				// resourceProvider.getResourceByNodeID(Integer.parseInt(nodeIDArray[i]));
-				// if (nodeResource == null) {
-				// continue;
-				// }
-				// nodesStatus.put(nodeIDArray[i],
-				// String.valueOf(nodeResource.getResValue().getUsableStatus()));
-			} catch (Exception e) {
-				logger.exception(e);
-			}
+		} catch (Exception e) {
+			logger.exception(e);
 		}
 		//
 		writeResponseMessage(response, nodesStatus.toString(), 200);
