@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resource"/>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
@@ -53,6 +52,5 @@
 	<classpathentry kind="lib" path="lib/http/netty-3.7.0.Final.jar"/>
 	<classpathentry kind="lib" path="lib/topology/y.jar"/>
 	<classpathentry kind="lib" path="lib/topology/yfiles-server.jar"/>
-	<classpathentry kind="lib" path="lib/web/org.springframework.web-3.1.0.M2.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
