@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.MsuTask;
 import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
@@ -110,16 +108,36 @@ public class TaskScheduleAction {
 			if ("ssh,snmp,telnet".indexOf(mcaOperation) == -1) {
 				throw new Exception(mcaOperation + "不是MCA有效的采集类型[ssh/snmp/telnet],操作失败");
 			}
-			// content中存放的是命令的ID
-			SysCommand sysCommand = (SysCommand) (taskScheduleService.getObj(SysCommand.class, Long.parseLong(request.getParameter("content").trim())));
-			if (sysCommand == null) {
-				throw new Exception("未找到ID" + request.getParameter("content") + "对应的命令资源");
+			String commandValue = null;
+			String openCommandValue = null;
+			if ("snmp".equalsIgnoreCase(mcaOperation) == true) {
+				String[] snmpOids = request.getParameterValues("snmp_oids");
+				commandValue = "";
+				if (snmpOids.length == 1) {
+					commandValue = snmpOids[0];
+				} else {
+					for (int i = 0; i < snmpOids.length; i++) {
+						if (i == 0) {
+							commandValue = commandValue + snmpOids[i];
+						} else {
+							commandValue = commandValue + "," + snmpOids[i];
+						}
+					}
+				}
+			} else {
+				// content中存放的是命令的ID
+				SysCommand sysCommand = (SysCommand) (taskScheduleService.getObj(SysCommand.class, Long.parseLong(request.getParameter("content").trim())));
+				if (sysCommand == null) {
+					throw new Exception("未找到ID" + request.getParameter("content") + "对应的命令资源");
+				}
+				commandValue = sysCommand.getCommand();
+				openCommandValue = sysCommand.getOpenCommand();
 			}
 			//
 			SysResAuth sysResAuth = buildSysResAuthByRequest(request);
-			JSONObject metaDataObj = BuildTaskMetaData(sysResAuth, mcaOperation, request.getParameter("snmp_version"), sysCommand.getOpenCommand());
+			JSONObject metaDataObj = BuildTaskMetaData(sysResAuth, mcaOperation, request.getParameter("snmp_version"), openCommandValue);
 			//
-			MsuTask task = buildMSUTaskByRequest(request, isNew, metaDataObj, sysCommand.getCommand());
+			MsuTask task = buildMSUTaskByRequest(request, isNew, metaDataObj, commandValue);
 			if (task == null) {
 				throw new Exception("无法从请求中分析出任务主体,操作失败.");
 			}
@@ -294,7 +312,7 @@ public class TaskScheduleAction {
 	/**
 	 * @param request
 	 * @param isNew
-	 * @param command 
+	 * @param command
 	 * @return
 	 * @throws Exception
 	 * 
@@ -332,13 +350,13 @@ public class TaskScheduleAction {
 	}
 
 	/**
-	 *  
+	 * 
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	private SysResAuth buildSysResAuthByRequest(HttpServletRequest request) throws Exception {
-		if(request==null){
+		if (request == null) {
 			throw new Exception("request为空");
 		}
 		SysResAuth resAuth = new SysResAuth();
@@ -360,6 +378,9 @@ public class TaskScheduleAction {
 		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv"));
 		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass"));
 		resAuth.setResId(Long.valueOf(request.getParameter("resId")));
+		//
+		resAuth.setFilterString(request.getParameter("filterString"));
+		resAuth.setTerminalType(request.getParameter("terminalType"));
 		//
 		return resAuth;
 	}
@@ -427,12 +448,12 @@ public class TaskScheduleAction {
 		if (Assert.isEmptyString(mcaOperation) == true) {
 			throw new Exception("MCA采集类型为空");
 		}
-		if (mcaOperation.equalsIgnoreCase("snmp") == false) {
+		if (mcaOperation.equalsIgnoreCase("snmp") == true) {
 			if (Assert.isEmptyString(snmpVersion) == true) {
 				throw new Exception("MCA采集类型snmp的版本为空");
 			}
 		}
-		if (mcaOperation.equalsIgnoreCase("telnet") == false) {
+		if (mcaOperation.equalsIgnoreCase("telnet") == true) {
 			if (Assert.isEmptyString(openCommand) == true) {
 				throw new Exception("MCA采集类型telnet中openCommand为空");
 			}
@@ -447,6 +468,14 @@ public class TaskScheduleAction {
 				//
 				if (resAuth.getPassword() != null && resAuth.getPassword().length() > 0) {
 					metaDataObj.put("password", resAuth.getPassword());
+				}
+			}
+			if ("ssh".equalsIgnoreCase(mcaOperation) == true) {
+				if (Assert.isEmptyString(resAuth.getFilterString()) == false) {
+					metaDataObj.put("filterString", resAuth.getFilterString());
+				}
+				if (Assert.isEmptyString(resAuth.getTerminalType()) == false) {
+					metaDataObj.put("terminalType", resAuth.getTerminalType());
 				}
 			}
 			if ("telnet".equalsIgnoreCase(mcaOperation) == true) {

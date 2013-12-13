@@ -1,5 +1,6 @@
 package com.secpro.platform.monitoring.manage.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -77,6 +78,28 @@ public class TaskScheduleServiceImpl extends BaseService implements TaskSchedule
 			return null;
 		}
 		return cityList.get(0);
+	}
+
+	public List<String[]> getSnmpOIDbyTypeCode(String typeCode) {
+		if (Assert.isEmptyString(typeCode) == true) {
+			return new ArrayList<String[]>();
+		}
+		StringBuffer querySQL = new StringBuffer();
+		querySQL.append("SELECT O.MIBOID, K.KPI_NAME");
+		querySQL.append("  FROM (SELECT O.MIBOID, O.TYPE_CODE, O.KPI_ID");
+		querySQL.append("          FROM SYS_KPI_OID O");
+		querySQL.append("         WHERE O.TYPE_CODE = '").append(typeCode).append("') O");
+		querySQL.append("  LEFT JOIN (SELECT K.KPI_NAME, K.ID FROM SYS_KPI_INFO K) K");
+		querySQL.append("    ON K.ID = O.KPI_ID");
+		List<Object> rowList = this.dao.queryBySql(querySQL.toString(), 1000, 1);
+		if (rowList == null) {
+			return new ArrayList<String[]>();
+		}
+		List<String[]> dataList = new ArrayList<String[]>();
+		for (int i = 0; i < rowList.size(); i++) {
+			dataList.add(new String[] { String.valueOf(((Object[]) (rowList.get(i)))[0]), String.valueOf(((Object[]) (rowList.get(i)))[1]) });
+		}
+		return dataList;
 	}
 
 	public TaskScheduleDao getTaskScheduleDao() {

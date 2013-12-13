@@ -17,6 +17,8 @@ public interface TaskScheduleService extends IBaseService {
 	public List<SysResAuth> getSysResAuthByResId(long resId);
 	
 	public SysCity getSysCityBycityCode(String cityCode);
+	
+	public List<String[]> getSnmpOIDbyTypeCode(String typeCode);
 
 	public TaskScheduleDao getTaskScheduleDao();
 }
