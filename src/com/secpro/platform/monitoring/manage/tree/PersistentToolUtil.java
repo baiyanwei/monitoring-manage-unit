@@ -19,12 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.secpro.platform.monitoring.manage.util.DBConfig;
 import com.vandagroup.common.bean.BaseBean;
 import com.vandagroup.common.util.ReadProperties;
@@ -182,7 +178,6 @@ public class PersistentToolUtil {
 			try{	
 				Class.forName(DBConfig.DRIVER);
 				conn=DriverManager.getConnection(DBConfig.URL,DBConfig.USERNAME,DBConfig.PASSWORD);
-				
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

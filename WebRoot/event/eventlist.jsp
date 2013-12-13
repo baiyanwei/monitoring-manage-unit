@@ -278,16 +278,16 @@
 						</div>
 						条] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="ploy" value="1" checked
-							onclick="getOneTypeNewEventByClass('ploy');">
+							onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#C8FF00'>通知</font>
 						<input type="checkbox" id="warning" name="ploy" value="2"
-							checked onclick="getOneTypeNewEventByClass('ploy');">
+							checked onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FFD200'>轻微</font>
 						<input type="checkbox" id="major" name="ploy" value="3" checked
-							onclick="getOneTypeNewEventByClass('ploy');">
+							onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FF9200'>重要</font>
 						<input type="checkbox" id="critical" name="ploy" value="4"
-							checked onclick="getOneTypeNewEventByClass('ploy');">
+							checked onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FF1042'>紧急</font>
 					</th>
 				</tr>
@@ -334,7 +334,7 @@ $('#eventtabs').tabs({
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("mca")',60000);
 		}else if(title=="策略告警"){
-			getOneTypeEventListByLevel("ploy");
+			getOneTypeEventListByLevel("policy");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}

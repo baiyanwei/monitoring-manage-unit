@@ -180,7 +180,7 @@ public class SysDevAction extends ActionSupport {
 			for (int i = 0; i < SysDevTypes.size(); i++) {
 				SysDevType sdc=(SysDevType)SysDevTypes.get(i);
 				if(i==0){
-					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\",\"selected\":true}");
+					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\"}");
 				}else{
 					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\"}");
 				}
