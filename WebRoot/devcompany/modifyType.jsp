@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-<title>设备类型修改</title>
+<title>设备型号修改</title>
 <meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="厂商管理》设备类型修改";
+		adiv.innerText="厂商管理>设备型号修改";
 	</script>
 </head>
 <body>
@@ -39,12 +39,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    <input type="hidden" name="company.companyCode" value="${ devType.companyCode}"/>
 		    	<table>
 	    		<tr>
-	    			<td><label>类型名称：</label></td>
+	    			<td><label>型号名称：</label></td>
 	    			<td><input class="easyui-validatebox" type="text" missingMessage="请输入厂商名称" name="company.typeName" value="${devType.typeName }" data-options="required:true"></input></td>
 	    		</tr>
 	    		
 	    		<tr>
-	    			<td><label>类型描述：</label></td>
+	    			<td><label>型号描述：</label></td>
 	    			<td><textarea class="datagrid-editable-input" name="company.typeDesc" style="resize:none;">${devType.typeDesc}</textarea></td>
 	    		</tr>
 	    	</table>
