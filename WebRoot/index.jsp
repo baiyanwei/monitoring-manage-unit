@@ -217,7 +217,7 @@ ul#navmenu-h ul ul li.iehover ul {
 										<% if(app.get("首页查看")!=null){ %>
 											<li><a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a></li>
 										<% }if(app.get("基线规则管理")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线规则管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线与规则管理</a></li>
 											<ul>
 												<% if(app.get("基线模板查看")!=null){ %>		
 													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a></li>
@@ -229,12 +229,12 @@ ul#navmenu-h ul ul li.iehover ul {
 												<%} %>	
 											</ul>
 										<% }if(app.get("资源数据管理菜单")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源数据管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源与数据管理</a></li>
 											<ul>
 												<% if(app.get("采集端查看")!=null){ %>	
 													<li><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></li>
 												<% }if(app.get("防火墙配置查看")!=null){ %>		
-													<li><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">配置文件</a></li>
+													<li><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">防火墙配置文件</a></li>
 												<% }if(app.get("SYSLOG命中查看")!=null){ %>	
 													<li><a href="javascript:hitmanager();" class="easyui-linkbutton" data-options="plain:true">SYSLOG命中</a></li>
 												<% }if(app.get("基线比对查看")!=null){ %>		
@@ -258,7 +258,7 @@ ul#navmenu-h ul ul li.iehover ul {
 													<% if(app.get("查看事件类型")!=null) {%>		
 														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件类型管理</a></li>
 													<% }if(app.get("查看告警规则")!=null){ %>		
-													    <li><a href="javascript:eventrulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
+													    <li><a href="javascript:eventrulemanager();" class="easyui-linkbutton" data-options="plain:true">告警规则管理</a></li>
 													<% }if(app.get("查看指标")!=null){ %>		
 														<li><a href="javascript:kpimanager();" class="easyui-linkbutton" data-options="plain:true">指标管理</a></li>
 													<%} %>

@@ -95,7 +95,7 @@
 										<% }if(app.get("资源数据管理菜单")!=null){ %>
 											<div id="mm2" style="width:150px;">
 												<% if(app.get("采集端查看")!=null){ %>	
-													<div></div><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></div>
+													<div><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></div>
 												<% }if(app.get("防火墙配置查看")!=null){ %>		
 													<div><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">配置文件</a></div>
 												<% }if(app.get("SYSLOG命中查看")!=null){ %>	

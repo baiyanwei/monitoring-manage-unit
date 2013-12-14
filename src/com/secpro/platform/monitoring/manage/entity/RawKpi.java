@@ -15,8 +15,8 @@ public class RawKpi {
 	private Long kpiId;
 	@Column(name="cdate")
 	private String cdate;
-	@Column(name="value_str")
-	private String valueStr;
+	@Column(name="kpi_value")
+	private String kpiValue;
 	@Column(name="value_num")
 	private Double valueNum;
 	public Long getResId() {
@@ -38,11 +38,12 @@ public class RawKpi {
 	public void setCdate(String cdate) {
 		this.cdate = cdate;
 	}
-	public String getValueStr() {
-		return valueStr;
+	
+	public String getKpiValue() {
+		return kpiValue;
 	}
-	public void setValueStr(String valueStr) {
-		this.valueStr = valueStr;
+	public void setKpiValue(String kpiValue) {
+		this.kpiValue = kpiValue;
 	}
 	public Double getValueNum() {
 		return valueNum;

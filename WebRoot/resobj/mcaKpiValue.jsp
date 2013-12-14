@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>采集端指标</title>
+    <title>采集机指标</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -62,10 +62,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }
         },'-', {   
-            text: '采集端启动',   
+            text: '采集程序启动',   
             iconCls: 'icon-remove',   
             handler: function () {   
-                if (confirm("请确认采集端处于宕机状态？")) {   
+                if (confirm("请确认采集程序处于宕机状态？")) {   
 				    var urll="mcaOperation.action?mcaid=${resid}&operation=start";  
 				 	window.location.href=urll;
 				}  
@@ -73,10 +73,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }   
                
         },'-', {   
-            text: '采集端停止',   
+            text: '采集程序停止',   
             iconCls: 'icon-remove',   
             handler: function () {   
-                if (confirm("确定停止采集端吗？")) {   
+                if (confirm("确定停止采集程序吗？")) {   
 				    var urll="mcaOperation.action?mcaid=${resid}&operation=start";  
 				 	window.location.href=urll;
 				}  
@@ -84,10 +84,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }   
                
         },'-', {   
-            text: '采集端重启',   
+            text: '采集程序重启',   
             iconCls: 'icon-remove',   
             handler: function () {   
-                if (confirm("确定重启采集端吗？")) {   
+                if (confirm("确定重启采集程序吗？")) {   
 				    var urll="mcaOperation.action?mcaid=${resid}&operation=restart";  
 				 	window.location.href=urll;
 				}  

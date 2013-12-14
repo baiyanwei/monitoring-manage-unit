@@ -15,7 +15,7 @@ Map app=user.getApp();
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>采集端明细</title>
+    <title>基线列表</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">

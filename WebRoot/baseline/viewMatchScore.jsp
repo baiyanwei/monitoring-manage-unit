@@ -130,7 +130,7 @@ Map app=user.getApp();
 		
 		</div>
 		<% }if(app.get("查询防火墙基线分数")!=null){ %>
-	<!-- 采集端告警设置 -->
+	
 		<div title="按资源查看分数" style="padding:10px">
 			<input type="hidden" id="resobj" value=""/>
 			<table>

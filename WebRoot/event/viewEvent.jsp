@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>资源查看</title>
+    <title>事件查看</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -197,7 +197,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
 		
 	<!-- 采集端告警设置 -->
-		<div title="采集端告警规则设置" style="padding:10px">
+		<div title="采集机告警规则设置" style="padding:10px">
 			
 			<input type="hidden" id="mca" value=""/>
 			<input type="hidden" id="meventType" value=""/>
@@ -216,7 +216,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									}" /> 
 			</td>
 			<td>
-				<lable>&nbsp;采集端：</lable>
+				<lable>&nbsp;采集机：</lable>
 				<input id="mm2" class="easyui-combobox" name="resId" data-options="required:true,valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 							var resobj=document.getElementById('mca');

@@ -44,15 +44,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		
 	    		<tr>
-	    			<td><label>指标类型：</label></td>
-	    			<td> 
-	    			<select class="easyui-combobox" name="kpiInfo.kpiType" data-options="required:true">
-	    					<option value="0" selected>字符串</option>
-	    					<option value="1">数字</option>
-	    			</select>
-	    			</td>
-	    		</tr>
-	    		<tr>
 	    			<td><label>资源类型：</label></td>
 	    			<td> 
 	    			<input name="kpiInfo.classId" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'classid', textField: 'text', url: 'findAllResClass.action'" /> 

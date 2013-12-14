@@ -40,7 +40,7 @@
 			<result name="failed">/error.jsp</result>
 		</action>
 		<action name="saveSysObj" class="ResObjectAction" method="saveResObj">
-			<result name="success">/error.jsp</result>
+			<result name="success">/first.jsp</result>
 			<result name="failed">/error.jsp</result>
 		</action>
 		<action name="toViewSysObj" class="ResObjectAction" method="getResObjInof">

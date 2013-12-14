@@ -25,6 +25,7 @@ Map app=user.getApp();
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>告警规则设置";
@@ -221,8 +222,8 @@ Map app=user.getApp();
 		
 		</div>
 		
-	<!-- 采集端告警设置 -->
-		<div title="采集端告警规则设置" style="padding:10px">
+	<!-- 采集机告警设置 -->
+		<div title="采集告警规则设置" style="padding:10px">
 			
 			<input type="hidden" id="mca" value=""/>
 			<input type="hidden" id="meventType" value=""/>
@@ -241,7 +242,7 @@ Map app=user.getApp();
 									}" /> 
 			</td>
 			<td>
-				<lable>&nbsp;采集端：</lable>
+				<lable>&nbsp;采集机：</lable>
 				<input id="mm2" class="easyui-combobox" name="resId" data-options="required:true,valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 							var resobj=document.getElementById('mca');

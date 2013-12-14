@@ -52,8 +52,7 @@ Map app=user.getApp();
         columns:[[  
             {field:'kpiId',checkbox:true},  
             {field:'kpiName',title:'指标名称',width:100,editor:'text',sortable:true},    
-            {field:'kpiDesc',title:'指标描述',width:100,editor:'text'},  
-            {field:'kpiType',title:'指标类型',width:150,editor:'text'},   
+            {field:'kpiDesc',title:'指标描述',width:100,editor:'text'},   
             {field:'className',title:'资源类型',width:150,editor:'text'}         	          	
         ]],   
        toolbar: [
@@ -159,15 +158,7 @@ Map app=user.getApp();
 		
 		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'  
 		
-		        /*onBeforeRefresh:function(){ 
-		
-		            $(this).pagination('loading'); 
-		
-		            alert('before refresh'); 
-		
-		            $(this).pagination('loaded'); 
-		
-		        }*/ 
+		       
 		
 		    });
 	});  

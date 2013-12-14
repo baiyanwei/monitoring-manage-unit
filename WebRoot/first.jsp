@@ -11,7 +11,8 @@ Map app=user.getApp();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>拓扑图</title>
+
 </head>
 <body>
 	 <% if(app.get("拓扑图")!=null){ %>
