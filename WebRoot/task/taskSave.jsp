@@ -85,7 +85,7 @@
 	//List<SysOperation> sysOperationList = taskScheduleService.getSysOperationByTypeCode(sysResObj.getTypeCode());
 	List<SysCommand> sysCommandList = taskScheduleService.getSystCommandByTypeCode(sysResObj.getTypeCode());
 	if (sysCommandList == null || sysCommandList.isEmpty()) {
-		out.println(sysResObj.getResName() + ",未指定设备型号,法进行创建任务操作");
+		out.println(sysResObj.getResName() + ",未指定设备型号,无法进行创建任务操作");
 		return;
 	}
 	List<SysResAuth> SysResAuthList = taskScheduleService.getSysResAuthByResId(sysResObj.getId());
