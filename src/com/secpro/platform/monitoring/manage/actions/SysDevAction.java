@@ -121,6 +121,7 @@ public class SysDevAction extends ActionSupport {
 	}
 
 	public void getAllCompany() {
+		
 		List companys = sdcs.queryAll("from SysDevCompany");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;

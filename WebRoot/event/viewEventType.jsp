@@ -108,7 +108,7 @@ Map app=user.getApp();
         }, '-', 
          <% }if(app.get("修改事件类型")!=null){ %>
         {   
-            text: '修改事件规则',   
+            text: '修改事件类型',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -117,7 +117,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改事件类型只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventType.action?eventTypeId="+rows[0].eventTypeId;  

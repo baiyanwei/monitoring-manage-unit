@@ -21,6 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="资源管理>创建资源";
@@ -58,11 +59,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		
 	    		<tr>
 	    			<td><label>防火墙厂商：</label></td>
-	    			<td><input name="resObjForm.company" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany', 
+	    			<td><input name="resObjForm.company" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany.action', 
 
 							onSelect: function(rec){ 
 
-							var url = 'findDevTypeByCompanyCode?companyCode='+rec.id; 
+							var url = 'findDevTypeByCompanyCode.action?companyCode='+rec.id; 
 
 							$('#cc2').combobox('reload', url); 
 

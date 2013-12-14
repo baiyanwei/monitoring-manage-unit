@@ -9,7 +9,6 @@
 %>
 <head>
 	<title>防火墙核查系统</title>
-	<link rel="fcvst icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" type="text/css" href="css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
@@ -70,14 +69,14 @@ ul#navmenu-h ul li {
 
 /* Root Menu */
 ul#navmenu-h a {
-  border: 1px solid #FFF; 
+  border: 1px solid #FFF;
   border-right-color: #CCC;
-  border-bottom-color: #CCC; 
+  border-bottom-color: #CCC;
   padding: 0 6px;
   float: none !important; /*For Opera*/
   float: left; /*For IE*/
   display: block;
- /* background: #EEE; */
+  background: #EEE;
   color: #666;
   font: bold 10px/22px Verdana, Arial, Helvetica, sans-serif;
   text-decoration: none;
@@ -217,19 +216,19 @@ ul#navmenu-h ul ul li.iehover ul {
 										<ul id="navmenu-h">
 										<% if(app.get("首页查看")!=null){ %>
 											<li><a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a></li>
-										<% }if(app.get("基线菜单")!=null){ %>	
+										<% }if(app.get("基线规则管理")!=null){ %>	
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线规则管理</a></li>
 											<ul>
 												<% if(app.get("基线模板查看")!=null){ %>		
-													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板</a></li>
+													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a></li>
 												<% }if(app.get("基线查看")!=null){ %>	
-													<li><a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线操作</a></li>
+													<li><a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线管理</a></li>
 												<% }if(app.get("查看规则")!=null) {%>	
 													<li><a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
 												
 												<%} %>	
 											</ul>
-										<% }if(app.get("采集端查看")!=null){ %>	
+										<% }if(app.get("资源数据管理菜单")!=null){ %>	
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源数据管理</a></li>
 											<ul>
 												<% if(app.get("采集端查看")!=null){ %>	
@@ -244,20 +243,20 @@ ul#navmenu-h ul ul li.iehover ul {
 													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>		
 											</ul>
 										
-										<% }if(app.get("系统管理")!=null) {%>	
+										<% }if(app.get("系统管理菜单")!=null) {%>	
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a></li>
 												<ul>
 														<% if(app.get("查看厂商")!=null){ %>		
 														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
-														<% }if(app.get("系统管理")!=null) {%>	
+														<% }if(app.get("操作日志")!=null) {%>	
 														<li><a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">操作日志</a></li>
 														<%} %>
 												</ul>
-										<% }if(app.get("查看事件类型")!=null) {%>		
+										<% }if(app.get("事件告警管理菜单")!=null) {%>		
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">事件告警管理</a></li>
 												<ul>
 													<% if(app.get("查看事件类型")!=null) {%>		
-														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件管理</a></li>
+														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件类型管理</a></li>
 													<% }if(app.get("查看告警规则")!=null){ %>		
 													    <li><a href="javascript:eventrulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
 													<% }if(app.get("查看指标")!=null){ %>		
@@ -265,7 +264,7 @@ ul#navmenu-h ul ul li.iehover ul {
 													<%} %>
 												</ul>
 										
-										<% }if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
+										<% }if(app.get("用户管理菜单")!=null||user.getAccount().equals("admin")){ %>		
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">用户管理</a></li>
 											<ul>
 												<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
@@ -291,14 +290,17 @@ ul#navmenu-h ul ul li.iehover ul {
 							</div>
 						</div>
 						<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
-							<iframe target="contextMain" name="contextMain" id="contextMain" src="" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
+
+							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
 					
 						</div>
 					</div>
 					
 			
 				<div title="告警视图"  style="padding:10px;">
+					
 					<iframe id="eventl" src="event/eventlist.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+					
 				</div>
 			</div>	
 		

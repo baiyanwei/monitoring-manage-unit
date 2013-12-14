@@ -1,16 +1,20 @@
-<%@ page contentType="text/html; charset=GBK"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 	response.setHeader("Expires","0");
 	response.setHeader("Pragma","no-cache");
 	response.setHeader("Catch-Control","no-cache");
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
+	SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+	Map app=user.getApp();
 %>
 <script>
   _contexPath='<%=_contexPath%>';
 </script>
 <html>
 	<head>
-		<title>ĞÂÊÂ¼şÁĞ±í</title>
+		<title>æ–°äº‹ä»¶åˆ—è¡¨</title>
 		<link href="css/default.css" rel="stylesheet"
 			type="text/css" />
 		<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/css/easyui.css">
@@ -24,6 +28,7 @@
 		<script type='text/javascript' src='<%=_contexPath%>/dwr/util.js'></script>
 		<script type='text/javascript' src='<%=_contexPath%>/js/jquery/jquery-1.8.0.min.js'></script>
 		<script type='text/javascript' src='<%=_contexPath%>/js/jquery/jquery.easyui.min.js'></script>
+		<% if(app.get("å‘Šè­¦è§†å›¾")!=null){ %>
 		<script type="text/javascript">
 			var timer1 ;
 			function confirmEvent(id)
@@ -32,7 +37,7 @@
 			}
 			DWREngine.setTimeout(10000);
       		DWREngine.setErrorHandler(function(){return;});
-      		//»ñÈ¡È«²¿¸æ¾¯
+      		//è·å–å…¨éƒ¨å‘Šè­¦
 			function getEventList()
 			{	
 				EventAjax.getNewEventList(function(data){
@@ -55,7 +60,7 @@
 			
 			
 			
-			//»ñÈ¡Ö¸¶¨ÀàĞÍ¸æ¾¯
+			//è·å–æŒ‡å®šç±»å‹å‘Šè­¦
 			function getOneTypeEventListByLevel(eventType)
 			{	
 				EventAjax.getNewEventListByType(eventType,function(data){
@@ -75,7 +80,7 @@
 					clearInterval(marquee2.TimerID);
 				});
 			}
-			//¸ù¾İÊÂ¼ş¼¶±ğÏÔÊ¾Î´´¦ÀíÊÂ¼şÁĞ±í
+			//æ ¹æ®äº‹ä»¶çº§åˆ«æ˜¾ç¤ºæœªå¤„ç†äº‹ä»¶åˆ—è¡¨
 			function getNewEventByClass(){
 				var checkboxs = document.getElementsByName("all");
 				var classIds = ",";
@@ -99,7 +104,7 @@
 					document.getElementById("textnomouse").innerHTML=data;
 				});
 			}
-			//»ñÈ¡ÖÆ¶¨ÀàĞÍÖÆ¶¨¼¶±ğµÄ¸æ¾¯
+			//è·å–åˆ¶å®šç±»å‹åˆ¶å®šçº§åˆ«çš„å‘Šè­¦
 			function getOneTypeNewEventByClass(eventType){
 				
 				var checkboxs = document.getElementsByName(eventType);
@@ -131,28 +136,28 @@
 
 	<body style="padding-left: 0px; padding-top: 0px;">
 	<div id="eventtabs" style="width:auto;height:auto;text-align:center">
-		<div title="È«²¿¸æ¾¯" style="padding:10px;text-align:center">
+		<div title="å…¨éƒ¨å‘Šè­¦" style="padding:10px;text-align:center">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
-						Î´´¦ÀíÊÂ¼şÁĞ±í&nbsp;[¹²
+						æœªå¤„ç†äº‹ä»¶åˆ—è¡¨&nbsp;[å…±
 						<div id="totalDiv" style="display: inline; color: red;">
 							0
 						</div>
-						Ìõ] &nbsp;&nbsp;&nbsp;&nbsp;
+						æ¡] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="all" value="1" checked
 							onclick="getNewEventByClass();">
-						<font color='#C8FF00'>Í¨Öª</font>
+						<font color='#C8FF00'>é€šçŸ¥</font>
 						<input type="checkbox" id="warning" name="all" value="2"
 							checked onclick="getNewEventByClass();">
-						<font color='#FFD200'>ÇáÎ¢</font>
+						<font color='#FFD200'>è½»å¾®</font>
 						<input type="checkbox" id="major" name="all" value="3" checked
 							onclick="getNewEventByClass();">
-						<font color='#FF9200'>ÖØÒª</font>
+						<font color='#FF9200'>é‡è¦</font>
 						<input type="checkbox" id="critical" name="all" value="4"
 							checked onclick="getNewEventByClass();">
-						<font color='#FF1042'>½ô¼±</font>
+						<font color='#FF1042'>ç´§æ€¥</font>
 					</th>
 				</tr>
 				<tr>
@@ -165,28 +170,28 @@
 				</tr>
 			</table>
 		</div>
-		<div title="»ùÏß¸æ¾¯" style="padding:10px">
+		<div title="åŸºçº¿å‘Šè­¦" style="padding:10px">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
-						Î´´¦ÀíÊÂ¼şÁĞ±í&nbsp;[¹²
+						æœªå¤„ç†äº‹ä»¶åˆ—è¡¨&nbsp;[å…±
 						<div id="baselineDiv" style="display: inline; color: red;">
 							0
 						</div>
-						Ìõ] &nbsp;&nbsp;&nbsp;&nbsp;
+						æ¡] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="baseline" value="1" checked
 							onclick="getOneTypeNewEventByClass('baseline');">
-						<font color='#C8FF00'>Í¨Öª</font>
+						<font color='#C8FF00'>é€šçŸ¥</font>
 						<input type="checkbox" id="warning" name="baseline" value="2"
 							checked onclick="getOneTypeNewEventByClass('baseline');">
-						<font color='#FFD200'>ÇáÎ¢</font>
+						<font color='#FFD200'>è½»å¾®</font>
 						<input type="checkbox" id="major" name="baseline" value="3" checked
 							onclick="getOneTypeNewEventByClass('baseline');">
-						<font color='#FF9200'>ÖØÒª</font>
+						<font color='#FF9200'>é‡è¦</font>
 						<input type="checkbox" id="critical" name="baseline" value="4"
 							checked onclick="getOneTypeNewEventByClass('baseline');">
-						<font color='#FF1042'>½ô¼±</font>
+						<font color='#FF1042'>ç´§æ€¥</font>
 					</th>
 				</tr>
 				<tr>
@@ -199,28 +204,28 @@
 				</tr>
 			</table>
 		</div>
-		<div title="·À»ğÇ½×´Ì¬¸æ¾¯" style="padding:10px">
+		<div title="é˜²ç«å¢™çŠ¶æ€å‘Šè­¦" style="padding:10px">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
-						Î´´¦ÀíÊÂ¼şÁĞ±í&nbsp;[¹²
+						æœªå¤„ç†äº‹ä»¶åˆ—è¡¨&nbsp;[å…±
 						<div id="fwDiv" style="display: inline; color: red;">
 							0
 						</div>
-						Ìõ] &nbsp;&nbsp;&nbsp;&nbsp;
+						æ¡] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="fw" value="1" checked
 							onclick="getOneTypeNewEventByClass('fw');">
-						<font color='#C8FF00'>Í¨Öª</font>
+						<font color='#C8FF00'>é€šçŸ¥</font>
 						<input type="checkbox" id="warning" name="fw" value="2"
 							checked onclick="getOneTypeNewEventByClass('fw');">
-						<font color='#FFD200'>ÇáÎ¢</font>
+						<font color='#FFD200'>è½»å¾®</font>
 						<input type="checkbox" id="major" name="fw" value="3" checked
 							onclick="getOneTypeNewEventByClass('fw');">
-						<font color='#FF9200'>ÖØÒª</font>
+						<font color='#FF9200'>é‡è¦</font>
 						<input type="checkbox" id="critical" name="fw" value="4"
 							checked onclick="getOneTypeNewEventByClass('fw');">
-						<font color='#FF1042'>½ô¼±</font>
+						<font color='#FF1042'>ç´§æ€¥</font>
 					</th>
 				</tr>
 				<tr>
@@ -233,28 +238,28 @@
 				</tr>
 			</table>
 		</div>
-		<div title="²É¼¯»ú×´Ì¬¸æ¾¯" style="padding:10px">
+		<div title="é‡‡é›†æœºçŠ¶æ€å‘Šè­¦" style="padding:10px">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
-						Î´´¦ÀíÊÂ¼şÁĞ±í&nbsp;[¹²
+						æœªå¤„ç†äº‹ä»¶åˆ—è¡¨&nbsp;[å…±
 						<div id="mcaDiv" style="display: inline; color: red;">
 							0
 						</div>
-						Ìõ] &nbsp;&nbsp;&nbsp;&nbsp;
+						æ¡] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="mca" value="1" checked
 							onclick="getOneTypeNewEventByClass('mca');">
-						<font color='#C8FF00'>Í¨Öª</font>
+						<font color='#C8FF00'>é€šçŸ¥</font>
 						<input type="checkbox" id="warning" name="mca" value="2"
 							checked onclick="getOneTypeNewEventByClass('mca');">
-						<font color='#FFD200'>ÇáÎ¢</font>
+						<font color='#FFD200'>è½»å¾®</font>
 						<input type="checkbox" id="major" name="mca" value="3" checked
 							onclick="getOneTypeNewEventByClass('mca');">
-						<font color='#FF9200'>ÖØÒª</font>
+						<font color='#FF9200'>é‡è¦</font>
 						<input type="checkbox" id="critical" name="mca" value="4"
 							checked onclick="getOneTypeNewEventByClass('mca');">
-						<font color='#FF1042'>½ô¼±</font>
+						<font color='#FF1042'>ç´§æ€¥</font>
 					</th>
 				</tr>
 				<tr>
@@ -267,28 +272,28 @@
 				</tr>
 			</table>
 		</div>
-		<div title="²ßÂÔ¸æ¾¯" style="padding:10px">
+		<div title="ç­–ç•¥å‘Šè­¦" style="padding:10px">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
-						Î´´¦ÀíÊÂ¼şÁĞ±í&nbsp;[¹²
+						æœªå¤„ç†äº‹ä»¶åˆ—è¡¨&nbsp;[å…±
 						<div id="ployDiv" style="display: inline; color: red;">
 							0
 						</div>
-						Ìõ] &nbsp;&nbsp;&nbsp;&nbsp;
+						æ¡] &nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="checkbox" id="minor" name="ploy" value="1" checked
 							onclick="getOneTypeNewEventByClass('policy');">
-						<font color='#C8FF00'>Í¨Öª</font>
+						<font color='#C8FF00'>é€šçŸ¥</font>
 						<input type="checkbox" id="warning" name="ploy" value="2"
 							checked onclick="getOneTypeNewEventByClass('policy');">
-						<font color='#FFD200'>ÇáÎ¢</font>
+						<font color='#FFD200'>è½»å¾®</font>
 						<input type="checkbox" id="major" name="ploy" value="3" checked
 							onclick="getOneTypeNewEventByClass('policy');">
-						<font color='#FF9200'>ÖØÒª</font>
+						<font color='#FF9200'>é‡è¦</font>
 						<input type="checkbox" id="critical" name="ploy" value="4"
 							checked onclick="getOneTypeNewEventByClass('policy');">
-						<font color='#FF1042'>½ô¼±</font>
+						<font color='#FF1042'>ç´§æ€¥</font>
 					</th>
 				</tr>
 				<tr>
@@ -309,31 +314,31 @@ $('#eventtabs').tabs({
 
 	onSelect:function(title){ 
 
-		if(title=="È«²¿¸æ¾¯"){
+		if(title=="å…¨éƒ¨å‘Šè­¦"){
 			getEventList();
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getEventList()',60000);
-		}else if(title=="»ùÏß¸æ¾¯"){
+		}else if(title=="åŸºçº¿å‘Šè­¦"){
 			getOneTypeEventListByLevel("baseline");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("baseline")',60000);
-		}else if(title=="·À»ğÇ½×´Ì¬¸æ¾¯"){
+		}else if(title=="é˜²ç«å¢™çŠ¶æ€å‘Šè­¦"){
 			getOneTypeEventListByLevel("fw");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("fw")',60000);
-		}else if(title=="²É¼¯»ú×´Ì¬¸æ¾¯"){
+		}else if(title=="é‡‡é›†æœºçŠ¶æ€å‘Šè­¦"){
 			getOneTypeEventListByLevel("mca");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("mca")',60000);
-		}else if(title=="²ßÂÔ¸æ¾¯"){
+		}else if(title=="ç­–ç•¥å‘Šè­¦"){
 			getOneTypeEventListByLevel("policy");
 			if(timer1!=null){
 				clearInterval( timer1 );
@@ -346,7 +351,7 @@ $('#eventtabs').tabs({
 }); 
 
 
-//È«²¿¸æ¾¯
+//å…¨éƒ¨å‘Šè­¦
 var marquee2 = new Marquee("textnomouse");
 marquee2.Direction="top";
 marquee2.Step=1;
@@ -354,7 +359,7 @@ marquee2.Width=1000;
 marquee2.Height=300;
 marquee2.Timer=300;
 marquee2.Start();
-//»ùÏß¸æ¾¯
+//åŸºçº¿å‘Šè­¦
 var baseline = new Marquee("baselinemouse");
 baseline.Direction="top";
 baseline.Step=1;
@@ -362,7 +367,7 @@ baseline.Width=1000;
 baseline.Height=300;
 baseline.Timer=300;
 baseline.Start();
-//·À»ğÇ½×´Ì¬¸æ¾¯
+//é˜²ç«å¢™çŠ¶æ€å‘Šè­¦
 var fw = new Marquee("fwmouse");
 fw.Direction="top";
 fw.Step=1;
@@ -370,7 +375,7 @@ fw.Width=1000;
 fw.Height=300;
 fw.Timer=300;
 fw.Start();
-//²É¼¯»ú×´Ì¬¸æ¾¯
+//é‡‡é›†æœºçŠ¶æ€å‘Šè­¦
 var mca = new Marquee("mcamouse");
 mca.Direction="top";
 mca.Step=1;
@@ -378,7 +383,7 @@ mca.Width=1000;
 mca.Height=300;
 mca.Timer=300;
 mca.Start();
-//²ßÂÔ¸æ¾¯
+//ç­–ç•¥å‘Šè­¦
 var ploy = new Marquee("ploymouse");
 ploy.Direction="top";
 ploy.Step=1;
@@ -388,6 +393,6 @@ ploy.Timer=300;
 ploy.Start();
 
 </script>
-
+<%} %>
 	</body>
 </html>

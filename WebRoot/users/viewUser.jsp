@@ -106,7 +106,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改用户只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyUser.action?userid="+rows[0].userid;  

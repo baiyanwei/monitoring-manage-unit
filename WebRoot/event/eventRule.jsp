@@ -193,7 +193,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  
@@ -372,7 +372,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  

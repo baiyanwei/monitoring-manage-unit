@@ -10,6 +10,17 @@
    <small-icon>/favicon.ico</small-icon> 
    <large-icon>/favicon.ico</large-icon> 
    </icon>
+    <!-- 404 页面不存在错误 -->  
+	<error-page>  
+	<error-code>404</error-code>  
+	<location>/404.jsp</location>  
+	</error-page>  
+	<!-- 500 服务器内部错误 -->  
+	<error-page>  
+	<error-code>500</error-code>  
+	<location>/500.jsp</location>  
+	</error-page>  
+	   
   <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>com.secpro.platform.monitoring.manage.servlet.LoginFilter</filter-class>

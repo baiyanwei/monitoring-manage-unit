@@ -100,7 +100,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改部门只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyOrg.action?orgId="+rows[0].orgId;  

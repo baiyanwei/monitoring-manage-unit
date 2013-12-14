@@ -137,7 +137,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
         }, '-', {   
-            text: '删除基线',   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -161,7 +161,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
             }   
         }, '-', {   
-            text: '修改基线',   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -170,7 +170,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  
@@ -286,7 +286,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
         }, '-', {   
-            text: '删除基线',   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -310,7 +310,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
             }   
         }, '-', {   
-            text: '修改基线',   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#mcaDetail').datagrid('getSelections');  
@@ -319,7 +319,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  
