@@ -69,14 +69,14 @@ ul#navmenu-h ul li {
 
 /* Root Menu */
 ul#navmenu-h a {
-  border: 1px solid #FFF;
+ /* border: 1px solid #FFF; */
   border-right-color: #CCC;
   border-bottom-color: #CCC;
   padding: 0 6px;
   float: none !important; /*For Opera*/
   float: left; /*For IE*/
   display: block;
-  background: #EEE;
+ /* background: #EEE; */
   color: #666;
   font: bold 10px/22px Verdana, Arial, Helvetica, sans-serif;
   text-decoration: none;
