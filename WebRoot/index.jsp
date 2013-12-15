@@ -190,7 +190,7 @@ ul#navmenu-h ul ul li.iehover ul {
 	</script>
 </head>
 <body class="easyui-layout">
-	<div data-options="region:'north',border:false"  style="height:80px;width:1270px;padding:0px">
+	<div data-options="region:'north',border:false"  style="height:112px;width:1270px;padding:0px">
 		
 		<div class="content_title_bg" >
 			<div class="content_title">
@@ -199,17 +199,7 @@ ul#navmenu-h ul ul li.iehover ul {
 			</div>
 		</div>
 		<div class="about_title" >防火墙策略核查系统</div>
-	
-	</div>
-	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
-		<iframe src="tree/treeViewFrame.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
-	</div>
-	
-	<div data-options="region:'center',title:''">
-		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
-			
-					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;overflow-x : hidden;overflow-y : scroll">
-						<div>
+		<div style="position:relative;z-index:99">
 							<table class="page_bar" align="center" style="padding:0px;">
 								<tr>
 									<td class="page_bar_bg" >
@@ -285,6 +275,16 @@ ul#navmenu-h ul ul li.iehover ul {
 								</tr>
 							</table>
 						</div>
+	</div>
+	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
+		<iframe src="tree/treeViewFrame.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+	</div>
+	
+	<div data-options="region:'center',title:''">
+		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
+			
+					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;overflow-x : hidden;overflow-y : scroll">
+						
 						<div class="content_title_bg">
 							<div id="operation" class="content_title">
 								
