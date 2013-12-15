@@ -49,7 +49,7 @@ public class SysLogDaoImpl extends BaseDao implements SysLogDao{
 		}
 		return logApp;
 	}
-	public long  getLogCount(){
+	public long  getLogCount(String from ,String to){
 		Connection con=null;
 		Statement sta=null;
 		ResultSet rs=null;
@@ -58,7 +58,7 @@ public class SysLogDaoImpl extends BaseDao implements SysLogDao{
 		try {
 			con=dataSource.getConnection();
 			sta=con.createStatement();
-			rs=sta.executeQuery("select count(id) from sys_log");
+			rs=sta.executeQuery("select count(id) from sys_log r where r.HANDLE_DATE>='"+from+"' and r.HANDLE_DATE <='"+to+"'");
 			if(rs.next()){
 				logcount=rs.getLong(1);
 			}

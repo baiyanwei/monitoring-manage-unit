@@ -437,7 +437,7 @@ public class EventAction {
 	public void getEventbyTime(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String from=request.getParameter("ff");
@@ -475,7 +475,7 @@ public class EventAction {
 				return;
 			}
 			if(from!=null&&!from.trim().equals("")){
-				from=sdf.format(sdf2.parse(from));
+				from=sdf.format(sdf1.parse(from));
 
 			}else{
 				 String todays=sdf1.format(new Date());
@@ -483,7 +483,7 @@ public class EventAction {
 			}
 			
 			if(to!=null&&!to.trim().equals("")){
-				to=sdf.format(sdf2.parse(to));
+				to=sdf.format(sdf1.parse(to));
 			}else{
 			
 				to=sdf.format(new Date());
@@ -885,7 +885,13 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String resId=request.getParameter("resId");
 		String eventTypeId=request.getParameter("eventTypeId");
-		List allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		List allEventRule=null;
+		if(resId!=null&&!resId.equals("")){
+			
+			allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		}else{
+			allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId is null and s.eventTypeId="+eventTypeId);
+		}
 	//	List allEventRule=eventRuleService.queryAll("from SysEventRule");
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
@@ -964,18 +970,6 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String resId=request.getParameter("resId");
 		String eventTypeId=request.getParameter("eventTypeId");
-		if(resId==null){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is null!");
-			backUrl = "event/viewEventType.jsp";
-			return "failed";
-		}
-		if(resId.equals("")){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is ''!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
 		if(eventTypeId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is null!");
@@ -1003,7 +997,12 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
-		List ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		List ruleList=null;
+		if(resId!=null&&!resId.equals("")){
+			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		}else{
+			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId is null and s.eventTypeId="+eventTypeId);
+		}
 		String levels="";
 		for(int i=0;i<ruleList.size();i++){
 			SysEventRule r=(SysEventRule)ruleList.get(i);
@@ -1067,12 +1066,6 @@ public class EventAction {
 		if(eventRule.getEventTypeId()==null){
 			returnMsg = "系统错误，规则保存失败！";
 			logger.info("fetch EventTypeId failed , EventTypeId is null!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
-		if(eventRule.getResId()==null){
-			returnMsg = "系统错误，规则保存失败！";
-			logger.info("fetch ResId failed , ResId is null!");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
@@ -1152,12 +1145,7 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
-		if(eventRule.getResId()==null){
-			returnMsg = "系统错误，规则修改失败！";
-			logger.info("fetch ResId failed , ResId is null!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
+		
 		if(eventRule.getRecoverSetMsg()==null){
 			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
@@ -1240,20 +1228,9 @@ public class EventAction {
 	}
 	public String toAddAlarmReceive(){
 		HttpServletRequest request=ServletActionContext.getRequest();
-		String resId=request.getParameter("resId");
+		
 		String ruleId=request.getParameter("ruleId");
-		if(resId==null){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is null!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
-		if(resId.trim().equals("")){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is ''!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
+		
 		if(ruleId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch ruleId failed , ruleId is null!");
@@ -1270,7 +1247,6 @@ public class EventAction {
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("userList", userList);
-		requestMap.put("resId", resId);
 		requestMap.put("ruleId", ruleId);
 		return "success";
 	}

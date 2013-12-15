@@ -88,6 +88,7 @@ ul#navmenu-h a {
 ul#navmenu-h a:hover,
 ul#navmenu-h li:hover a,
 ul#navmenu-h li.iehover a {
+  border: 1px solid #FFF;
   background: #CCC;
   color: #FFF;
 }
@@ -315,7 +316,7 @@ ul#navmenu-h ul ul li.iehover ul {
 			//alert(title);
 		}
 		function shouye(){
-			window.frames.contextMain.location.href="resobj/addResObj.jsp";
+			window.frames.contextMain.location.href="addResObj.jsp";
 		}
 		function companymanager(){
 			window.frames.contextMain.location.href="devcompany/viewAllDevCompany.jsp";

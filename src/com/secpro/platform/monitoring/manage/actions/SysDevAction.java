@@ -829,7 +829,7 @@ public class SysDevAction extends ActionSupport {
 				configRule=configRuleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+obj[0]+"'");
 				sb.append("{\"typeCode\":\"" + obj[0] + "\",");
 				sb.append("\"typeName\":\"" + obj[1] + "\",");
-				sb.append("\"typeDesc\":\"" + obj[3] + "\",");
+				sb.append("\"typeDesc\":\"" + (obj[3]==null?" ":obj[3]) + "\",");
 				if(syslogRule!=null&&syslogRule.size()>0){
 					sb.append("\"hasSyslogRule\":\"1\",");
 				}else{

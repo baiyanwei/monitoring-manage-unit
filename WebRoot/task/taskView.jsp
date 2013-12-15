@@ -158,7 +158,7 @@
 								alert('请选择单个任务进行修改');
 								return;
 							}
-							window.location.href = "task/taskSave.jsp?operationType=update&tid="+rows[0].tid;
+							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=update&tid="+rows[0].tid;
 						}
 					},  '-', {
 						text : '刷新',

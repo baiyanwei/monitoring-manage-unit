@@ -55,7 +55,7 @@ Map app=user.getApp();
             {field:'baselineType',title:'基线类型',width:100,editor:'text',sortable:true},     
             {field:'blackWhite',title:'黑白名单',width:200,editor:'text'} ,
             {field:'baselineDesc',title:'基线描述',width:100,editor:'textarea'}, 
-            {field:'score',title:'分数(默认10分，点击修改)',width:150,editor:'text'}
+            {field:'score',title:'分数',width:150,editor:'text'}
            <% if(app.get("添加基线规则")!=null){ %> 
             ,{
   				 field : 'boperation',

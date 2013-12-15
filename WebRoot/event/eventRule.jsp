@@ -29,6 +29,23 @@ Map app=user.getApp();
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="告警规则管理>告警规则设置";
+		function clearData(){
+			$('#cc1').combobox('clear');
+			$('#cc2').combobox('clear');
+			$('#cc3').combobox('clear');
+			$('#cc4').combobox('clear');
+			var eventType=document.getElementById('eventType');			
+			eventType.value="";		
+			var resobj=document.getElementById('resobj');
+			resobj.value="";
+			$('#mm1').combobox('clear');
+			$('#mm2').combobox('clear');
+			$('#mm4').combobox('clear');
+			var resobj1=document.getElementById('mca');
+			resobj1.value="";				
+			var eventType1=document.getElementById('meventType');
+			eventType1.value="";	
+		}
 	</script>
   </head>
   <body>
@@ -42,7 +59,7 @@ Map app=user.getApp();
     	<tr>
     		<td>
 			    <lable>&nbsp;&nbsp;省份：</lable>
-			    <input name="cityCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'getAllCity.action', 
+			    <input name="cityCode" id="cc1" class="easyui-combobox" data-options=" valueField: 'id', textField: 'text', url: 'getAllCity.action', 
 			
 										onSelect: function(rec){ 
 			
@@ -54,7 +71,7 @@ Map app=user.getApp();
 			</td>
 			<td>
 				<lable>&nbsp;&nbsp;单位：</lable>
-				<input id="cc2" class="easyui-combobox" name="sbucityCode" data-options="required:true,valueField:'id',textField:'text',
+				<input id="cc2" class="easyui-combobox" name="sbucityCode" data-options="valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 										var url = 'getResObjByCity.action?cityCode='+rec.id; 
 										$('#cc3').combobox('clear');
@@ -63,7 +80,7 @@ Map app=user.getApp();
 			</td>
 			<td>
 				<lable>&nbsp;防火墙：</lable>
-				<input id="cc3" class="easyui-combobox" name="resId" data-options="required:true,valueField:'id',textField:'text',
+				<input id="cc3" class="easyui-combobox" name="resId" data-options="valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 							var resobj=document.getElementById('resobj');
 							resobj.value=rec.id;
@@ -83,13 +100,18 @@ Map app=user.getApp();
 								var eventType=document.getElementById('eventType');			
 								eventType.value=rec.id;
 								var resobj=document.getElementById('resobj');
-								if(resobj.value!=''){
 		            				$.post('viewEventRule.action', {resId:resobj.value,eventTypeId:eventType.value},function(data){
 				 						$('#listDetail').datagrid('loadData',data);
 									});
-								}
+								
 				}" />
 			</td>
+	  	</tr>
+	  	<tr>
+	  		<td><input type="button" value="清空数据" onclick="clearData();"/></td>
+	  		<td></td>
+	  		<td></td>
+	  		<td></td>
 	  	</tr>
 	  </table>
 	  <div class="demo-info">
@@ -129,13 +151,17 @@ Map app=user.getApp();
 					var d;
 					var res=document.getElementById("resobj");
 					var resId=res.value;
-					if(row.setMsg=='是'){
-						if(row.isNotyfUser=='0'){
-    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
-       					}else{
-	       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
-	       					
-       					}
+					if(resId==""){
+						d = '<a href="toAddAlarmReceiveNoFw.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+					}else{
+						if(row.setMsg=='是'){
+							if(row.isNotyfUser=='0'){
+	    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
+	       					}else{
+		       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
+		       					
+	       					}
+	       				}
        				}
     				return d; 
     			}
@@ -150,8 +176,8 @@ Map app=user.getApp();
             handler: function () {  
             	var resId=document.getElementById("resobj");
             	var eventType=document.getElementById("eventType");
-            	if(eventType.value==''|| resId.value==''){
-            		alert('请选择资源和事件类型');
+            	if(eventType.value==''){
+            		alert('请选择事件类型');
             		return ;
             	}
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
@@ -231,7 +257,7 @@ Map app=user.getApp();
     		<tr>
     		<td>
 			    <lable>&nbsp;&nbsp;省份：</lable>
-			    <input name="cityCode" id="mm1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'getAllCity.action', 
+			    <input name="cityCode" id="mm1" class="easyui-combobox" data-options="  valueField: 'id', textField: 'text', url: 'getAllCity.action', 
 			
 										onSelect: function(rec){ 
 			
@@ -243,7 +269,7 @@ Map app=user.getApp();
 			</td>
 			<td>
 				<lable>&nbsp;采集机：</lable>
-				<input id="mm2" class="easyui-combobox" name="resId" data-options="required:true,valueField:'id',textField:'text',
+				<input id="mm2" class="easyui-combobox" name="resId" data-options="valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 							var resobj=document.getElementById('mca');
 							resobj.value=rec.id;
@@ -270,6 +296,7 @@ Map app=user.getApp();
 								}
 				}" />
 			</td>
+			<td>&nbsp;<input type="button" value="清空数据" onclick="clearData();"/></td>
 	  	</tr>
 	  </table>
 	  <div class="demo-info">
@@ -296,8 +323,8 @@ Map app=user.getApp();
             {field:'setMsg',title:'是否产生告警短信',width:200,editor:'text'} ,
             {field:'topr',title:'操作符',width:100,editor:'textarea'}, 
             {field:'tvalue',title:'阀值',width:150,editor:'text'},
-            {field:'repeat',title:'是否重复告警',width:150,editor:'text'},
-            {field:'recoverSetMsg',title:'是否产生恢复短信',width:150,editor:'text'}
+            {field:'repeat',title:'是否重复告警',width:200,editor:'text'},
+            {field:'recoverSetMsg',title:'是否产生恢复短信',width:200,editor:'text'}
             <% if(app.get("增加修改告警接收人")!=null){ %>
             ,
            	{
@@ -308,13 +335,17 @@ Map app=user.getApp();
 					var d;
 					var res=document.getElementById("resobj");
 					var resId=res.value;
-					if(row.setMsg=='是'){
-						if(row.isNotyfUser=='0'){
-    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
-       					}else{
-	       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
-	       					
-       					}
+					if(resId==""){
+						d = '<a href="toAddAlarmReceiveNoMca.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+					}else{
+						if(row.setMsg=='是'){
+							if(row.isNotyfUser=='0'){
+	    						d = '<a href="toAddAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>添加告警接收人</font></a>"; 
+	       					}else{
+		       					d = '<a href="toModifyAlarmReceive.action?resId=' + resId +'&ruleId='+row.ruleid+'" class="easyui-linkbutton l-btn l-btn-plain")>' + "<font color='blue'>修改告警接收人</font>" + "</a>"; 
+		       					
+	       					}
+	       				}
        				}
     				return d; 
     			}
@@ -329,8 +360,8 @@ Map app=user.getApp();
             handler: function () {  
             	var resId=document.getElementById("mca");
             	var eventType=document.getElementById("meventType");
-            	if(eventType.value==''|| resId.value==''){
-            		alert('请选择资源和事件类型');
+            	if(eventType.value==''){
+            		alert('请选择事件类型');
             		return ;
             	}
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;

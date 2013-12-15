@@ -135,9 +135,9 @@
 	</head>
 
 	<body style="padding-left: 0px; padding-top: 0px;">
-	<div id="eventtabs" style="width:auto;height:auto;text-align:center">
+	<div id="eventtabs" style="width:1030px;height:auto;text-align:center">
 		<div title="全部告警" style="padding:10px;text-align:center">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			<table width="990px" border="0" cellspacing="0" cellpadding="0"
 				class="small_table">
 				<tr>
 					<th class="th_w">
