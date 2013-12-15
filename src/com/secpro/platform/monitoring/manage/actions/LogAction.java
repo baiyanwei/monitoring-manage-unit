@@ -38,7 +38,7 @@ public class LogAction {
 		String to=request.getParameter("tt");
 		String rows=request.getParameter("rows");
 		String page=request.getParameter("page");
-		System.out.println(from+"-----------------------"+to);
+		
 		int pageNum=1;
 		int maxPage=10;
 		if(rows!=null&&!rows.trim().equals("")){

@@ -824,9 +824,8 @@ public class EventAction {
 		msgService.update(msg);
 		return "success";
 	}
-	public void getAllEventTypeByClass(){
-		HttpServletRequest request=ServletActionContext.getRequest();
-		String resclass=request.getParameter("resclass");
+	public void getAllEventType(){
+		
 		
 		
 		StringBuilder result = new StringBuilder();
@@ -835,20 +834,8 @@ public class EventAction {
 			HttpServletResponse resp = ServletActionContext.getResponse();
 			resp.setContentType("text/json");
 			pw = resp.getWriter();
-			if(resclass==null){
-				result.append("[]");
-				
-				pw.println(result.toString());
-				pw.flush();
-				return;
-			}
-			if(resclass.trim().equals("")){
-				result.append("[]");
-				pw.println(result.toString());
-				pw.flush();
-				return;
-			}
-			List eventType = eventTypeService.queryAll("select e.id ,e.eventTypeName,e.eventTypeDesc from EventType e , SysKpiInfo s,SysResClass c where e.eventTypeName=s.kpiName and s.classId=c.id and c.className='"+resclass+"'");
+			
+			List eventType = eventTypeService.queryAll("select e.id ,e.eventTypeName,e.eventTypeDesc from EventType e");
 			if (eventType == null) {
 				result.append("[]");
 				
@@ -860,7 +847,7 @@ public class EventAction {
 			for (int i = 0; i < eventType.size(); i++) {
 				Object[] etype =(Object[])eventType.get(i);
 				
-				result.append("{\"id\":"+etype[0]+",\"text\":\""+etype[1]+" "+etype[2]+"\"}");
+				result.append("{\"id\":"+etype[0]+",\"text\":\""+etype[1]+" "+(etype[2]==null?"":etype[2])+"\"}");
 				
 				if((i+1)!=eventType.size()){
 					result.append(",");
@@ -1230,7 +1217,19 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		
 		String ruleId=request.getParameter("ruleId");
-		
+		String resId=request.getParameter("resId");
+		if(resId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(resId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch resId failed , resId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
 		if(ruleId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch ruleId failed , ruleId is null!");
@@ -1248,6 +1247,7 @@ public class EventAction {
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("userList", userList);
 		requestMap.put("ruleId", ruleId);
+		requestMap.put("resId", resId);
 		return "success";
 	}
 	public String toModifyAlarmReceive(){
@@ -1360,5 +1360,122 @@ public class EventAction {
 			notifyService.save(notify);
 		}
 		return "success";
+	}
+	public String toAddFWAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String ruleId=request.getParameter("ruleId");
+		
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}	
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public String toAddMcaAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String ruleId=request.getParameter("ruleId");
+		
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}	
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public void queryAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String ruleId=request.getParameter("ruleId");
+		String resId=request.getParameter("resId");
+		
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(resId==null){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(resId.trim().equals("")){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(ruleId==null){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(ruleId.trim().equals("")){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			
+			List userList=userService.queryAll("from SysUserInfo u where u.deleted is null");
+			List notifyList=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and eventRuleId="+ruleId);
+			List notifyUser =new ArrayList();
+			
+			for(Object o:notifyList){
+				NotifyUserRule notify=(NotifyUserRule)o;
+				for(Object u:userList){
+					SysUserInfo user=(SysUserInfo)u;
+					if(user.getId()==notify.getUserId()){
+						notifyUser.add(user);
+					}
+				}
+			}
+			userList.removeAll(notifyUser);
+			JSONObject json=new JSONObject();
+			String userDisplay="";
+			String receiveDispaly="";
+			for(int i=0;i<userList.size();i++){
+				SysUserInfo value = (SysUserInfo)userList.get(i);
+				userDisplay+=value.getId()+"|"+value.getUserName();
+				if(i<userList.size()-1){
+					userDisplay+=";";
+				}
+			}
+			for(int i=0;i<notifyUser.size();i++){
+				SysUserInfo value = (SysUserInfo)notifyUser.get(i);
+				receiveDispaly+=value.getId()+"|"+value.getUserName();
+				if(i<userList.size()-1){
+					receiveDispaly+=";";
+				}
+			}
+			json.put("userList",userDisplay );
+			json.put("receiveList",receiveDispaly );
+			System.out.println(json.toString());
+			pw.println(json.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			} finally {
+				if (pw != null) {
+					pw.close();
+				}
+			}
 	}
 }

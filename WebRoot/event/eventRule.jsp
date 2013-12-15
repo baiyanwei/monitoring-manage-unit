@@ -95,7 +95,7 @@ Map app=user.getApp();
 			</td>
 			<td>
 				<lable>&nbsp;事件类型：</lable>
-				<input id="cc4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url:'getAllEventTypeByClass.action?resclass=fw',
+				<input id="cc4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url:'getAllEventType.action',
 					onSelect: function(rec){ 
 								var eventType=document.getElementById('eventType');			
 								eventType.value=rec.id;
@@ -152,7 +152,7 @@ Map app=user.getApp();
 					var res=document.getElementById("resobj");
 					var resId=res.value;
 					if(resId==""){
-						d = '<a href="toAddAlarmReceiveNoFw.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						d = '<a href="toAddFWAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
 					}else{
 						if(row.setMsg=='是'){
 							if(row.isNotyfUser=='0'){
@@ -274,9 +274,10 @@ Map app=user.getApp();
 							var resobj=document.getElementById('mca');
 							resobj.value=rec.id;
 							var eventType=document.getElementById('meventType');
+							
 							if(eventType.value!=''){
 	            				$.post('viewEventRule.action', {resId:resobj.value,eventTypeId:eventType.value},function(data){
-			 						$('mcaDetail').datagrid('loadData',data);
+			 						$('#mcaDetail').datagrid('loadData',data);
 								});
 							}
 				
@@ -284,16 +285,16 @@ Map app=user.getApp();
 			</td>
 			<td>
 				<lable>&nbsp;事件类型：</lable>
-				<input id="mm4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url: 'getAllEventTypeByClass.action?resclass=mca',
+				<input id="mm4" class="easyui-combobox" name="eventTypeId" data-options="required:true,valueField:'id',textField:'text',url: 'getAllEventType.action',
 					onSelect: function(rec){ 
 								var eventType=document.getElementById('meventType');			
 								eventType.value=rec.id;
 								var resobj=document.getElementById('mca');
-								if(resobj.value!=''){
+								
 		            				$.post('viewEventRule.action', {resId:resobj.value,eventTypeId:eventType.value},function(data){
 				 						$('#mcaDetail').datagrid('loadData',data);
 									});
-								}
+								
 				}" />
 			</td>
 			<td>&nbsp;<input type="button" value="清空数据" onclick="clearData();"/></td>
@@ -333,10 +334,10 @@ Map app=user.getApp();
    				width : 160,
    				formatter:function(value,row,index){
 					var d;
-					var res=document.getElementById("resobj");
+					var res=document.getElementById("mca");
 					var resId=res.value;
 					if(resId==""){
-						d = '<a href="toAddAlarmReceiveNoMca.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						d = '<a href="toAddMcaAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
 					}else{
 						if(row.setMsg=='是'){
 							if(row.isNotyfUser=='0'){

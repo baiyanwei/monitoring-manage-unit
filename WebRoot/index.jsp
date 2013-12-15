@@ -316,7 +316,7 @@ ul#navmenu-h ul ul li.iehover ul {
 			//alert(title);
 		}
 		function shouye(){
-			window.frames.contextMain.location.href="addResObj.jsp";
+			window.frames.contextMain.location.href="first.jsp";
 		}
 		function companymanager(){
 			window.frames.contextMain.location.href="devcompany/viewAllDevCompany.jsp";

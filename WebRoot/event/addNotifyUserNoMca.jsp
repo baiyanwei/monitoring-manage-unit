@@ -110,32 +110,23 @@
    						<input type="hidden" id="userIds" name="userIds" value=""/>
    						 <table>
    						 	<tr>
-   								<td>
-								    <lable>&nbsp;&nbsp;省份：</lable>
-								    <input name="cityCode" id="cc1" class="easyui-combobox" data-options=" valueField: 'id', textField: 'text', url: 'getAllCity.action', 
-								
-															onSelect: function(rec){ 
-								
-															var url = 'getCityByParent.action?cityCode='+rec.id; 
-															$('#cc2').combobox('clear');
-															$('#cc2').combobox('reload', url); 
-								
-														}" /> 
-								</td>
-								<td>
-									<lable>&nbsp;&nbsp;单位：</lable>
-									<input id="cc2" class="easyui-combobox" name="sbucityCode" data-options="valueField:'id',textField:'text',
+    		<td>
+			    <lable>&nbsp;&nbsp;省份：</lable>
+			    <input name="cityCode" id="mm1" class="easyui-combobox" data-options="  valueField: 'id', textField: 'text', url: 'getAllCity.action', 
+			
 										onSelect: function(rec){ 
-															var url = 'getResObjByCity.action?cityCode='+rec.id; 
-															$('#cc3').combobox('clear');
-															$('#cc3').combobox('reload', url); 
-									}" />
-								</td>
-								<td>
-									<lable>&nbsp;防火墙：</lable>
-									<input id="cc3" class="easyui-combobox" name="resId" data-options="valueField:'id',textField:'text',
-										onSelect: function(rec){ 
-												var resobj=document.getElementById('resId');
+			
+										var url = 'getMcaByCity.action?cityCode='+rec.id; 
+										$('#mm2').combobox('clear');
+										$('#mm2').combobox('reload', url); 
+			
+									}" /> 
+			</td>
+			<td>
+				<lable>&nbsp;采集机：</lable>
+				<input id="mm2" class="easyui-combobox" name="resId" data-options="valueField:'id',textField:'text',
+					onSelect: function(rec){ 
+							var resobj=document.getElementById('resId');
 												resobj.value=rec.id;
 												
 												var ruleId=document.getElementById('ruleId');
@@ -155,10 +146,10 @@
  														}
 													});
 												}
-									
-									}" />
-								</td>
-   							</tr>
+				
+				}" />
+					</td>
+   						</tr>
    						 
     					</table>
     							

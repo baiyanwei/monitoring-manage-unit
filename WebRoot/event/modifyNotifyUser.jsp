@@ -105,7 +105,7 @@
      		}
      		var userid="";
      		var count=0;
-     		alert(users.length);
+     		
      		for(var i=0;i<users.length;i++){
      			userid+=users[i].value;
      			
@@ -116,7 +116,7 @@
      			}
      			count++;
      		}
-     		alert(userid);
+     		
      		var userIds=document.getElementById("userIds");
      		userIds.value=userid;
      		return true;
