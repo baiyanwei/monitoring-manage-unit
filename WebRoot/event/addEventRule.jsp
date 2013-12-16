@@ -86,7 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			</td>
 	    		</tr>
 	    		<tr>
-	    			<td><label>告警判断条件：</label><select id="thresholdOpr" class="easyui-combobox" missingMessage="请选择" name="eventRule.thresholdOpr" data-options="required:true">
+	    			<td><label>告警判断条件：</label><select id="thresholdOpr"  name="eventRule.thresholdOpr">
 	    				 	
 		    				 	<option value="==" selected>字符等</option>
 		    				 	<option value="!=">字符不等</option>	    				 	

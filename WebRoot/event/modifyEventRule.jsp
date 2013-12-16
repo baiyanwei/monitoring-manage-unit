@@ -104,7 +104,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			</td>
 	    		</tr>
 	    		<tr>
-	    			<td><label>告警判断条件：</label><select id="thresholdOpr" class="easyui-combobox" missingMessage="请选择" name="eventRule.thresholdOpr" data-options="required:true">
+	    			<td><label>告警判断条件：</label><select id="thresholdOpr"  name="eventRule.thresholdOpr" >
 	    				 	
 		    				 	<c:if test="${eRule.thresholdOpr eq '==' }">
 			    				 	<option value="==" selected>字符等</option>
@@ -164,9 +164,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    				 	<option value="<">小于</option>
 			    				</c:if>
 			    				<c:if test="${eRule.thresholdOpr eq '<' }">
+			    					<option value="<">小于</option>
 			    					<option value="==">字符等</option>
 			    				 	<option value="!=">字符不等</option>
-			    					<option value="<">小于</option>
+			    					
 			    				 	<option value=">" >大于</option>
 			    				 	<option value=">=" >大于等于</option>
 			    				 	<option value="=" >等于</option>
