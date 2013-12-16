@@ -90,7 +90,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    				 	
 		    				 	<option value="==" selected>字符等</option>
 		    				 	<option value="!=">字符不等</option>	    				 	
-		    				 	<option value=">" selected>大于</option>
+		    				 	<option value=">">大于</option>
 		    				 	<option value=">=">大于等于</option>
 		    				 	<option value="=">等于</option>
 		    				 	<option value="<=">小于等于</option>
@@ -140,7 +140,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					return false;
 				}
 			}
-			
 			if(thresholdOpr.value==">"||thresholdOpr.value=="<"||thresholdOpr.value=="<="||thresholdOpr.value==">="||thresholdOpr.value=="="){
 				
 				if(isNaN(thresholdValue.value)){
