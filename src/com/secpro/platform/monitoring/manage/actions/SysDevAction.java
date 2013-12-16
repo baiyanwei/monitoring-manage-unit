@@ -122,7 +122,7 @@ public class SysDevAction extends ActionSupport {
 
 	public void getAllCompany() {
 		
-		List companys = sdcs.queryAll("from SysDevCompany");
+		List companys = sdcs.queryAll("from SysDevCompany s order by s.companyCode");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -163,7 +163,7 @@ public class SysDevAction extends ActionSupport {
 	public void getDevTypeByCompanyCode(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String companyCode=request.getParameter("companyCode");
-		List SysDevTypes=sdts.queryAll("from SysDevType s where s.companyCode='"+companyCode+"'");
+		List SysDevTypes=sdts.queryAll("from SysDevType s where s.companyCode='"+companyCode+"' order by s.typeCode");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {
