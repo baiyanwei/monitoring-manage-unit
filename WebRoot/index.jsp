@@ -18,6 +18,7 @@
 	<link rel="stylesheet" media="all" type="text/css" href="style/blue/css/basic.css" />
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script src="js/ueframe/main.js"></script>
+	<script src="js/iframeAutoSize.js"></script>
 	<style>/* Root = Horizontal, Secondary = Vertical */
 
 ul#navmenu-h {
@@ -296,7 +297,7 @@ ul#navmenu-h ul ul li.iehover ul {
 						</div>
 						<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
 
-							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
+							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto" onload='IFrameReSizeWidth("contextMain");'></iframe>	
 					
 						</div>
 					</div>
