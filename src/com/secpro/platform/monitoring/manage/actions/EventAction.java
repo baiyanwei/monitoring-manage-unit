@@ -181,25 +181,30 @@ public class EventAction {
 		this.sysEventHisService = sysEventHisService;
 	}
 	//告警确认
-	public void dealEvent(){
+	public String dealEvent(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String type=request.getParameter("type");//0代表确认告警，1代表清楚告警
 		String dealMsg=request.getParameter("dealMsg");
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		if(type==null){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		if(type.trim().equals("")){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		HttpSession s=request.getSession();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
 		if(user==null){
-			return;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		if(se.getId()==null){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		
 		if(type.equals("0")){
@@ -244,6 +249,10 @@ public class EventAction {
 			sysEventHisService.save(eventHis);
 				
 		}
+		
+		
+		requestMap.put("close", 1);
+		return "success";
 	}
 	
 	

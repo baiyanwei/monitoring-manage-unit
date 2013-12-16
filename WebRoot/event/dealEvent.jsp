@@ -25,7 +25,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-	
+	<script>
+		if('${close}'=='1'){
+			window.close();
+		}
+	</script>
 	
   </head>
   <body>

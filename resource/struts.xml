@@ -423,6 +423,7 @@
 			<result name="success">/event/dealEvent.jsp</result>
 		</action>
 		<action name="dealEvent" class="EventAction" method="dealEvent">	
+			<result name="success">/event/dealEvent.jsp</result>
 		</action>
 		<action name="getEventbyTime" class="EventAction" method="getEventbyTime">	
 		</action>
