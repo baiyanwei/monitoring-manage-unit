@@ -971,7 +971,7 @@ public class EventAction {
 		}
 		
 		EventType type=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
-		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		/*List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
@@ -983,7 +983,7 @@ public class EventAction {
 			logger.info("fetch SysKpiInfo failed from database !");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
-		}
+		}*/
 		List ruleList=null;
 		if(resId!=null&&!resId.equals("")){
 			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
@@ -1003,7 +1003,7 @@ public class EventAction {
 		requestMap.put("resId", resId);
 		requestMap.put("type", type);
 		requestMap.put("levels", levels);
-		requestMap.put("kpi", kpiList.get(0));
+		//requestMap.put("kpi", kpiList.get(0));
 		return "success";
 	}
 	public String toModifyEventRule(){
