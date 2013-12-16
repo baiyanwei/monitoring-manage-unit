@@ -19,6 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script src="js/ueframe/main.js"></script>
 	<style>/* Root = Horizontal, Secondary = Vertical */
+
 ul#navmenu-h {
   margin: 0;
   border: 0 none;
@@ -65,6 +66,7 @@ ul#navmenu-h ul li {
   float: left; /*For IE 7 lack of compliance*/
   display: block !important;
   display: inline; /*For IE*/
+  
 }
 
 /* Root Menu */
@@ -88,7 +90,7 @@ ul#navmenu-h a {
 ul#navmenu-h a:hover,
 ul#navmenu-h li:hover a,
 ul#navmenu-h li.iehover a {
-  border: 1px solid #FFF;
+  border: 1px solid #fff;
   background: #CCC;
   color: #FFF;
 }
@@ -188,10 +190,11 @@ ul#navmenu-h ul ul li.iehover ul {
 	}
 	if (window.attachEvent) window.attachEvent("onload", navHover);
 	</script>
+	
 </head>
 <body class="easyui-layout">
-	<div data-options="region:'north',border:false"  style="height:112px;width:1270px;padding:0px">
-		
+	
+	<div data-options="region:'north',border:false"  style="height:80px;width:1270px;padding:0px">	
 		<div class="content_title_bg" >
 			<div class="content_title">
 				<div style="float:left">欢迎 ${user.userName}！</div>
@@ -199,7 +202,18 @@ ul#navmenu-h ul ul li.iehover ul {
 			</div>
 		</div>
 		<div class="about_title" >防火墙策略核查系统</div>
-		<div style="position:relative;z-index:99">
+		
+			
+		</div>
+	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
+		<iframe src="tree/treeViewFrame.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+	</div>
+	
+	<div data-options="region:'center',title:''">
+		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
+			
+					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;overflow-x : hidden;overflow-y : scroll">
+						<div >
 							<table class="page_bar" align="center" style="padding:0px;">
 								<tr>
 									<td class="page_bar_bg" >
@@ -274,17 +288,7 @@ ul#navmenu-h ul ul li.iehover ul {
 									</td>
 								</tr>
 							</table>
-						</div>
-	</div>
-	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
-		<iframe src="tree/treeViewFrame.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
-	</div>
-	
-	<div data-options="region:'center',title:''">
-		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
-			
-					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;overflow-x : hidden;overflow-y : scroll">
-						
+				</div>
 						<div class="content_title_bg">
 							<div id="operation" class="content_title">
 								
