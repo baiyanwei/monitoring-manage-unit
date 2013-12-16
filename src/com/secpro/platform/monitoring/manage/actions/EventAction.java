@@ -1023,7 +1023,7 @@ public class EventAction {
 		}
 		SysEventRule rule=(SysEventRule)eventRuleService.getObj(SysEventRule.class, Long.parseLong(ruleId));
 		EventType type=(EventType)eventTypeService.getObj(EventType.class, rule.getEventTypeId());
-		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		/*List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
@@ -1035,11 +1035,11 @@ public class EventAction {
 			logger.info("fetch SysKpiInfo failed from database !");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
-		}
+		}*/
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("eRule", rule);
-		requestMap.put("kpi", kpiList.get(0));
+		//requestMap.put("kpi", kpiList.get(0));
 		return "success";
 	}
 	public String saveEventRule(){

@@ -140,7 +140,7 @@ Map app=user.getApp();
             {field:'topr',title:'操作符',width:100,editor:'textarea'}, 
             {field:'tvalue',title:'阀值',width:150,editor:'text'},
             {field:'repeat',title:'是否重复告警',width:150,editor:'text'},
-            {field:'recoverSetMsg',title:'是否产生恢复短信',width:150,editor:'text'}
+            {field:'recoverSetMsg',title:'是否产生恢复短信',width:200,editor:'text'}
             <% if(app.get("增加修改告警接收人")!=null){ %>
             ,
            	{
@@ -152,7 +152,9 @@ Map app=user.getApp();
 					var res=document.getElementById("resobj");
 					var resId=res.value;
 					if(resId==""){
-						d = '<a href="toAddFWAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						if(row.setMsg=='是'){
+							d = '<a href="toAddFWAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						}
 					}else{
 						if(row.setMsg=='是'){
 							if(row.isNotyfUser=='0'){
@@ -337,7 +339,9 @@ Map app=user.getApp();
 					var res=document.getElementById("mca");
 					var resId=res.value;
 					if(resId==""){
-						d = '<a href="toAddMcaAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						if(row.setMsg=='是'){
+							d = '<a href="toAddMcaAlarmReceive.action?ruleId='+row.ruleid+'"  class="easyui-linkbutton l-btn l-btn-plain" )>' + "<font color='blue'>告警接收人</font></a>"; 
+						}
 					}else{
 						if(row.setMsg=='是'){
 							if(row.isNotyfUser=='0'){
