@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>资源添加</title>
+    <title>基线规则添加</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -22,9 +22,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="资源管理>创建资源";
+		adiv.innerText="基线管理>创建基线规则";
 	</script>
   </head>
   
@@ -39,11 +40,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					 	<td>
 					 		<tr>
 	    			<td><label>防火墙厂商：</label></td>
-	    			<td><input name="companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany', 
+	    			<td><input name="companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany.action', 
 
 							onSelect: function(rec){ 
 
-							var url = 'findDevTypeByCompanyCode?companyCode='+rec.id; 
+							var url = 'findDevTypeByCompanyCode.action?companyCode='+rec.id; 
 							$('#cc2').combobox('clear'); 
 							$('#cc2').combobox('reload', url); 
 
@@ -64,7 +65,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 		
        				 <tr>
-				          <td><lable>防火墙策略包含与冲突比对规则：</lable></td>
+				          <td><lable>基线比对规则：</lable></td>
 				          <td><label>
 				            <textarea id="ccr" class="datagrid-editable-input"  name="baselineRule" style="resize:none;width=300;height=100">${configRule.containConflictRule }</textarea> 
 				           

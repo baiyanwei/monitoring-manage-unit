@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  <div class="easyui-panel" title="" style="width:400px">
+  <div class="easyui-panel" title="事件类型名称:${eventName }" style="width:400px">
 		<div style="padding:10px 0 10px 60px">
 		    <form id="ff" action="saveEventRule.action" method="post" onsubmit="return submitForm();">
 		    	<input type="hidden" name="eventRule.resId" value="${resId }"/>

@@ -206,6 +206,7 @@ ul#navmenu-h ul ul li.iehover ul {
 		
 			
 		</div>
+		
 	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
 		<iframe src="tree/treeViewFrame.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
 	</div>

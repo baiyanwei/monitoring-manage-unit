@@ -11,7 +11,7 @@
 		for(int i=0; i<userList.size(); i++)
 		{
 			SysUserInfo value = (SysUserInfo)userList.get(i);
-			userDisplay+=value.getId()+"|"+value.getUserName();
+			userDisplay+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 			if(i<userList.size()-1){
 				userDisplay+=";";
 			}
@@ -19,7 +19,7 @@
 		for(int i=0; i<notifyList.size(); i++)
 		{
 			SysUserInfo value = (SysUserInfo)notifyList.get(i);
-			notifyDisplay+=value.getId()+"|"+value.getUserName();
+			notifyDisplay+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 			if(i<notifyList.size()-1){
 				notifyDisplay+=";";
 			}

@@ -21,6 +21,7 @@ import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
 import com.secpro.platform.monitoring.manage.services.TaskScheduleService;
 import com.secpro.platform.monitoring.manage.util.Assert;
+import com.secpro.platform.monitoring.manage.util.LocalEncrypt;
 import com.secpro.platform.monitoring.manage.util.MsuMangementAPI;
 import com.secpro.platform.monitoring.manage.util.StringFormat;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
@@ -212,6 +213,8 @@ public class TaskScheduleAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String rows = request.getParameter("rows");
 		String page = request.getParameter("page");
+		String resId=request.getParameter("resId");
+		
 		int pageNo = 1;
 		int pageSize = 10;
 		if (Assert.isEmptyString(rows) == false) {
@@ -244,10 +247,14 @@ public class TaskScheduleAction {
 		querySQL.append("	               T.RES_ID,");
 		querySQL.append("	               T.IS_REALTIME");
 		querySQL.append("	          FROM MSU_TASK T");
-		querySQL.append("	         WHERE T.IS_REALTIME = 0) MT");
+		if(resId!=null&&!resId.equals("")){
+			querySQL.append("	         WHERE T.RES_ID="+resId+" AND T.IS_REALTIME = 0) MT");
+		}else{
+			querySQL.append("	         WHERE T.IS_REALTIME = 0) MT");
+		}
 		querySQL.append("	  LEFT JOIN (SELECT C.CITY_NAME, C.CITY_CODE FROM SYS_CITY C) R");
 		querySQL.append("	    ON MT.REGION = R.CITY_CODE");
-
+		System.out.println(querySQL);
 		List<Object> viewTableList = this.taskScheduleService.getTaskScheduleDao().queryBySql(querySQL.toString(), pageSize, pageNo);
 		if (viewTableList == null) {
 			returnMsg = "获取任务失败！";
@@ -366,27 +373,26 @@ public class TaskScheduleAction {
 			throw new Exception("request为空");
 		}
 		SysResAuth resAuth = new SysResAuth();
-		// if (isNew == false) {
-		// resAuth.setId(Long.valueOf(request.getParameter("resAuthId").trim()));
-		// }
+		
 		resAuth.setUsername(request.getParameter("username"));
-		resAuth.setPassword(request.getParameter("password"));
-		resAuth.setUserPrompt(request.getParameter("userPrompt"));
-		resAuth.setPassPrompt(request.getParameter("passPrompt"));
-		resAuth.setPrompt(request.getParameter("prompt"));
-		resAuth.setExecPrompt(request.getParameter("execPrompt"));
-		resAuth.setNextPrompt(request.getParameter("nextPrompt"));
-		resAuth.setSepaWord(request.getParameter("sepaWord"));
-		resAuth.setCommunity(request.getParameter("community"));
-		resAuth.setSnmpv3User(request.getParameter("snmpv3User"));
-		resAuth.setSnmpv3Auth(request.getParameter("snmpv3Auth"));
-		resAuth.setSnmpv3Authpass(request.getParameter("snmpv3Authpass"));
-		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv"));
-		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass"));
+		resAuth.setPassword(LocalEncrypt.Decode(request.getParameter("password")));
+		resAuth.setUserPrompt(request.getParameter("userPrompt").equals("null")?"":request.getParameter("userPrompt"));
+		resAuth.setPassPrompt(request.getParameter("passPrompt").equals("null")?"":request.getParameter("passPrompt"));
+		resAuth.setPrompt(request.getParameter("prompt").equals("null")?"":request.getParameter("prompt"));
+		resAuth.setExecPrompt(request.getParameter("execPrompt").equals("null")?"":request.getParameter("execPrompt"));
+		resAuth.setNextPrompt(request.getParameter("nextPrompt").equals("null")?"":request.getParameter("nextPrompt"));
+		
+		resAuth.setSepaWord(request.getParameter("sepaWord").equals("null")?"":request.getParameter("sepaWord"));
+		resAuth.setCommunity(request.getParameter("community").equals("null")?"":request.getParameter("community"));
+		resAuth.setSnmpv3User(request.getParameter("snmpv3User").equals("null")?"":request.getParameter("snmpv3User"));
+		resAuth.setSnmpv3Auth(request.getParameter("snmpv3Auth").equals("null")?"":request.getParameter("snmpv3Auth"));
+		resAuth.setSnmpv3Authpass(request.getParameter("snmpv3Authpass").equals("null")?"":request.getParameter("snmpv3Authpass"));
+		resAuth.setSnmpv3Priv(request.getParameter("snmpv3Priv").equals("null")?"":request.getParameter("snmpv3Priv"));
+		resAuth.setSnmpv3Privpass(request.getParameter("snmpv3Privpass").equals("null")?"":request.getParameter("snmpv3Privpass"));
 		resAuth.setResId(Long.valueOf(request.getParameter("resId")));
 		//
-		resAuth.setFilterString(request.getParameter("filterString"));
-		resAuth.setTerminalType(request.getParameter("terminalType"));
+		resAuth.setFilterString(request.getParameter("filterString").equals("null")?"":request.getParameter("filterString"));
+		resAuth.setTerminalType(request.getParameter("terminalType").equals("null")?"":request.getParameter("terminalType"));
 		//
 		return resAuth;
 	}
@@ -489,7 +495,7 @@ public class TaskScheduleAction {
 					metaDataObj.put("userPrompt", resAuth.getUserPrompt());
 				}
 				if (resAuth.getPassPrompt() != null && resAuth.getPassPrompt().length() > 0) {
-					metaDataObj.put("passPrompt", resAuth.getPassPrompt());
+					metaDataObj.put("passwdPrompt", resAuth.getPassPrompt());
 				}
 				if (resAuth.getPrompt() != null && resAuth.getPrompt().length() > 0) {
 					metaDataObj.put("prompt", resAuth.getPrompt());
@@ -498,12 +504,12 @@ public class TaskScheduleAction {
 					metaDataObj.put("execPrompt", resAuth.getExecPrompt());
 				}
 				if (resAuth.getNextPrompt() != null && resAuth.getNextPrompt().length() > 0) {
-					metaDataObj.put("nextPrompt", resAuth.getNextPrompt());
+					metaDataObj.put("separPrompt", resAuth.getNextPrompt());
 				}
-				if (resAuth.getSepaWord() != null && resAuth.getSepaWord().length() > 0) {
-					metaDataObj.put("sepaWord", resAuth.getSepaWord());
+				if (resAuth.getSepaWord() != null && resAuth.getSepaWord().length() > 0) {				
+					metaDataObj.put("separWrod", resAuth.getSepaWord());				
 				}
-				metaDataObj.put("openCommand", "openCommand");
+				metaDataObj.put("openCommand", openCommand);
 			}
 			if ("snmp".equalsIgnoreCase(mcaOperation) == true) {
 				if ("1".equals(snmpVersion) || "2".equals(snmpVersion)) {

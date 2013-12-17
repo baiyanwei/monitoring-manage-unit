@@ -25,4 +25,7 @@ public class SysResObjServiceImpl extends BaseService implements SysResObjServic
 	public void getResObjForm(final ResObjForm resObjForm){
 		dao.getResObjForm(resObjForm);
 	}
+	public void deleteRelevance(String resId){
+		dao.deleteRelevance(resId);
+	}
 }

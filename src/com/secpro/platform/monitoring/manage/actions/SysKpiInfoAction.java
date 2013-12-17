@@ -377,7 +377,7 @@ public class SysKpiInfoAction {
 				Object obj[]=(Object[])pageKpiList.get(i);
 				sb.append("{\"kpiId\":" + obj[0] + ",");
 				sb.append("\"kpiName\":\"" + obj[1] + "\",");
-				sb.append("\"kpiDesc\":\"" + obj[2] + "\",");
+				sb.append("\"kpiDesc\":\"" + (obj[2]==null?" ":obj[2]) + "\",");
 				
 				
 				if(i==(pageKpiList.size()-1)){

@@ -53,5 +53,30 @@ private DataSource dataSource;
 		}
 		return flag;
 	}
-
+	public void deleteRelevance(String ruleId){
+		Connection con=null;
+		Statement sta=null;
+		
+		try {
+			con=dataSource.getConnection();
+			con.setAutoCommit(false);
+			sta=con.createStatement();
+			
+			sta.execute("delete from notify_user_rule e where e.EVENT_RULE_ID="+ruleId);
+			
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally{
+			JdbcUtil.close( sta);
+			JdbcUtil.close( con);
+		}
+	}
 }

@@ -2,6 +2,8 @@ package com.secpro.platform.monitoring.manage.actions;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -122,8 +124,9 @@ public class ConfigPolicyRuleAction {
 		return "success";
 	}
 	public String configRule(){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		if(file != null){
-	        String fullFileName=  ApplicationConfiguration.CONFIGRULEPATH+File.separator+typeCode+fileFileName;
+	        String fullFileName=  ApplicationConfiguration.CONFIGRULEPATH+File.separator+typeCode+"_"+sdf.format(new Date());
 			File savefile = new File(fullFileName);
 			if (!savefile.getParentFile().exists()) {
 				savefile.getParentFile().mkdirs();
@@ -133,6 +136,8 @@ public class ConfigPolicyRuleAction {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				returnMsg="规则上传失败，请重新上传！";
+				backUrl = "rule/viewAllDevType.jsp";
 				return "failed";
 			}
 			List ruleList=ruleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+typeCode+"'");

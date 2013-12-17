@@ -21,4 +21,7 @@ public class NotifyUserRuleServiceImpl extends BaseService implements NotifyUser
 	public boolean deleteAllNotifyUser(String resId,String ruleId){
 		return dao.deleteAllNotifyUser(resId, ruleId);
 	}
+	public void deleteRelevance(String ruleId){
+		dao.deleteRelevance(ruleId);
+	}
 }

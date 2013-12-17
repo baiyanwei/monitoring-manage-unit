@@ -46,7 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				          <td><lable>请选择防火墙配置标准化脚本：</lable></td>
 				          <td><label>
 				            
-				           	<input class="easyui-validatebox" type="file" missingMessage="请选择文件" name="file" data-options="required:true"></input>
+				           	<input id="ff" class="easyui-validatebox" type="file" missingMessage="请选择文件" name="file" data-options="required:true"></input>
 				          </label></td>
        				 </tr>
        				 <tr>
@@ -78,6 +78,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    <script>
 		function submitForm(){
 			var t=document.getElementById("ccr");
+			if($("#ff").val()==""){
+				$.messager.alert('错误提示','请上传规则脚本','error');
+				return false;
+			}
 			if(t.value==""){
 				$.messager.alert('错误提示','请输入包含比对规则','error');
 				return false;

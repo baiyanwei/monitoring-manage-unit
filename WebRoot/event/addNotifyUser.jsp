@@ -10,7 +10,7 @@
 		for(int i=0; i<userList.size(); i++)
 		{
 			SysUserInfo value = (SysUserInfo)userList.get(i);
-			userDisplay+=value.getId()+"|"+value.getUserName();
+			userDisplay+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 			if(i<userList.size()-1){
 				userDisplay+=";";
 			}

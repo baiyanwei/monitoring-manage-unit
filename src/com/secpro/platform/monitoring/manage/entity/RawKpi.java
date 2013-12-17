@@ -17,8 +17,6 @@ public class RawKpi {
 	private String cdate;
 	@Column(name="kpi_value")
 	private String kpiValue;
-	@Column(name="value_num")
-	private Double valueNum;
 	public Long getResId() {
 		return resId;
 	}
@@ -45,11 +43,6 @@ public class RawKpi {
 	public void setKpiValue(String kpiValue) {
 		this.kpiValue = kpiValue;
 	}
-	public Double getValueNum() {
-		return valueNum;
-	}
-	public void setValueNum(Double valueNum) {
-		this.valueNum = valueNum;
-	}
+	
 	
 }
