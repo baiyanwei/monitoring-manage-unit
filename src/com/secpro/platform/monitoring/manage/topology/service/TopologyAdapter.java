@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +72,7 @@ public class TopologyAdapter {
 		// 生成布局
 		topologyLayoutRender.renderLayout(graph, referentMap.get("layoutStlye"));
 	}
+
 	/**
 	 * @param graph
 	 * @param referentMap
@@ -91,6 +91,7 @@ public class TopologyAdapter {
 		// 生成布局 orthogonal
 		topologyLayoutRender.renderLayout(graph, "orthogonal");
 	}
+
 	/**
 	 * 取得拓扑图中NODE的TIP信息
 	 * 
@@ -108,10 +109,21 @@ public class TopologyAdapter {
 			writeResponseMessage(response, "没有必要的参数nodeID", 500);
 			return;
 		}
+		String nodeType = request.getParameter("nodeType");
+		if (nodeType == null || nodeType.length() == 0) {
+			writeResponseMessage(response, "没有必要的参数nodeType", 500);
+			return;
+		}
+		JSONObject nodeResource = null;
 		// 当前查看的资源节点
-		JSONObject nodeResource = new JSONObject();
-		// JSONObject nodeResource =
-		// ResourceProvider.getInstance().getCityObjByNodeID(nodeID);
+		if (NodeType.CITY_NODE.equalsIgnoreCase(nodeType) == true) {
+			nodeResource = ResourceProvider.getInstance().getCityObjByCityCode(nodeID);
+		} else if (NodeType.FIREWALL_NODE.equalsIgnoreCase(nodeType) == true) {
+			nodeResource = ResourceProvider.getInstance().getFirewallResourceById(nodeID);
+		} else {
+			writeResponseMessage(response, "没有必要的参数nodeType", 500);
+			return;
+		}
 		if (nodeResource == null) {
 			writeResponseMessage(response, "ID[" + nodeID + "]对应的资源不存在", 500);
 			return;
@@ -120,7 +132,7 @@ public class TopologyAdapter {
 		// String.valueOf(nodeResource.getResValue().getResTypeId());
 		ArrayList<ArrayList<Object>> nodeTipDataList = new ArrayList<ArrayList<Object>>();
 		// 处理默认属性
-		topologyBuilder.buildDefaultNodeTip(nodeTipDataList, nodeResource);
+		topologyBuilder.buildDefaultNodeTip(nodeTipDataList, nodeResource, nodeType);
 		// 处理定制属性，指标，动作
 		/*
 		 * ArrayList<String[]> cfgTipList =
@@ -137,7 +149,7 @@ public class TopologyAdapter {
 		 * nodeTipDataList.add(groupTipList); } }
 		 */
 		// 处理TIP中的事件
-		topologyBuilder.buildNodeTipEvent(nodeTipDataList, nodeResource);
+		topologyBuilder.buildNodeTipEvent(nodeTipDataList, nodeID, nodeType);
 		// 找到最长的列
 		int maxLen = 0;
 		for (int i = 0; i < nodeTipDataList.size(); i++) {
@@ -159,7 +171,7 @@ public class TopologyAdapter {
 			nodeTipArray.put(rawArray);
 		}
 		// 写响应
-		System.out.println("TIP:" + nodeTipArray.toString());
+		//System.out.println("TIP:" + nodeTipArray.toString());
 		writeResponseMessage(response, nodeTipArray.toString(), 200);
 	}
 
@@ -182,16 +194,9 @@ public class TopologyAdapter {
 			return;
 		}
 		//
-		JSONObject nodesStatus = new JSONObject();
-		try {
-			List<String[]> resourceStatusListResource = ResourceProvider.getInstance().getResourceEventStatusByNodeID(nodeIDs);
-			if (resourceStatusListResource != null) {
-				for (int i = 0; i < resourceStatusListResource.size(); i++) {
-					nodesStatus.put(resourceStatusListResource.get(i)[0], resourceStatusListResource.get(i)[1]);
-				}
-			}
-		} catch (Exception e) {
-			logger.exception(e);
+		JSONObject nodesStatus = ResourceProvider.getInstance().getResourceEventStatusByNodeIDs(nodeIDs);
+		if (nodesStatus == null) {
+			nodesStatus = new JSONObject();
 		}
 		//
 		writeResponseMessage(response, nodesStatus.toString(), 200);

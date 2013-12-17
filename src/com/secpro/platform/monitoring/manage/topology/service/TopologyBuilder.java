@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import y.base.DataMap;
 import y.base.Node;
 
+import com.secpro.platform.monitoring.manage.topology.service.TopologyAdapter.NodeType;
 import com.secpro.platform.monitoring.manage.util.Assert;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.yworks.yfiles.server.graphml.flexio.data.StyledLayoutGraph;
@@ -75,7 +76,7 @@ public class TopologyBuilder {
 		// 找到FW资源
 		HashMap<String, List<JSONObject>> fwDataMap = resourceProvider.getFirewallAllResourceMap();
 		// 全国CITY_CODE从1开始
-		JSONObject currentResource = resourceProvider.getCityObjByNodeID("1");
+		JSONObject currentResource = resourceProvider.getCityObjByCityCode("1");
 		if (currentResource == null) {
 			return;
 		}
@@ -95,6 +96,7 @@ public class TopologyBuilder {
 
 	/**
 	 * 构建连通性测试
+	 * 
 	 * @param graph
 	 * @param referentMap
 	 */
@@ -240,7 +242,7 @@ public class TopologyBuilder {
 	 * @param nodeTipArray
 	 * @param currentResource
 	 */
-	public void buildDefaultNodeTip(ArrayList<ArrayList<Object>> nodeTipDataList, JSONObject currentResource) {
+	public void buildDefaultNodeTip(ArrayList<ArrayList<Object>> nodeTipDataList, JSONObject currentResource, String nodeType) {
 		if (nodeTipDataList == null || currentResource == null) {
 			return;
 		}
@@ -250,14 +252,38 @@ public class TopologyBuilder {
 		// 标题
 		JSONArray titleObject = new JSONArray();
 		titleObject.put("default");
-		titleObject.put("默认");
+		titleObject.put("基本信息");
 		defaultTipData.add(titleObject);
-		// 内容
-		defaultTipData.add("资源名称:AA");
-		defaultTipData.add("资源标识:AA");
-		defaultTipData.add("采集器:AA");
-		defaultTipData.add("健康度:AA");
-		defaultTipData.add("监控状态:AA");
+
+		if (NodeType.CITY_NODE.equalsIgnoreCase(nodeType) == true) {
+			try {
+				// "CITY_NAME", "CITY_CODE", "CITY_LEVEL", "PARENT_CODE"
+				defaultTipData.add("城市名称:" + currentResource.getString("CITY_NAME"));
+				defaultTipData.add("城市代码:" + currentResource.getString("CITY_CODE"));
+				defaultTipData.add("城市级别:" + currentResource.getString("CITY_LEVEL"));
+				defaultTipData.add("上级城市:" + currentResource.getString("PARENT_NAME"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else if (NodeType.FIREWALL_NODE.equalsIgnoreCase(nodeType) == true) {
+			try {
+				// "RES_NAME", "RES_DESC", "RES_IP", "RES_PAUSED", "CITY_CODE",
+				// "COMPANY_CODE", "TYPE_CODE", "COMPANY_NAME", "TYPE_NAME",
+				// "CITY_NAME", "ID"
+				defaultTipData.add("防火墙名称:" + currentResource.getString("RES_NAME"));
+				defaultTipData.add("描述:" + currentResource.getString("RES_DESC"));
+				defaultTipData.add("IP:" + currentResource.getString("RES_IP"));
+				// 资源启用状态0：表示启用1：表示停用，默认资源状态为启用
+				defaultTipData.add("状态:" + (currentResource.getString("RES_PAUSED").equals("0") ? "启用" : "停用"));
+				defaultTipData.add("设备厂商:" + currentResource.getString("COMPANY_NAME"));
+				defaultTipData.add("设备类别:" + currentResource.getString("TYPE_NAME"));
+				defaultTipData.add("所属城市:" + currentResource.getString("CITY_NAME"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return;
+		}
 	}
 
 	/**
@@ -266,9 +292,14 @@ public class TopologyBuilder {
 	 * @param nodeTipDataList
 	 * @param currentResource
 	 */
-	@SuppressWarnings("unchecked")
-	public void buildNodeTipEvent(ArrayList<ArrayList<Object>> nodeTipDataList, JSONObject currentResource) {
-		if (nodeTipDataList == null || currentResource == null) {
+	public void buildNodeTipEvent(ArrayList<ArrayList<Object>> nodeTipDataList, String nodeId, String nodeType) {
+		if (Assert.isEmptyCollection(nodeTipDataList) == true) {
+			return;
+		}
+		if (Assert.isEmptyString(nodeId) == true) {
+			return;
+		}
+		if (Assert.isEmptyString(nodeType) == true) {
 			return;
 		}
 		ArrayList<Object> eventTipData = new ArrayList<Object>();
@@ -290,40 +321,35 @@ public class TopologyBuilder {
 		}
 		// 查询最新的事件
 		//
-		HashMap<String, Object> eventMap = resourceProvider.getEventList(currentResource);
+		List<JSONObject> eventList = resourceProvider.getEventList(new String[] { nodeId });
 		// 标题
 		JSONArray titleObject = new JSONArray();
 		titleObject.put("event");
-		if (eventMap.containsKey("total") == false) {
+		if (eventList == null || eventList.isEmpty() == true) {
 			titleObject.put("事件(0)");
-		} else {
-			titleObject.put("事件(" + eventMap.get("total") + ")");
+			eventTipData.add(titleObject);
+			return;
 		}
+		titleObject.put("事件(" + eventList.size() + ")");
 		eventTipData.add(titleObject);
-		if (eventMap == null || eventMap.isEmpty()) {
-			return;
-		}
-		List<JSONObject> eventList = (List<JSONObject>) eventMap.get("event");
-		if (eventList == null || eventList.isEmpty()) {
-			return;
-		}
+		
 		for (int i = 0; i < eventList.size(); i++) {
-			if (eventList.get(i) == null) {
-				continue;
+			try {
+				JSONObject eventObj = eventList.get(i);
+				// "ID", "EVENT_LEVEL", "MESSAGE", "CDATE
+				JSONArray eventLevelArray = new JSONArray();
+				eventLevelArray.put("(" + resourceProvider.getUsableStatusDescr(eventObj.getString("EVENT_LEVEL")) + "," + eventObj.getString("CDATE") + ")");
+				eventLevelArray.put(eventObj.getString("EVENT_LEVEL"));
+				eventTipData.add(eventLevelArray);
+				JSONArray eventDetailArray = new JSONArray();
+				eventDetailArray.put("\t" + eventObj.getString("MESSAGE"));
+				eventDetailArray.put(eventObj.getString("EVENT_LEVEL"));
+				eventTipData.add(eventDetailArray);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-			JSONObject view = eventList.get(i);
-			// JSONArray eventLevelArray = new JSONArray();
-			// eventLevelArray.add("(" +
-			// resourceProvider.getUsableStatusDescr(view.getLevel()) + "," +
-			// view.getTime() + ")");
-			// eventLevelArray.add(String.valueOf(view.getLevel()));
-			// eventTipData.add(eventLevelArray.toString());
-			// eventLevelArray.clear();
-			// eventLevelArray.add("\t" + view.getMsg());
-			// eventLevelArray.add(String.valueOf(view.getLevel()));
-			// eventTipData.add(eventLevelArray.toString());
-		}
 
+		}
 	}
 
 	/**
@@ -373,7 +399,7 @@ public class TopologyBuilder {
 	 */
 	public void setGraphBackGroup(StyledLayoutGraph graph, String imageURL, String width, String height) {
 		JSONObject dataObj = new JSONObject();
-		JSONObject backGroundObj = new JSONObject();
+		// JSONObject backGroundObj = new JSONObject();
 		// backGroundObj.put("imageURL", imageURL);
 		// backGroundObj.put("width", width);
 		// backGroundObj.put("height", height);
@@ -395,30 +421,5 @@ public class TopologyBuilder {
 		// dataObj.put("graphBackGround", backGroundObj);
 		// setGraphAdditionalData(graph, dataObj);
 
-	}
-
-	/**
-	 * 判断一个JS拓扑图是否存在
-	 * 
-	 * @param nodeID
-	 * @param currentTopologyName
-	 * @return
-	 */
-	public boolean hasExistJSTopology(String nodeID, String currentTopologyName) {
-		if (nodeID == null || nodeID.length() == 0) {
-			return false;
-		}
-		if (currentTopologyName == null || currentTopologyName.length() == 0) {
-			return false;
-		}
-		// List<TopuConfValue> tpList =
-		// FactoryRegistry.getTopuConfFactory().getAllTopuConf();
-		// for (TopuConfValue tcv : tpList) {
-		// if (tcv.getNodeId().equals(nodeID) &&
-		// tcv.getName().equals(currentTopologyName)) {
-		// return true;
-		// }
-		// }
-		return false;
 	}
 }

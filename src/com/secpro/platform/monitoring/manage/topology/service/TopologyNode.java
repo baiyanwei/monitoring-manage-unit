@@ -20,9 +20,11 @@ public class TopologyNode {
 			}
 
 		}
-		rowObj.put(NODE_ID_NAME, rowObj.getString(nodeDefines[0]));
-		rowObj.put(NODE_LABEL_NAME, rowObj.getString(nodeDefines[1]));
-		rowObj.put(NODE_TYPE_NAME, nodeDefines[2]);
+		if (nodeDefines != null) {
+			rowObj.put(NODE_ID_NAME, rowObj.getString(nodeDefines[0]));
+			rowObj.put(NODE_LABEL_NAME, rowObj.getString(nodeDefines[1]));
+			rowObj.put(NODE_TYPE_NAME, nodeDefines[2]);
+		}
 		return rowObj;
 	}
 }
