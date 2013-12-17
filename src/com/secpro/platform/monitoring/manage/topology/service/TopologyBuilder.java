@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import y.base.DataMap;
 import y.base.Node;
 
-import com.secpro.platform.monitoring.manage.entity.SysResObj;
 import com.secpro.platform.monitoring.manage.util.Assert;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 import com.yworks.yfiles.server.graphml.flexio.data.StyledLayoutGraph;
@@ -95,6 +94,52 @@ public class TopologyBuilder {
 	}
 
 	/**
+	 * 构建连通性测试
+	 * @param graph
+	 * @param referentMap
+	 */
+	public void buildDialingTopology(StyledLayoutGraph graph, HashMap<String, String> referentMap) {
+		logger.info("start build the hole topology graph ");
+		// 实体节点出拓扑图时，按实现节点的所有关系都出来
+		if (graph == null || referentMap == null) {
+			return;
+		}
+		String startIp = referentMap.get("startIp");
+		if (Assert.isEmptyString(startIp) == true) {
+			return;
+		}
+		String endIp = referentMap.get("endIp");
+		if (Assert.isEmptyString(endIp) == true) {
+			return;
+		}
+		// 找到基于当前资源的所有关系
+		List<JSONObject> startIpFWList = resourceProvider.getFWResourceListByDialing(startIp);
+		if (Assert.isEmptyCollection(startIpFWList) == true) {
+			return;
+		}
+
+		List<JSONObject> endIpFWList = resourceProvider.getFWResourceListByDialing(endIp);
+		if (Assert.isEmptyCollection(endIpFWList) == true) {
+			return;
+		}
+		// NODE与资源的对照
+		HashMap<JSONObject, Node> graphNodeMap = new HashMap<JSONObject, Node>();
+		//
+		// 构建当前全国节点到图上
+		Node startIpNode = this.buildLineNodeOnTopology(graph, startIpFWList, graphNodeMap);
+		if (startIpNode == null) {
+			return;
+		}
+		Node endIpNode = this.buildLineNodeOnTopology(graph, endIpFWList, graphNodeMap);
+		if (endIpNode == null) {
+			return;
+		}
+		//
+		topologyPainter.createEdgeWithRelation(graph, startIpNode, endIpNode, startIpFWList.get(startIpFWList.size() - 1), endIpFWList.get(endIpFWList.size() - 1),
+				RelationConstants.FILIATION);
+	}
+
+	/**
 	 * 构建一个基于类别节点的拓扑图
 	 * 
 	 * @param graph
@@ -129,6 +174,40 @@ public class TopologyBuilder {
 			buildSonNodeOnTopology(maxLoop--, graph, sonCityList.get(n), sonCityNode, graphNodeMap, cityDataMap, fwDataMap);
 		}
 
+	}
+
+	/**
+	 * 根据集合中的资源,将资源一个连一个的画出来.并返回最后一个节点
+	 * 
+	 * @param graph
+	 * @param resourceList
+	 * @param graphNodeMap
+	 * @return
+	 */
+	private Node buildLineNodeOnTopology(StyledLayoutGraph graph, List<JSONObject> resourceList, HashMap<JSONObject, Node> graphNodeMap) {
+		//
+
+		JSONObject currentResource = null;
+		Node currentNode = null;
+
+		JSONObject theLastResource = resourceList.get(0);
+		Node theLastNode = topologyPainter.createNodeByResource(graph, theLastResource);
+		graphNodeMap.put(theLastResource, theLastNode);
+		for (int n = 1; n < resourceList.size(); n++) {
+			currentResource = resourceList.get(n);
+			if (graphNodeMap.containsKey(currentNode) == true) {
+				currentNode = graphNodeMap.get(currentResource);
+			} else {
+				currentNode = topologyPainter.createNodeByResource(graph, currentResource);
+				graphNodeMap.put(currentResource, currentNode);
+			}
+			//
+			topologyPainter.createEdgeWithRelation(graph, theLastNode, currentNode, theLastResource, currentResource, RelationConstants.FILIATION);
+			//
+			theLastResource = currentResource;
+			theLastNode = currentNode;
+		}
+		return currentNode;
 	}
 
 	/**
@@ -233,14 +312,16 @@ public class TopologyBuilder {
 				continue;
 			}
 			JSONObject view = eventList.get(i);
-//			JSONArray eventLevelArray = new JSONArray();
-//			eventLevelArray.add("(" + resourceProvider.getUsableStatusDescr(view.getLevel()) + "," + view.getTime() + ")");
-//			eventLevelArray.add(String.valueOf(view.getLevel()));
-//			eventTipData.add(eventLevelArray.toString());
-//			eventLevelArray.clear();
-//			eventLevelArray.add("\t" + view.getMsg());
-//			eventLevelArray.add(String.valueOf(view.getLevel()));
-//			eventTipData.add(eventLevelArray.toString());
+			// JSONArray eventLevelArray = new JSONArray();
+			// eventLevelArray.add("(" +
+			// resourceProvider.getUsableStatusDescr(view.getLevel()) + "," +
+			// view.getTime() + ")");
+			// eventLevelArray.add(String.valueOf(view.getLevel()));
+			// eventTipData.add(eventLevelArray.toString());
+			// eventLevelArray.clear();
+			// eventLevelArray.add("\t" + view.getMsg());
+			// eventLevelArray.add(String.valueOf(view.getLevel()));
+			// eventTipData.add(eventLevelArray.toString());
 		}
 
 	}

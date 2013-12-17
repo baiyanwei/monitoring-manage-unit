@@ -73,7 +73,24 @@ public class TopologyAdapter {
 		// 生成布局
 		topologyLayoutRender.renderLayout(graph, referentMap.get("layoutStlye"));
 	}
-
+	/**
+	 * @param graph
+	 * @param referentMap
+	 *            构建拓扑图
+	 */
+	public void buildDialingTopology(StyledLayoutGraph graph, HashMap<String, String> referentMap) {
+		if (graph == null || referentMap == null) {
+			return;
+		}
+		// 设置一个默认的背景图
+		topologyBuilder.setGraphBackGroup(graph, "/mmu/topology/images/background/bg_default.jpg");
+		// 构建关系拓扑图，按NODE类别
+		//
+		topologyBuilder.buildDialingTopology(graph, referentMap);
+		//
+		// 生成布局 orthogonal
+		topologyLayoutRender.renderLayout(graph, "orthogonal");
+	}
 	/**
 	 * 取得拓扑图中NODE的TIP信息
 	 * 
@@ -230,6 +247,7 @@ public class TopologyAdapter {
 		final public static String BUILD_TOPOLOGY = "buildTopology";
 		final public static String FETCH_NODE_TOOLTIP = "fetchNodeTooltip";
 		final public static String FETCH_NODE_USABLE_STATUS = "fetchNodeUsableStatus";
+		final public static String BUILD_DIALING_TOPOLOGY = "buildDialingTopology";
 	}
 
 	/**

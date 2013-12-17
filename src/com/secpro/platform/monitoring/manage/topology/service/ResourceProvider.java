@@ -105,6 +105,66 @@ public class ResourceProvider {
 		}
 		return rowMap;
 	}
+	public List<JSONObject> getFWResourceListByDialing(String ip) {
+		StringBuffer querySQL = new StringBuffer();
+		querySQL.append("SELECT T1.RES_NAME,");
+		querySQL.append("       T1.RES_DESC,");
+		querySQL.append("       T1.RES_IP,");
+		querySQL.append("       T1.RES_PAUSED,");
+		querySQL.append("       T1.CITY_CODE,");
+		querySQL.append("       T1.COMPANY_CODE,");
+		querySQL.append("       T1.TYPE_CODE,");
+		querySQL.append("       T2.COMPANY_NAME,");
+		querySQL.append("       T3.TYPE_NAME,");
+		querySQL.append("       T4.CITY_NAME,");
+		querySQL.append("       T1.ID");
+		querySQL.append("  FROM (SELECT ID,");
+		querySQL.append("               R.RES_NAME,");
+		querySQL.append("               R.RES_DESC,");
+		querySQL.append("               R.RES_IP,");
+		querySQL.append("               R.RES_PAUSED,");
+		querySQL.append("               R.CITY_CODE,");
+		querySQL.append("               R.COMPANY_CODE,");
+		querySQL.append("               R.TYPE_CODE");
+		querySQL.append("          FROM SYS_RES_OBJ R");
+		querySQL.append("         WHERE R.CITY_CODE IS NOT NULL");
+		querySQL.append("           AND R.CLASS_ID = 1) T1");
+		querySQL.append("  LEFT JOIN (SELECT C.COMPANY_NAME, C.COMPANY_CODE");
+		querySQL.append("               FROM SYS_DEV_COMPANY C");
+		querySQL.append("              WHERE C.COMPANY_CODE IS NOT NULL) T2");
+		querySQL.append("    ON T1.COMPANY_CODE = T2.COMPANY_CODE");
+		querySQL.append("  LEFT JOIN (SELECT T.TYPE_NAME, T.TYPE_CODE");
+		querySQL.append("               FROM SYS_DEV_TYPE T");
+		querySQL.append("              WHERE T.TYPE_CODE IS NOT NULL) T3");
+		querySQL.append("    ON T1.TYPE_CODE = T3.TYPE_CODE");
+		querySQL.append("  LEFT JOIN (SELECT SC.CITY_CODE, SC.CITY_NAME");
+		querySQL.append("               FROM SYS_CITY SC");
+		querySQL.append("              WHERE SC.CITY_CODE IS NOT NULL) T4");
+		querySQL.append("    ON T4.CITY_CODE = T1.CITY_CODE");
+		//
+		String[] keyNames = new String[] { "RES_NAME", "RES_DESC", "RES_IP", "RES_PAUSED", "CITY_CODE", "COMPANY_CODE", "TYPE_CODE", "COMPANY_NAME", "TYPE_NAME", "CITY_NAME", "ID" };
+		List<JSONObject> rowList = queryResourcePackageInJSON(keyNames, new String[] { "ID", "RES_NAME", TopologyAdapter.NodeType.FIREWALL_NODE }, querySQL.toString());
+		if (Assert.isEmptyCollection(rowList) == true) {
+			return new ArrayList<JSONObject>();
+		}
+//		List<JSONObject> rowMap = new ArrayList<JSONObject>();
+//		// package
+//		for (int i = 0; i < rowList.size(); i++) {
+//			try {
+//				if (rowMap.containsKey(rowList.get(i).getString("CITY_CODE")) == true) {
+//					List<JSONObject> cityFWList = rowMap.get(rowList.get(i).getString("CITY_CODE"));
+//					cityFWList.add(rowList.get(i));
+//				} else {
+//					ArrayList<JSONObject> cityFWList = new ArrayList<JSONObject>();
+//					cityFWList.add(rowList.get(i));
+//					rowMap.put(rowList.get(i).getString("CITY_CODE"), cityFWList);
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		return rowList;
+	}
 
 	/**
 	 * get all FireWall resource.

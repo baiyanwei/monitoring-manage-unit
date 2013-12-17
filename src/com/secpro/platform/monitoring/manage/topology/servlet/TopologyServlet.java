@@ -107,8 +107,19 @@ public class TopologyServlet extends HttpServlet {
 		} else if (TopologyAdapter.TopologyMethod.FETCH_NODE_USABLE_STATUS.equalsIgnoreCase(method)) {
 			// 请求拓扑图中的NODE健康度信息
 			topologyAdapter.fetchNodeUsableStatus(request, response);
+		} else if (TopologyAdapter.TopologyMethod.BUILD_DIALING_TOPOLOGY.equalsIgnoreCase(method)) {
+			// 构建拓扑参考，存放一个拓扑图与节点的信息
+			HashMap<String, String> topologyReferentMap = buildTopologyReferent(request);
+			// 构建拓扑图
+			GraphRoundtripSupport support = new GraphRoundtripSupport();
+			support.setSupportUserTags(true);
+			// 加入拓扑图附加信息
+			support.addMapper("GraphAdditionalDataMap", "GRAPH-ADD-DATA", KeyType.STRING, KeyScope.GRAPH);
+			//
+			StyledLayoutGraph graph = (StyledLayoutGraph) support.createRoundtripGraph();
+			topologyAdapter.buildDialingTopology(graph, topologyReferentMap);
+			support.sendGraph(graph, response);
 		}
-
 	}
 
 	/**
@@ -126,6 +137,8 @@ public class TopologyServlet extends HttpServlet {
 		if (Assert.isEmptyString(layoutStyle) == true) {
 			layoutStyle = TopologyLayoutRender.ORGANIC;
 		}
+		topologyReferentMap.put("startIp", request.getParameter("startIp"));
+		topologyReferentMap.put("endIp", request.getParameter("endIp"));
 		topologyReferentMap.put("layoutStlye", layoutStyle);
 		logger.debug("buildTopologyReferent:" + topologyReferentMap);
 		return topologyReferentMap;
