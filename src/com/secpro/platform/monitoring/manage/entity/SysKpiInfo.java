@@ -19,8 +19,6 @@ public class SysKpiInfo {
 	private Long id;
 	@Column(name="kpi_name")
 	private String kpiName;
-	@Column(name="kpi_type")
-	private String kpiType;
 	@Column(name="kpi_desc")
 	private String kpiDesc;
 	@Column(name="class_id")
@@ -36,12 +34,6 @@ public class SysKpiInfo {
 	}
 	public void setKpiName(String kpiName) {
 		this.kpiName = kpiName;
-	}
-	public String getKpiType() {
-		return kpiType;
-	}
-	public void setKpiType(String kpiType) {
-		this.kpiType = kpiType;
 	}
 	public String getKpiDesc() {
 		return kpiDesc;

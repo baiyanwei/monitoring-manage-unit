@@ -15,7 +15,7 @@ Map app=user.getApp();
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>采集端明细</title>
+    <title>基线模板列表</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -104,7 +104,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改基线模板只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyTemplate.action?templateId="+rows[0].templateId;  

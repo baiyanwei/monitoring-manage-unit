@@ -1,8 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+Map app=user.getApp();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -52,13 +55,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {field:'roledesc',title:'角色描述',width:100,editor:'text'}
            	          	
         ]],   
-       toolbar: [{   
+       toolbar: [
+       <% if(app.get("创建角色")!=null||user.getAccount().equals("admin")){ %>
+       {   
             text: '创建角色',   
             iconCls: 'icon-add',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/users/addRole.jsp";
             }   
-        }, '-', {   
+        }, '-', 
+        <% }if(app.get("删除角色")!=null||user.getAccount().equals("admin")){ %>
+        {   
             text: '删除角色',   
             iconCls: 'icon-remove',   
             handler: function () {   
@@ -80,7 +87,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
             }   
-        }, '-', {   
+        }, '-', 
+        <% }if(app.get("修改角色")!=null||user.getAccount().equals("admin")){ %>
+        {   
             text: '修改角色',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -90,7 +99,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改角色只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyRole.action?roleid="+rows[0].roleid;  
@@ -99,7 +108,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        },'-', {   
+        },'-', 
+         <% }if(app.get("角色权限关联")!=null||user.getAccount().equals("admin")){ %>
+        {   
             text: '角色权限关联',   
             iconCls: 'icon-edit',   
             handler: function () {     
@@ -109,7 +120,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}  
 
                
-        }, '-', {   
+        }, '-',
+        <%}%>
+         {   
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }

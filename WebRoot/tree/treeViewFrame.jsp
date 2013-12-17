@@ -64,7 +64,7 @@ function clickFolder() {
         var subcode = arguments[0];
 
         if(arguments[0].indexOf("_")>0){
-        	window.parent.frames["contextMain"].location.href="toViewSysObj?resid="+subcode+"&&operation=查看资源明细";
+        	window.parent.frames["contextMain"].location.href="<%=_contexPath%>/toViewSysObj.action?resid="+subcode+"&&operation=查看资源明细";
         }
     } catch ( e ) {
         alert( "查找成员单位数据时出错，请等待右侧表格出现后再选择成员单位。" );

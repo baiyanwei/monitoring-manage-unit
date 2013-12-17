@@ -96,16 +96,6 @@
 						title : '调度规则',
 						width : 80,
 						editor : 'text'
-					}, {
-						field : 'con',
-						title : '任务内容',
-						width : 100,
-						editor : 'text'
-					}, {
-						field : 'mda',
-						title : '附加数据',
-						width : 100,
-						editor : 'text'
 					},{
 						field : 'rid',
 						title : 'rid',
@@ -158,7 +148,7 @@
 								alert('请选择单个任务进行修改');
 								return;
 							}
-							window.location.href = "task/taskSave.jsp?operationType=update&tid="+rows[0].tid;
+							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=update&tid="+rows[0].tid;
 						}
 					},  '-', {
 						text : '刷新',

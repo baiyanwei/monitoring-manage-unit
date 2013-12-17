@@ -104,20 +104,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    			</td>
 	    		</tr>
 	    		<tr>
-	    			<td><label>告警判断条件：</label><select id="thresholdOpr" class="easyui-combobox" missingMessage="请选择" name="eventRule.thresholdOpr" data-options="required:true">
-	    				 	<c:if test="${kpi.kpiType eq '0' }">
+	    			<td><label>告警判断条件：</label><select id="thresholdOpr"  name="eventRule.thresholdOpr" >
+	    				 	
 		    				 	<c:if test="${eRule.thresholdOpr eq '==' }">
-			    				 	<option value="==" selected>等于</option>
-			    				 	<option value="!=">不等于</option>
+			    				 	<option value="==" selected>字符等</option>
+			    				 	<option value="!=">字符不等</option>
+			    				 	<option value=">" >大于</option>
+			    				 	<option value=">=">大于等于</option>
+			    				 	<option value="=">等于</option>
+			    				 	<option value="<=">小于等于</option>
+			    				 	<option value="<">小于</option>
 		    				 	</c:if>
 		    				 	<c:if test="${eRule.thresholdOpr eq '!=' }">
-			    				 	<option value="==" >等于</option>
-			    				 	<option value="!=" selected>不等于</option>
+			    				 	<option value="==" >字符等</option>
+			    				 	<option value="!=" selected>字符不等</option>
+			    				 	<option value=">" >大于</option>
+			    				 	<option value=">=">大于等于</option>
+			    				 	<option value="=">等于</option>
+			    				 	<option value="<=">小于等于</option>
+			    				 	<option value="<">小于</option>
 		    				 	</c:if>
-	    				 	</c:if>
 	    				 	
-	    				 	<c:if test="${kpi.kpiType eq '1' }">
+	    				 	
+	    				 	
 	    				 		<c:if test="${eRule.thresholdOpr eq '>' }">
+	    				 			<option value="==">字符等</option>
+			    				 	<option value="!=">字符不等</option>
 			    				 	<option value=">" selected>大于</option>
 			    				 	<option value=">=">大于等于</option>
 			    				 	<option value="=">等于</option>
@@ -125,6 +137,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    				 	<option value="<">小于</option>
 			    				</c:if>
 			    				<c:if test="${eRule.thresholdOpr eq '>=' }">
+			    					<option value="==">字符等</option>
+			    				 	<option value="!=">字符不等</option>
 			    				 	<option value=">" >大于</option>
 			    				 	<option value=">=" selected>大于等于</option>
 			    				 	<option value="=">等于</option>
@@ -132,6 +146,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    				 	<option value="<">小于</option>
 			    				</c:if>
 			    				<c:if test="${eRule.thresholdOpr eq '=' }">
+			    					<option value="==">字符等</option>
+			    				 	<option value="!=">字符不等</option>
 			    				 	<option value=">" >大于</option>
 			    				 	<option value=">=" >大于等于</option>
 			    				 	<option value="=" selected>等于</option>
@@ -139,6 +155,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    				 	<option value="<">小于</option>
 			    				</c:if>
 			    				<c:if test="${eRule.thresholdOpr eq '<=' }">
+			    					<option value="==">字符等</option>
+			    				 	<option value="!=">字符不等</option>
 			    				 	<option value=">" >大于</option>
 			    				 	<option value=">=" >大于等于</option>
 			    				 	<option value="=" >等于</option>
@@ -147,22 +165,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    				</c:if>
 			    				<c:if test="${eRule.thresholdOpr eq '<' }">
 			    					<option value="<">小于</option>
+			    					<option value="==">字符等</option>
+			    				 	<option value="!=">字符不等</option>
+			    					
 			    				 	<option value=">" >大于</option>
 			    				 	<option value=">=" >大于等于</option>
 			    				 	<option value="=" >等于</option>
 			    				 	<option value="<=" >小于等于</option>
 			    				 	
 			    				</c:if>
-	    				 	</c:if>
+	    				 	
 	    				 </select></td>
 	    			<td>
 	    				 <lable>阀值:</lable>
-	    				 <c:if test="${kpi.kpiType eq '0' }">
+	    				 
 	    				 	<input id="thresholdValue" class="easyui-validatebox" type="text" missingMessage="请输入阀值" name="eventRule.thresholdValue" data-options="required:true" value="${ eRule.thresholdValue}"></input>
-	    				 </c:if>
-	    				 <c:if test="${kpi.kpiType eq '1' }">
-	    				 	<input id="thresholdValue1" class="easyui-validatebox"  type="text" name="eventRule.thresholdValue" missingMessage="请输入阀值"  data-options="required:true" value="${ eRule.thresholdValue}"></input>
-	    				 </c:if>
+	    				
+	    				
 	    			</td>
 	    		</tr>
 	    		
@@ -177,20 +196,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return flag;
 			}
 			var thresholdValue=document.getElementById("thresholdValue");
-			var thresholdValue1=document.getElementById("thresholdValue1");
 			var thresholdOpr=document.getElementById("thresholdOpr");
-			if(thresholdValue!=null){
-				if(thresholdValue.value=='null'&&thresholdOpr.value=='=='){
+			if(thresholdValue.value=='null'){
+				if(thresholdOpr.value!='!='){
 					alert("只有选择不等于时，阀值才能未字符串null");
 					return false;
 				}
 			}
-			if(thresholdValue1!=null&&isNaN(thresholdValue1.value)){
-				alert("阀值请输入数字！");
-				return false;
+			
+			if(thresholdOpr.value==">"||thresholdOpr.value=="<"||thresholdOpr.value=="<="||thresholdOpr.value==">="||thresholdOpr.value=="="){
+				
+				if(isNaN(thresholdValue.value)){
+					alert("阀值请输入数字！");
+					return false;
+				}
+				return true;
 			}
-			return true;
-		}
+		}	
 		
 	</script>
 </body>

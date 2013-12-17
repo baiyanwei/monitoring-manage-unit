@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>设备类型列表</title>
+    <title>设备型号列表</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -48,12 +48,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         rownumbers:true,
         columns:[[  
             {field:'typeid_ccode',checkbox:true},  
-            {field:'typecode',title:'类型编码',width:100,editor:'text',sortable:true},    
-            {field:'typename',title:'类型名称',width:100,editor:'text'},  
-            {field:'typedesc',title:'类型描述',width:100,editor:'text'},    
+            {field:'typecode',title:'型号编码',width:100,editor:'text',sortable:true},    
+            {field:'typename',title:'型号名称',width:100,editor:'text'},  
+            {field:'typedesc',title:'型号描述',width:100,editor:'text'},    
         ]],   
        toolbar: [{   
-            text: '删除类型',   
+            text: '添加防火墙型号',   
+            iconCls: 'icon-edit',   
+            handler: function () {     
+               	 	    
+				    var urll="toAddType.action?companyCode=<%=request.getParameter("companyCode")%>";  
+				    
+				 	window.location.href=urll;
+				}  
+
+               
+        }, '-', {   
+            text: '删除型号',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -76,7 +87,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
             }   
         }, '-', {   
-            text: '修改类型',   
+            text: '修改型号',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -85,7 +96,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改类型只能选择一个条目');
+				     	alert('修改型号只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyType.action?devTypeId="+rows[0].typeid_ccode;  

@@ -330,7 +330,7 @@ public class BaseLineAction {
 	public void queryResBaseLineMatchScore(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String from=request.getParameter("ff");
@@ -368,7 +368,7 @@ public class BaseLineAction {
 				return;
 			}
 			if(from!=null&&!from.trim().equals("")){
-				from=sdf.format(sdf2.parse(from));
+				from=sdf.format(sdf1.parse(from));
 
 			}else{
 				 String todays=sdf1.format(new Date());
@@ -376,7 +376,7 @@ public class BaseLineAction {
 			}
 			
 			if(to!=null&&!to.trim().equals("")){
-				to=sdf.format(sdf2.parse(to));
+				to=sdf.format(sdf1.parse(to));
 			}else{
 			
 				to=sdf.format(new Date());
@@ -418,7 +418,7 @@ public class BaseLineAction {
 	public void queryBaseLineMatchScore(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String from=request.getParameter("ff");
@@ -443,7 +443,7 @@ public class BaseLineAction {
 			pw = resp.getWriter();
 			
 			if(from!=null&&!from.trim().equals("")){
-				from=sdf.format(sdf2.parse(from));
+				from=sdf.format(sdf1.parse(from));
 
 			}else{
 				 String todays=sdf1.format(new Date());
@@ -451,7 +451,7 @@ public class BaseLineAction {
 			}
 			
 			if(to!=null&&!to.trim().equals("")){
-				to=sdf.format(sdf2.parse(to));
+				to=sdf.format(sdf1.parse(to));
 			}else{
 			
 				to=sdf.format(new Date());

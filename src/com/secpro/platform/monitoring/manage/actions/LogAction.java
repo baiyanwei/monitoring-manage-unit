@@ -30,7 +30,7 @@ public class LogAction {
 	public void viewLog(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd" );
-		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		SimpleDateFormat sdf3 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
@@ -56,7 +56,7 @@ public class LogAction {
 			pw = resp.getWriter();
 			
 			if(from!=null&&!from.trim().equals("")){
-				from=sdf.format(sdf2.parse(from));
+				from=sdf.format(sdf3.parse(from));
 
 			}else{
 				 String todays=sdf1.format(new Date());
@@ -64,13 +64,12 @@ public class LogAction {
 			}
 			
 			if(to!=null&&!to.trim().equals("")){
-				to=sdf.format(sdf2.parse(to));
+				to=sdf.format(sdf3.parse(to));
 			}else{
 			
 				to=sdf.format(new Date());
 			}
-			System.out.println(from+"---------------"+to);
-			long count=logService.getLogCount();
+			long count=logService.getLogCount(from,to);
 			List logPage=logService.queryByPage("from com.secpro.platform.monitoring.manage.entity.Log r where r.handleDate>='"+from+"' and r.handleDate <='"+to+"'",pageNum,maxPage);
 			if (count == 0) {
 				sb.append("{\"total\":0,\"rows\":[]}");

@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>资源查看</title>
+    <title>事件查看</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -137,7 +137,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
         }, '-', {   
-            text: '删除基线',   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -161,7 +161,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
             }   
         }, '-', {   
-            text: '修改基线',   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -170,7 +170,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  
@@ -197,7 +197,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
 		
 	<!-- 采集端告警设置 -->
-		<div title="采集端告警规则设置" style="padding:10px">
+		<div title="采集机告警规则设置" style="padding:10px">
 			
 			<input type="hidden" id="mca" value=""/>
 			<input type="hidden" id="meventType" value=""/>
@@ -216,7 +216,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									}" /> 
 			</td>
 			<td>
-				<lable>&nbsp;采集端：</lable>
+				<lable>&nbsp;采集机：</lable>
 				<input id="mm2" class="easyui-combobox" name="resId" data-options="required:true,valueField:'id',textField:'text',
 					onSelect: function(rec){ 
 							var resobj=document.getElementById('mca');
@@ -286,7 +286,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                window.location.href="toAddEventRule.action?resId="+resId.value+"&eventTypeId="+eventType.value;
             }   
         }, '-', {   
-            text: '删除基线',   
+            text: '删除告警规则',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -310,7 +310,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
             }   
         }, '-', {   
-            text: '修改基线',   
+            text: '修改告警规则',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#mcaDetail').datagrid('getSelections');  
@@ -319,7 +319,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改厂商只能选择一个条目');
+				     	alert('修改告警规则只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyEventRule.action?ruleid="+rows[0].ruleid;  

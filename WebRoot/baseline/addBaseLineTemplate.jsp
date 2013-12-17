@@ -26,7 +26,7 @@
 		<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
-
+		<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 		<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="基线模板管理>创建模板";
@@ -34,7 +34,7 @@
 	</head>
 
 	<body>
-		<div class="easyui-panel" title="" style="width: 700px">
+		<div class="easyui-panel" title="" style="width:1000px;height:500px">
 
 			<div style="padding: 10px 0 10px 60px">
 				<form id="ff" action="saveBaseLineTemplate.action"
@@ -73,7 +73,7 @@
 							<td>
 								<input id="companyCode" name="companyCode" id="cc1" missingMessage="请选择厂商"
 									class="easyui-combobox"
-									data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany'" />
+									data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany.action'" />
 							</td>
 						</tr>
 						<tr>

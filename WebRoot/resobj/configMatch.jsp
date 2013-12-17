@@ -121,7 +121,7 @@ Map app=user.getApp();
 		</script>
 		</div>
 		
-	<!-- 采集端告警设置 -->
+	
 		<div title="HA配置比对" style="padding:10px">
 			
 		<table>

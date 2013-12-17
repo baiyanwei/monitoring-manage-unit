@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	<table>
 	    		<tr>
 	    			<td><label>开启命令：</label></td>
-	    			<td><input class="easyui-validatebox" type="text" missingMessage="开启命令为登录设备后开启自行才命令权限的命令，如无需开启则和采集命令相同" name="sc.openCommand" data-options="required:true"></input>&nbsp;</td>
+	    			<td><input class="easyui-validatebox" type="text" missingMessage="开启命令为登录设备后开启获取配置命令权限的命令，如无需开启则和采集命令相同" name="sc.openCommand" data-options="required:true"></input>&nbsp;</td>
 	    		</tr>
 	    		
 	    		<tr>

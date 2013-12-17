@@ -24,7 +24,7 @@ public class SysLogServiceImpl extends BaseService implements SysLogService{
 	public Map getLogApp(){
 		return dao.getLogApp();
 	}
-	public long  getLogCount(){
-		return dao.getLogCount();
+	public long  getLogCount(String from ,String to){
+		return dao.getLogCount(from,to);
 	}
 }

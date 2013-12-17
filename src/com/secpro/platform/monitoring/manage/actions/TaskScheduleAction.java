@@ -138,11 +138,17 @@ public class TaskScheduleAction {
 			JSONObject metaDataObj = BuildTaskMetaData(sysResAuth, mcaOperation, request.getParameter("snmp_version"), openCommandValue);
 			//
 			MsuTask task = buildMSUTaskByRequest(request, isNew, metaDataObj, commandValue);
+			
 			if (task == null) {
 				throw new Exception("无法从请求中分析出任务主体,操作失败.");
 			}
 			//
-			taskScheduleService.save(task);
+			if(isNew){
+				taskScheduleService.save(task);
+			}else{
+				taskScheduleService.update(task);
+			}
+			
 			//
 			returnMsg = "操作成功！";
 			String msu_command = MsuMangementAPI.MSU_COMMAND_TASK_ADD;

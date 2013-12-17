@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-	<dataProvider>192.168.18.66:8080</dataProvider>
+	<dataProvider>127.0.0.1:8080</dataProvider>
 	<appName>mmu</appName>
 	<appVersion>0.1</appVersion>
 </configuration>

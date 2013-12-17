@@ -178,29 +178,19 @@ public class SysKpiInfoAction {
 				
 				if (i != (kpiList.size() - 1)) {
 					if (l != null && l.size() != 0) {
-						if (kpi.getKpiType().equals("0")) {
+						
 							sb.append("\"kpiValue\":\""
-									+ ((RawKpi) l.get(0)).getValueStr() + "\"},");
-						} else if (kpi.getKpiType().equals("1")) {
-							sb.append("\"kpiValue\":"
-									+ ((RawKpi) l.get(0)).getValueNum() + "},");
-						} else {
-							sb.append("\"kpiValue\":\"\"},");
-						}
+									+ ((RawKpi) l.get(0)).getKpiValue() + "\"},");
+						
 					}else{
 						sb.append("\"kpiValue\":\"\"},");
 					}
 				} else {
 					if (l != null && l.size() != 0) {
-						if (kpi.getKpiType().equals("0")) {
+						
 							sb.append("\"kpiValue\":\""
-									+ ((RawKpi) l.get(0)).getValueStr() + "\"}");
-						} else if (kpi.getKpiType().equals("1")) {
-							sb.append("\"kpiValue\":"
-									+ ((RawKpi) l.get(0)).getValueNum() + "}");
-						} else {
-							sb.append("\"kpiValue\":\"\"}");
-						}
+									+ ((RawKpi) l.get(0)).getKpiValue() + "\"}");
+						
 					}else{
 						sb.append("\"kpiValue\":\"\"}");
 					}
@@ -286,16 +276,7 @@ public class SysKpiInfoAction {
 			logger.info("fetch kpiName failed , kpiName is ''!");
 			backUrl = "resobj/viewKpiInfo.jsp";
 		}
-		if(kpiInfo.getKpiType()==null){
-			returnMsg = "指标类型不能为空，指标保存失败！";
-			logger.info("fetch kpiType failed , kpiName is null!");
-			backUrl = "resobj/viewKpiInfo.jsp";
-		}
-		if(kpiInfo.getKpiType().equals("")){
-			returnMsg = "指标类型不能为空，指标保存失败！";
-			logger.info("fetch kpiType failed , kpiName is ''!");
-			backUrl = "resobj/viewKpiInfo.jsp";
-		}
+		
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
@@ -325,16 +306,7 @@ public class SysKpiInfoAction {
 			logger.info("fetch kpiName failed , kpiName is ''!");
 			backUrl = "resobj/viewKpiInfo.jsp";
 		}
-		if(kpiInfo.getKpiType()==null){
-			returnMsg = "指标类型不能为空，指标修改失败！";
-			logger.info("fetch kpiType failed , kpiName is null!");
-			backUrl = "resobj/viewKpiInfo.jsp";
-		}
-		if(kpiInfo.getKpiType().equals("")){
-			returnMsg = "指标类型不能为空，指标修改失败！";
-			logger.info("fetch kpiType failed , kpiName is ''!");
-			backUrl = "resobj/viewKpiInfo.jsp";
-		}
+		
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
@@ -348,7 +320,7 @@ public class SysKpiInfoAction {
 		SysKpiInfo kpi=(SysKpiInfo)kpiService.getObj(SysKpiInfo.class, kpiInfo.getId());
 		kpi.setKpiName(kpiInfo.getKpiName());
 		kpi.setKpiDesc(kpiInfo.getKpiDesc());
-		kpi.setKpiType(kpiInfo.getKpiType());
+		
 		kpi.setClassId(kpiInfo.getClassId());
 		kpiService.update(kpi);
 		return "success";
@@ -387,7 +359,7 @@ public class SysKpiInfoAction {
 			pageNum=Integer.parseInt(page); 
 		}
 		List allKpiList=kpiService.queryAll("from SysKpiInfo ");
-		List pageKpiList=kpiService.queryByPage("select k.id,k.kpiName,k.kpiType,k.kpiDesc,r.className from SysKpiInfo k , SysResClass r where k.classId=r.id", pageNum,maxPage);
+		List pageKpiList=kpiService.queryByPage("select k.id,k.kpiName,k.kpiDesc,r.className from SysKpiInfo k , SysResClass r where k.classId=r.id", pageNum,maxPage);
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -405,14 +377,13 @@ public class SysKpiInfoAction {
 				Object obj[]=(Object[])pageKpiList.get(i);
 				sb.append("{\"kpiId\":" + obj[0] + ",");
 				sb.append("\"kpiName\":\"" + obj[1] + "\",");
-				sb.append("\"kpiDesc\":\"" + obj[3] + "\",");
+				sb.append("\"kpiDesc\":\"" + obj[2] + "\",");
 				
-				sb.append("\"kpiType\":\"" + (obj[2].equals("0")?"字符型":"数字型") + "\",");
 				
 				if(i==(pageKpiList.size()-1)){
-					sb.append("\"className\":\"" + (obj[4].equals("fw")?"防火墙":"采集端") + "\"}");
+					sb.append("\"className\":\"" + (obj[3].equals("fw")?"防火墙":"采集端") + "\"}");
 				}else{
-					sb.append("\"className\":\"" + (obj[4].equals("fw")?"防火墙":"采集端") + "\"},");
+					sb.append("\"className\":\"" + (obj[3].equals("fw")?"防火墙":"采集端") + "\"},");
 				}
 			}
 			sb.append("]}");

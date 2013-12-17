@@ -27,7 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			function OK(){
 				var url="${backUrl}";
 				if(url==null || url=="" || url=="null"){
-				  	self.location=first.jsp;
+					var u="<%=_contexPath%>/first.jsp";
+				  	self.location=u;
 				}else{
 				 	if(url.indexOf(".action")>=0){
 				 	}else{

@@ -21,6 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
 		adiv.innerText="指标管理>创建指标解析规则";
@@ -37,11 +38,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	<tbody>
 	    		<tr>
 	    			<td><label>设备厂商：</label></td>
-	    			<td><input name="oid.companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany', 
+	    			<td><input name="oid.companyCode" id="cc1" class="easyui-combobox" data-options=" required:true, valueField: 'id', textField: 'text', url: 'findAllCompany.action', 
 
 							onSelect: function(rec){ 
 
-							var url = 'findDevTypeByCompanyCode?companyCode='+rec.id; 
+							var url = 'findDevTypeByCompanyCode.action?companyCode='+rec.id; 
 							$('#cc2').combobox('clear');
 							$('#cc2').combobox('reload', url); 
 

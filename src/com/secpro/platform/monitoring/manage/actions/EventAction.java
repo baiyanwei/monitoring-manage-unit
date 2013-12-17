@@ -181,25 +181,30 @@ public class EventAction {
 		this.sysEventHisService = sysEventHisService;
 	}
 	//告警确认
-	public void dealEvent(){
+	public String dealEvent(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String type=request.getParameter("type");//0代表确认告警，1代表清楚告警
 		String dealMsg=request.getParameter("dealMsg");
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		if(type==null){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		if(type.trim().equals("")){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		HttpSession s=request.getSession();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
 		if(user==null){
-			return;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		if(se.getId()==null){
-			return ;
+			requestMap.put("close", "1");
+			return "success";
 		}
 		
 		if(type.equals("0")){
@@ -244,6 +249,10 @@ public class EventAction {
 			sysEventHisService.save(eventHis);
 				
 		}
+		
+		
+		requestMap.put("close", 1);
+		return "success";
 	}
 	
 	
@@ -437,7 +446,7 @@ public class EventAction {
 	public void getEventbyTime(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String from=request.getParameter("ff");
@@ -475,7 +484,7 @@ public class EventAction {
 				return;
 			}
 			if(from!=null&&!from.trim().equals("")){
-				from=sdf.format(sdf2.parse(from));
+				from=sdf.format(sdf1.parse(from));
 
 			}else{
 				 String todays=sdf1.format(new Date());
@@ -483,7 +492,7 @@ public class EventAction {
 			}
 			
 			if(to!=null&&!to.trim().equals("")){
-				to=sdf.format(sdf2.parse(to));
+				to=sdf.format(sdf1.parse(to));
 			}else{
 			
 				to=sdf.format(new Date());
@@ -824,9 +833,8 @@ public class EventAction {
 		msgService.update(msg);
 		return "success";
 	}
-	public void getAllEventTypeByClass(){
-		HttpServletRequest request=ServletActionContext.getRequest();
-		String resclass=request.getParameter("resclass");
+	public void getAllEventType(){
+		
 		
 		
 		StringBuilder result = new StringBuilder();
@@ -835,20 +843,8 @@ public class EventAction {
 			HttpServletResponse resp = ServletActionContext.getResponse();
 			resp.setContentType("text/json");
 			pw = resp.getWriter();
-			if(resclass==null){
-				result.append("[]");
-				
-				pw.println(result.toString());
-				pw.flush();
-				return;
-			}
-			if(resclass.trim().equals("")){
-				result.append("[]");
-				pw.println(result.toString());
-				pw.flush();
-				return;
-			}
-			List eventType = eventTypeService.queryAll("select e.id ,e.eventTypeName,e.eventTypeDesc from EventType e , SysKpiInfo s,SysResClass c where e.eventTypeName=s.kpiName and s.classId=c.id and c.className='"+resclass+"'");
+			
+			List eventType = eventTypeService.queryAll("select e.id ,e.eventTypeName,e.eventTypeDesc from EventType e");
 			if (eventType == null) {
 				result.append("[]");
 				
@@ -860,7 +856,7 @@ public class EventAction {
 			for (int i = 0; i < eventType.size(); i++) {
 				Object[] etype =(Object[])eventType.get(i);
 				
-				result.append("{\"id\":"+etype[0]+",\"text\":\""+etype[1]+" "+etype[2]+"\"}");
+				result.append("{\"id\":"+etype[0]+",\"text\":\""+etype[1]+" "+(etype[2]==null?"":etype[2])+"\"}");
 				
 				if((i+1)!=eventType.size()){
 					result.append(",");
@@ -885,7 +881,13 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String resId=request.getParameter("resId");
 		String eventTypeId=request.getParameter("eventTypeId");
-		List allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		List allEventRule=null;
+		if(resId!=null&&!resId.equals("")){
+			
+			allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		}else{
+			allEventRule=eventRuleService.queryAll("from SysEventRule s where s.resId is null and s.eventTypeId="+eventTypeId);
+		}
 	//	List allEventRule=eventRuleService.queryAll("from SysEventRule");
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
@@ -964,18 +966,6 @@ public class EventAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String resId=request.getParameter("resId");
 		String eventTypeId=request.getParameter("eventTypeId");
-		if(resId==null){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is null!");
-			backUrl = "event/viewEventType.jsp";
-			return "failed";
-		}
-		if(resId.equals("")){
-			returnMsg = "系统错误，页面跳转失败！";
-			logger.info("fetch resId failed , resId is ''!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
 		if(eventTypeId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch eventTypeId failed , eventTypeId is null!");
@@ -990,7 +980,7 @@ public class EventAction {
 		}
 		
 		EventType type=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
-		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		/*List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
@@ -1002,8 +992,13 @@ public class EventAction {
 			logger.info("fetch SysKpiInfo failed from database !");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
+		}*/
+		List ruleList=null;
+		if(resId!=null&&!resId.equals("")){
+			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
+		}else{
+			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId is null and s.eventTypeId="+eventTypeId);
 		}
-		List ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
 		String levels="";
 		for(int i=0;i<ruleList.size();i++){
 			SysEventRule r=(SysEventRule)ruleList.get(i);
@@ -1017,7 +1012,7 @@ public class EventAction {
 		requestMap.put("resId", resId);
 		requestMap.put("type", type);
 		requestMap.put("levels", levels);
-		requestMap.put("kpi", kpiList.get(0));
+		//requestMap.put("kpi", kpiList.get(0));
 		return "success";
 	}
 	public String toModifyEventRule(){
@@ -1037,7 +1032,7 @@ public class EventAction {
 		}
 		SysEventRule rule=(SysEventRule)eventRuleService.getObj(SysEventRule.class, Long.parseLong(ruleId));
 		EventType type=(EventType)eventTypeService.getObj(EventType.class, rule.getEventTypeId());
-		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
+		/*List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
 		if(kpiList==null){
 			returnMsg = "请先创建KPI指标，页面跳转失败！";
 			logger.info("fetch SysKpiInfo failed from database !");
@@ -1049,11 +1044,11 @@ public class EventAction {
 			logger.info("fetch SysKpiInfo failed from database !");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
-		}
+		}*/
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("eRule", rule);
-		requestMap.put("kpi", kpiList.get(0));
+		//requestMap.put("kpi", kpiList.get(0));
 		return "success";
 	}
 	public String saveEventRule(){
@@ -1067,12 +1062,6 @@ public class EventAction {
 		if(eventRule.getEventTypeId()==null){
 			returnMsg = "系统错误，规则保存失败！";
 			logger.info("fetch EventTypeId failed , EventTypeId is null!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
-		if(eventRule.getResId()==null){
-			returnMsg = "系统错误，规则保存失败！";
-			logger.info("fetch ResId failed , ResId is null!");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
@@ -1152,12 +1141,7 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
-		if(eventRule.getResId()==null){
-			returnMsg = "系统错误，规则修改失败！";
-			logger.info("fetch ResId failed , ResId is null!");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
+		
 		if(eventRule.getRecoverSetMsg()==null){
 			returnMsg = "是否产生恢复告警不能为空，规则修改失败！";
 			logger.info("fetch RecoverSetMsg failed , RecoverSetMsg is null!");
@@ -1240,8 +1224,9 @@ public class EventAction {
 	}
 	public String toAddAlarmReceive(){
 		HttpServletRequest request=ServletActionContext.getRequest();
-		String resId=request.getParameter("resId");
+		
 		String ruleId=request.getParameter("ruleId");
+		String resId=request.getParameter("resId");
 		if(resId==null){
 			returnMsg = "系统错误，页面跳转失败！";
 			logger.info("fetch resId failed , resId is null!");
@@ -1270,8 +1255,8 @@ public class EventAction {
 		ActionContext actionContext = ActionContext.getContext(); 
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		requestMap.put("userList", userList);
-		requestMap.put("resId", resId);
 		requestMap.put("ruleId", ruleId);
+		requestMap.put("resId", resId);
 		return "success";
 	}
 	public String toModifyAlarmReceive(){
@@ -1384,5 +1369,122 @@ public class EventAction {
 			notifyService.save(notify);
 		}
 		return "success";
+	}
+	public String toAddFWAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String ruleId=request.getParameter("ruleId");
+		
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}	
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public String toAddMcaAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String ruleId=request.getParameter("ruleId");
+		
+		if(ruleId==null){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is null!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}
+		if(ruleId.trim().equals("")){
+			returnMsg = "系统错误，页面跳转失败！";
+			logger.info("fetch ruleId failed , ruleId is ''!");
+			backUrl = "event/eventRule.jsp";
+			return "failed";
+		}	
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map<String,Object> requestMap=(Map)actionContext.get("request");
+		requestMap.put("ruleId", ruleId);
+		return "success";
+	}
+	public void queryAlarmReceive(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String ruleId=request.getParameter("ruleId");
+		String resId=request.getParameter("resId");
+		
+		StringBuilder sb = new StringBuilder();
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			if(resId==null){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(resId.trim().equals("")){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(ruleId==null){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			if(ruleId.trim().equals("")){
+				pw.println(new JSONObject().toString());
+				pw.flush();
+			}
+			
+			List userList=userService.queryAll("from SysUserInfo u where u.deleted is null");
+			List notifyList=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and eventRuleId="+ruleId);
+			List notifyUser =new ArrayList();
+			
+			for(Object o:notifyList){
+				NotifyUserRule notify=(NotifyUserRule)o;
+				for(Object u:userList){
+					SysUserInfo user=(SysUserInfo)u;
+					if(user.getId()==notify.getUserId()){
+						notifyUser.add(user);
+					}
+				}
+			}
+			userList.removeAll(notifyUser);
+			JSONObject json=new JSONObject();
+			String userDisplay="";
+			String receiveDispaly="";
+			for(int i=0;i<userList.size();i++){
+				SysUserInfo value = (SysUserInfo)userList.get(i);
+				userDisplay+=value.getId()+"|"+value.getUserName();
+				if(i<userList.size()-1){
+					userDisplay+=";";
+				}
+			}
+			for(int i=0;i<notifyUser.size();i++){
+				SysUserInfo value = (SysUserInfo)notifyUser.get(i);
+				receiveDispaly+=value.getId()+"|"+value.getUserName();
+				if(i<userList.size()-1){
+					receiveDispaly+=";";
+				}
+			}
+			json.put("userList",userDisplay );
+			json.put("receiveList",receiveDispaly );
+			System.out.println(json.toString());
+			pw.println(json.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			} finally {
+				if (pw != null) {
+					pw.close();
+				}
+			}
 	}
 }

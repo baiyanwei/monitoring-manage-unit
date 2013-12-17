@@ -42,6 +42,7 @@ public class LoginAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String account=request.getParameter("account");
 		String password=request.getParameter("password");
+		System.out.println(password+"===============-------------");
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> requestMap=(Map)ctx.get("request");
 		if(account==null){

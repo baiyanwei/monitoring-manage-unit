@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>添加防火墙类型</title>
+<title>添加防火墙型号</title>
 <meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -32,13 +32,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	<input type="hidden" name="company.companyCode" value="${companyCode }"/>
 		    	<table>
 	    		<tr>
-	    			<td><label>防火墙类型名称：</label></td>
+	    			<td><label>防火墙型号名称：</label></td>
 	    			<td><input class="easyui-validatebox" type="text" missingMessage="请输入厂商名称" name="company.typeName" data-options="required:true"></input></td>
 	    		</tr>
 	    		
 	    		
 	    		<tr>
-	    			<td><label>类型描述：</label></td>
+	    			<td><label>型号描述：</label></td>
 	    			<td><textarea class="datagrid-editable-input" name="company.typeDesc" style="resize:none;"></textarea></td>
 	    		</tr>
 	    		<tr>

@@ -121,7 +121,8 @@ public class SysDevAction extends ActionSupport {
 	}
 
 	public void getAllCompany() {
-		List companys = sdcs.queryAll("from SysDevCompany");
+		
+		List companys = sdcs.queryAll("from SysDevCompany s order by s.companyCode");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -162,7 +163,7 @@ public class SysDevAction extends ActionSupport {
 	public void getDevTypeByCompanyCode(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String companyCode=request.getParameter("companyCode");
-		List SysDevTypes=sdts.queryAll("from SysDevType s where s.companyCode='"+companyCode+"'");
+		List SysDevTypes=sdts.queryAll("from SysDevType s where s.companyCode='"+companyCode+"' order by s.typeCode");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {
@@ -180,7 +181,7 @@ public class SysDevAction extends ActionSupport {
 			for (int i = 0; i < SysDevTypes.size(); i++) {
 				SysDevType sdc=(SysDevType)SysDevTypes.get(i);
 				if(i==0){
-					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\",\"selected\":true}");
+					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\"}");
 				}else{
 					result.append("{\"id\":"+sdc.getTypeCode()+",\"text\":\""+sdc.getTypeName()+"\"}");
 				}
@@ -828,7 +829,7 @@ public class SysDevAction extends ActionSupport {
 				configRule=configRuleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+obj[0]+"'");
 				sb.append("{\"typeCode\":\"" + obj[0] + "\",");
 				sb.append("\"typeName\":\"" + obj[1] + "\",");
-				sb.append("\"typeDesc\":\"" + obj[3] + "\",");
+				sb.append("\"typeDesc\":\"" + (obj[3]==null?" ":obj[3]) + "\",");
 				if(syslogRule!=null&&syslogRule.size()>0){
 					sb.append("\"hasSyslogRule\":\"1\",");
 				}else{

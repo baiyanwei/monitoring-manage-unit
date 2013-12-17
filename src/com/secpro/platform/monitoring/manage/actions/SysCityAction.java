@@ -78,7 +78,7 @@ public class SysCityAction extends ActionSupport{
 		}
 	}
 	public void getAllCity(){
-		List citys = _cityService.queryAll("from SysCity s where s.parentCode='1'");
+		List citys = _cityService.queryAll("from SysCity s where s.parentCode='1' order by s.cityName");
 		StringBuilder result = new StringBuilder();
 		PrintWriter pw = null;
 		try {

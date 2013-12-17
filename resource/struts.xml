@@ -392,7 +392,7 @@
 			<result name="failed">/error.jsp</result>
 			<result name="success">/event/viewEventType.jsp</result>
 		</action>
-		<action name="getAllEventTypeByClass" class="EventAction" method="getAllEventTypeByClass">
+		<action name="getAllEventType" class="EventAction" method="getAllEventType">
 		</action>
 		<action name="viewEventRule" class="EventAction" method="viewEventRule">
 		</action>
@@ -423,6 +423,7 @@
 			<result name="success">/event/dealEvent.jsp</result>
 		</action>
 		<action name="dealEvent" class="EventAction" method="dealEvent">	
+			<result name="success">/event/dealEvent.jsp</result>
 		</action>
 		<action name="getEventbyTime" class="EventAction" method="getEventbyTime">	
 		</action>
@@ -442,6 +443,16 @@
 		<action name="saveOrUpdateNotifyUser" class="EventAction" method="saveOrUpdateNotifyUser">	
 			<result name="success">/event/eventRule.jsp</result>
 			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="toAddFWAlarmReceive" class="EventAction" method="toAddFWAlarmReceive">	
+			<result name="success">/event/addNotifyUserNoFw.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="toAddMcaAlarmReceive" class="EventAction" method="toAddMcaAlarmReceive">	
+			<result name="success">/event/addNotifyUserNoMca.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="queryAlarmReceive" class="EventAction" method="queryAlarmReceive">	
 		</action>
 		<!-- 用户登录 -->
 

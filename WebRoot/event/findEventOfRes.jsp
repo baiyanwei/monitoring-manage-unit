@@ -114,7 +114,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		</div>
 		
-	<!-- 采集端告警设置 -->
+	
 		<div title="历史事件查询" style="padding:10px">
 			<table>
 			<tr>

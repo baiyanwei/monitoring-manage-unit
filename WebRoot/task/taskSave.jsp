@@ -26,8 +26,8 @@
 	//
 	if ("new".equalsIgnoreCase(operationType) == true) {
 		if (Assert.isEmptyString(resId) == true) {
-	out.println("未发现创建任务需要的资源,请设置resId参数");
-	return;
+			out.println("未发现创建任务需要的资源,请设置resId参数");
+			return;
 		}
 		msuTask = new MsuTask();
 		msuTask.setTargetPort(0);
@@ -35,19 +35,19 @@
 		operationTitle = "新建任务";
 	} else {
 		if (Assert.isEmptyString(tid) == true) {
-	out.println("未发现要操作的任务标识,请设置tid参数");
-	return;
+			out.println("未发现要操作的任务标识,请设置tid参数");
+			return;
 		}
 		msuTask = (MsuTask) (taskScheduleService.getTaskScheduleDao().findById(MsuTask.class, tid));
 		if (msuTask == null) {
-	out.println("未取得" + tid + "对应的任务");
-	return;
+			out.println("未取得" + tid + "对应的任务");
+			return;
 		}
 		resId = String.valueOf(msuTask.getResId());
 		if ("update".equalsIgnoreCase(operationType) == true) {
-	operationTitle = "更新任务 " + tid;
+			operationTitle = "更新任务 " + tid;
 		} else {
-	operationTitle = "查看详细 " + tid;
+			operationTitle = "查看详细 " + tid;
 		}
 	}
 	SysResObj sysResObj = (SysResObj) (taskScheduleService.getObj(SysResObj.class, Long.parseLong(resId)));
@@ -69,12 +69,12 @@
 	}
 	if (Assert.isEmptyString(sysResObj.getConfigOperation()) == false) {
 		if (sysResObj.getConfigOperation().toLowerCase().indexOf("ssh") != -1) {
-	sysOperationList.add("ssh");
-	mcaOperation = "ssh";
+			sysOperationList.add("ssh");
+			mcaOperation = "ssh";
 		}
 		if (sysResObj.getConfigOperation().toLowerCase().indexOf("telnet") != -1) {
-	sysOperationList.add("telnet");
-	mcaOperation = "telnet";
+			sysOperationList.add("telnet");
+			mcaOperation = "telnet";
 		}
 	}
 	if (sysOperationList.isEmpty()) {
@@ -85,7 +85,7 @@
 	//List<SysOperation> sysOperationList = taskScheduleService.getSysOperationByTypeCode(sysResObj.getTypeCode());
 	List<SysCommand> sysCommandList = taskScheduleService.getSystCommandByTypeCode(sysResObj.getTypeCode());
 	if (sysCommandList == null || sysCommandList.isEmpty()) {
-		out.println(sysResObj.getResName() + ",未指定设备型号,法进行创建任务操作");
+		out.println(sysResObj.getResName() + ",未指定设备型号,无法进行创建任务操作");
 		return;
 	}
 	List<SysResAuth> SysResAuthList = taskScheduleService.getSysResAuthByResId(sysResObj.getId());

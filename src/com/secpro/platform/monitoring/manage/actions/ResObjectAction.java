@@ -469,10 +469,9 @@ public class ResObjectAction extends ActionSupport {
 			return "failed";
 		}
 		SysResAuth auth=(SysResAuth)auths.get(0);
-		if(!company.equals(resObjForm.getCompany())||!devType.equals(resObjForm.getDevType())){
 			List dicts=telnetSshService.queryAll("from TelnetSshDict t where t.companyCode='"+resObjForm.getCompany()+"' and t.typeCode='"+resObjForm.getDevType()+"'");
-			if(dicts==null){
-				returnMsg=("修改失败，修改值获取失败！");
+			if(dicts==null&&resObjForm.getConfigOperation().equals("telnet")){
+				returnMsg=("系统错误，防火墙修改失败！");
 				if(flag){
 					backUrl="toViewSysObj.action?resid="+resObjForm.getResId();
 				}else{
@@ -482,8 +481,8 @@ public class ResObjectAction extends ActionSupport {
 				return "failed";
 			}
 			
-			if(dicts.size()==0){
-				returnMsg=("修改失败，修改值获取失败！");
+			if(dicts.size()==0&&resObjForm.getConfigOperation().equals("telnet")){
+				returnMsg=("系统错误，防火墙修改失败！");
 				if(flag){
 					backUrl="toViewSysObj.action?resid="+resObjForm.getResId();
 				}else{
@@ -492,16 +491,18 @@ public class ResObjectAction extends ActionSupport {
 				logger.info("query dict failed from db");
 				return "failed";
 			}
-			TelnetSshDict tsd=(TelnetSshDict)dicts.get(0);
-			auth.setExecPrompt(tsd.getExecPrompt());
-			auth.setNextPrompt(tsd.getExecPrompt());
-			auth.setPassPrompt(tsd.getPassPrompt());
-			auth.setPrompt(tsd.getPrompt());
-			auth.setSepaWord(tsd.getSepaWord());
-			auth.setUserPrompt(tsd.getUserPrompt());	
-			auth.setTerminalType(tsd.getTerminalType());
-			auth.setFilterString(tsd.getFilterString());
-		}
+			if(dicts!=null&&dicts.size()>0){
+				TelnetSshDict tsd=(TelnetSshDict)dicts.get(0);
+				auth.setExecPrompt(tsd.getExecPrompt());
+				auth.setNextPrompt(tsd.getExecPrompt());
+				auth.setPassPrompt(tsd.getPassPrompt());
+				auth.setPrompt(tsd.getPrompt());
+				auth.setSepaWord(tsd.getSepaWord());
+				auth.setUserPrompt(tsd.getUserPrompt());	
+				auth.setTerminalType(tsd.getTerminalType());
+				auth.setFilterString(tsd.getFilterString());
+			}
+		
 		auth.setCommunity(resObjForm.getCommuinty());
 		if(resObjForm.getPassword()==null){
 			returnMsg=("修改失败，修改值获取失败！");
@@ -621,53 +622,62 @@ public class ResObjectAction extends ActionSupport {
 		List resClasses =classService.queryAll("from SysResClass s where s.className='fw'");
 		if(resClasses==null){
 			logger.info("fetch classid of fw faild");
+			backUrl="first.jsp";
 			returnMsg=("系统错误，资源保存失败！");	
 			return "failed";
 		}
 		if(resClasses.size()==0){
 			logger.info("fetch classid of fw faild");
 			returnMsg=("系统错误，资源保存失败！");	
+			backUrl="first.jsp";
 			return "failed";
 		}
 		long classid=((SysResClass)resClasses.get(0)).getId();
 		List dicts=telnetSshService.queryAll("from TelnetSshDict t where t.companyCode='"+res.getCompanyCode()+"' and t.typeCode='"+res.getTypeCode()+"'");
-		if(dicts==null){
+		if(dicts==null&&resObjForm.getConfigOperation().equals("telnet")){
 			logger.info("fetch TelnetSshDict failed ,by companycode="+res.getCompanyCode()+" and typeCode="+res.getTypeCode());
-			returnMsg=("系统错误，资源保存失败！");	
+			returnMsg=("系统错误，资源保存失败！");
+			backUrl="first.jsp";
 			return "failed";
 		}
 		
-		if(dicts.size()==0){
+		if(dicts.size()==0&&resObjForm.getConfigOperation().equals("telnet")){
 			logger.info("fetch TelnetSshDict failed ,by companycode="+res.getCompanyCode()+" and typeCode="+res.getTypeCode());
 			returnMsg=("系统错误，资源保存失败！");	
+			backUrl="first.jsp";
 			return "failed";
 		}
 		res.setClassId(classid);
 		
 		sysService.save(res);
-		
-		TelnetSshDict tsd=(TelnetSshDict)dicts.get(0);
 		SysResAuth resAuth=new SysResAuth();
+		if(dicts!=null&&dicts.size()>0){
+			TelnetSshDict tsd=(TelnetSshDict)dicts.get(0);
+			resAuth.setExecPrompt(tsd.getExecPrompt());
+			resAuth.setNextPrompt(tsd.getNextPrompt());
+			resAuth.setPassPrompt(tsd.getPassPrompt());
+			resAuth.setTerminalType(tsd.getTerminalType());
+			resAuth.setFilterString(tsd.getFilterString());
+			resAuth.setPrompt(tsd.getPrompt());
+			resAuth.setSepaWord(tsd.getSepaWord());
+			resAuth.setUserPrompt(tsd.getUserPrompt());
+		}	
 		resAuth.setCommunity(resObjForm.getCommuinty());
-		resAuth.setExecPrompt(tsd.getExecPrompt());
-		resAuth.setNextPrompt(tsd.getNextPrompt());
-		resAuth.setPassPrompt(tsd.getPassPrompt());
-		resAuth.setTerminalType(tsd.getTerminalType());
-		resAuth.setFilterString(tsd.getFilterString());
+		
 		resAuth.setPassword(resObjForm.getPassword());
-		resAuth.setPrompt(tsd.getPrompt());
-		resAuth.setSepaWord(tsd.getSepaWord());
+		
 		resAuth.setSnmpv3Auth(resObjForm.getSnmpau());
 		resAuth.setSnmpv3Authpass(resObjForm.getSnmpaups());
 		resAuth.setSnmpv3Priv(resObjForm.getSnmppr());
 		resAuth.setSnmpv3Privpass(resObjForm.getSnmpprps());
 		resAuth.setSnmpv3User(resObjForm.getSnmpuser());
 		resAuth.setUsername(resObjForm.getUsername());
-		resAuth.setUserPrompt(tsd.getUserPrompt());
+		
 		resAuth.setResId(res.getId());
 		resAuthService.save(resAuth);
+		
 		returnMsg=("资源保存成功，刷新资源树后展示！");	
-		backUrl="/first.jsp";
+		
 		return "success";
 	}
 	//跳转到添加资源页面
@@ -736,7 +746,11 @@ public class ResObjectAction extends ActionSupport {
 			sb.append("\"mcapaused\":\""+objs[5]+"\",");
 			sb.append("\"cityName\":\""+objs[6]+"\",");
 			if(objs[5].equals("1")){
-				sb.append("\"maxLevel\":\"-1\"},");
+				if(i!=mcaPage.size()-1){
+					sb.append("\"maxLevel\":\"-1\"},");
+				}else{
+					sb.append("\"maxLevel\":\"-1\"}");
+				}
 			}else if(i!=mcaPage.size()-1){			
 				if(maxlevel!=null&&maxlevel.size()>0){
 					

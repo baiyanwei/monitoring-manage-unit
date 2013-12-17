@@ -23,7 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="厂商管理》厂商信息修改";
+		adiv.innerText="厂商管理>厂商信息修改";
 	</script>
 </head>
 <body>
