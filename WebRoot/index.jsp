@@ -198,7 +198,7 @@ ul#navmenu-h ul ul li.iehover ul {
 	<div data-options="region:'north',border:false"  style="height:80px;width:1270px;padding:0px">	
 		<div class="content_title_bg" >
 			<div class="content_title">
-				<div style="float:left">欢迎 ${user.userName}！</div>
+				<div style="float:left">cha欢迎 ${user.userName}！</div>
 				<div style="float:right;padding-right:10px"><a href="javascript:modifyselfmanager();" >修改个人信息</a>&nbsp;&nbsp;<a href="logout.action">注销</a></div>
 			</div>
 		</div>
@@ -214,7 +214,7 @@ ul#navmenu-h ul ul li.iehover ul {
 	<div data-options="region:'center',title:''">
 		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
 			
-					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;overflow-x : hidden;overflow-y : scroll">
+					<div class="content" title="主视图" data-options="selected:true" style="padding:0px;">
 						<div >
 							<table class="page_bar" align="center" style="padding:0px;">
 								<tr>
@@ -247,7 +247,8 @@ ul#navmenu-h ul ul li.iehover ul {
 												<% }if(app.get("基线比对查看")!=null){ %>		
 													<li><a href="javascript:matchscoremanager();" class="easyui-linkbutton" data-options="plain:true">基线比对结果</a></li>
 												<%} %>
-													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>		
+													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>	
+													<li><a href="javascript:taskmanager();" class="easyui-linkbutton" data-options="plain:true">任务查询</a></li>		
 											</ul>
 										
 										<% }if(app.get("系统管理菜单")!=null) {%>	
@@ -290,15 +291,15 @@ ul#navmenu-h ul ul li.iehover ul {
 									</td>
 								</tr>
 							</table>
-				</div>
+						</div>
 						<div class="content_title_bg">
 							<div id="operation" class="content_title">
 								
 							</div>
 						</div>
-						<div id="center" style="overflow: auto; width: 100%; padding: 0px;">
+						<div id="cont" style="overflow: hidden; width: 100%;height:88%;mergin:0px; padding: 0px;">
 
-							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto" onload='IFrameReSizeWidth("contextMain");'></iframe>	
+							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
 					
 						</div>
 					</div>
@@ -374,6 +375,9 @@ ul#navmenu-h ul ul li.iehover ul {
 		}
 		function systemmanager(){
 			window.frames.contextMain.location.href="log.jsp";
+		}
+		function taskmanager(){
+			window.frames.contextMain.location.href="task/queryTaskView.jsp";
 		}
 	</script>
 </body>

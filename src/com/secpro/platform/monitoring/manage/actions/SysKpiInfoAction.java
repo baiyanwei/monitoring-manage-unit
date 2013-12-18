@@ -256,8 +256,10 @@ public class SysKpiInfoAction {
 			hc.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();		
 				returnMsg = "任务下发失败，请重新执行操作！";
+				
 				logger.info("task is null ");
 				backUrl = "resobj/viewMca.jsp";
 				return "failed";

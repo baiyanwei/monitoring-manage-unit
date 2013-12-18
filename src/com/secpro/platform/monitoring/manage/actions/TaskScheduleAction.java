@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.MsuTask;
 import com.secpro.platform.monitoring.manage.entity.SysCommand;
 import com.secpro.platform.monitoring.manage.entity.SysResAuth;
@@ -176,6 +178,8 @@ public class TaskScheduleAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			String tids = request.getParameter("tids");
+			String resId= request.getParameter("resId");
+			System.out.println("--------------------------"+resId);
 			if (Assert.isEmptyString(tids) == true) {
 				throw new Exception("未找到需要删除的任务ID");
 			}
@@ -199,6 +203,9 @@ public class TaskScheduleAction {
 			this.taskScheduleService.getTaskScheduleDao().executeBySql(querySQL.toString());
 			returnMsg = "操作成功！";
 			MsuMangementAPI.getInstance().publishMUSTaskToMSU(tids, MsuMangementAPI.MSU_COMMAND_TASK_REMOVE);
+			ActionContext actionContext = ActionContext.getContext(); 
+			Map<String,Object> requestMap=(Map)actionContext.get("request");
+			requestMap.put("resId", resId);
 			return "toView";
 		} catch (Exception e) {
 			request.setAttribute("exception", e);
