@@ -82,37 +82,42 @@ public class SysDevTypeDaoImpl extends BaseDao implements SysDevTypeDao{
 	public void deleteRelevance(String typeCode){
 		Connection con=null;
 		Statement sta=null;
-	
+		System.out.println(typeCode+"----------------------------------");
 		try {
 			con=dataSource.getConnection();
 			con.setAutoCommit(false);
 			sta=con.createStatement();
-			sta.execute("delete from sys_kpi_oid o where o.typeCode="+typeCode);
+			sta.execute("delete from sys_kpi_oid o where o.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			
 			sta=con.createStatement();
-			sta.execute("delete from sys_command c where c.type_code="+typeCode);
+			sta.execute("delete from sys_command c where c.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			
 			sta=con.createStatement();
-			sta.execute("delete from baseline_rule b where b.type_code="+typeCode);
+			sta.execute("delete from baseline_rule b where b.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			
 			sta=con.createStatement();
-			sta.execute("delete from syslog_rule s where s.type_code="+typeCode);
+			sta.execute("delete from syslog_rule s where s.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			
 			sta=con.createStatement();
-			sta.execute("delete from syslog_rule_mapping s where s.type_code="+typeCode);
+			sta.execute("delete from syslog_rule_mapping s where s.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			
 			sta=con.createStatement();
-			sta.execute("delete from telnet_ssh_dict t where t.type_code="+typeCode);
+			sta.execute("delete from config_policy_rule s where s.type_code='"+typeCode+"'");
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from telnet_ssh_dict t where t.type_code='"+typeCode+"'");
 			sta.close();
 			sta=null;
 			con.commit();

@@ -511,8 +511,9 @@ public class SysDevAction extends ActionSupport {
 		}
 		for(int i=0;i<devTypeIds.length;i++){
 			SysDevType sdt=(SysDevType)sdts.getObj(SysDevType.class,Long.parseLong(devTypeIds[i].split("_")[0]));			
-			sdts.delete(sdt);
+			
 			final String typeCode=sdt.getTypeCode();
+			sdts.delete(sdt);
 			new Thread(){
 				public void run(){
 					sdts.deleteRelevance(typeCode);
