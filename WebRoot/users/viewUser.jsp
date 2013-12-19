@@ -118,7 +118,7 @@ Map app=user.getApp();
         },'-',
          <% }if(app.get("用户角色关联")!=null||user.getAccount().equals("admin")){ %>
          {   
-            text: '用户权限关联',   
+            text: '用户角色关联',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 

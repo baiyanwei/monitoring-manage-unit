@@ -631,6 +631,7 @@ public class EventAction {
 		return "success";
 	}
 	public String modifyEventType(){
+	
 		if(eventType.getId()==null){
 			returnMsg = "系统错误，事件类型修改失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
@@ -661,6 +662,7 @@ public class EventAction {
 			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
+		
 		EventType et=(EventType)eventTypeService.getObj(EventType.class, eventType.getId());
 		if(et==null){
 			returnMsg = "系统错误，事件类型修改失败！";
@@ -669,6 +671,7 @@ public class EventAction {
 			return "failed";
 		}
 		et.setEventRecover(eventType.getEventRecover());
+		
 		et.setEventTypeDesc(eventType.getEventTypeDesc());
 		et.setEventTypeName(eventType.getEventTypeName());
 		eventTypeService.update(et);
