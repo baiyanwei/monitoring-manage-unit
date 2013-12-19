@@ -70,7 +70,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    			<td><label>是否重复告警：</label></td>
 	    			<td>
-	    				 <select class="easyui-combobox" name="eventRule.repeat" missingMessage="请选择" data-options="required:true">
+	    				 <select class="easyui-combobox" name="eventRule.repeat" missingMessage="请选择" data-options="required:true"><font color="red">如选择不生成告警短信，此选项选择重复告警无效！</font>
 	    				 	<option value="0" selected>否</option>
 	    				 	<option value="1" >是</option>
 	    				 </select>
@@ -79,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    			<td><label>是否产生恢复短信：</label></td>
 	    			<td>
-	    				 <select class="easyui-combobox" name="eventRule.recoverSetMsg" missingMessage="请选择" data-options="required:true">
+	    				 <select class="easyui-combobox" name="eventRule.recoverSetMsg" missingMessage="请选择" data-options="required:true"><font color="red">如选择不生成告警短信，此选项选择生成恢复告警无效！</font>
 	    				 	<option value="0" selected>否</option>
 	    				 	<option value="1">是</option>
 	    				 </select>

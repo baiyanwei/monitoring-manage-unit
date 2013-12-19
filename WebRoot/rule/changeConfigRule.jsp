@@ -78,10 +78,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    <script>
 		function submitForm(){
 			var t=document.getElementById("ccr");
-			if($("#ff").val()==""){
-				$.messager.alert('错误提示','请上传规则脚本','error');
-				return false;
-			}
 			if(t.value==""){
 				$.messager.alert('错误提示','请输入包含比对规则','error');
 				return false;

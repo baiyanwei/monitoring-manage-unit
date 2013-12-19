@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    			<td><label>是否自动恢复：</label></td>
 	    			<td> 
-	    			<select class="easyui-combobox" name="eventType.eventRecover" data-options="required:true">
+	    			<select  name="eventType.eventRecover" >
 	    					
 	    					<c:if test="${ eType.eventRecover eq '1'}">
 		    					<option value="0" selected>自动恢复</option>

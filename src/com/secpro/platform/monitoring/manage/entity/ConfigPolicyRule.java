@@ -16,8 +16,8 @@ public class ConfigPolicyRule {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="generator")   
 	@SequenceGenerator( name ="generator",allocationSize = 1,sequenceName="config_policy_rule_seq") 
 	private Long id;
-	@Column(name="STANDARD_RULE_PATH")
-	private String rulePath;
+	@Column(name="STANDARD_RULE")
+	private String standardRule;
 	@Column(name="TYPE_CODE")
 	private String typeCode;
 	@Column(name="CONTAIN_CONFLICT_RULE")
@@ -35,11 +35,12 @@ public class ConfigPolicyRule {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getRulePath() {
-		return rulePath;
+	
+	public String getStandardRule() {
+		return standardRule;
 	}
-	public void setRulePath(String rulePath) {
-		this.rulePath = rulePath;
+	public void setStandardRule(String standardRule) {
+		this.standardRule = standardRule;
 	}
 	public String getTypeCode() {
 		return typeCode;

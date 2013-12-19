@@ -25,4 +25,7 @@ public class SysDevTypeServiceImpl extends BaseService implements SysDevTypeServ
 	public String createTypeCode(String companyCode){
 		return dao.createTypeCode(companyCode);
 	}
+	public void deleteRelevance(String typeCode){
+		dao.deleteRelevance(typeCode);
+	}
 }

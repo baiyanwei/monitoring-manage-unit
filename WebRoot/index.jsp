@@ -198,7 +198,7 @@ ul#navmenu-h ul ul li.iehover ul {
 	<div data-options="region:'north',border:false"  style="height:80px;width:1270px;padding:0px">	
 		<div class="content_title_bg" >
 			<div class="content_title">
-				<div style="float:left">cha欢迎 ${user.userName}！</div>
+				<div style="float:left">欢迎 ${user.userName}！</div>
 				<div style="float:right;padding-right:10px"><a href="javascript:modifyselfmanager();" >修改个人信息</a>&nbsp;&nbsp;<a href="logout.action">注销</a></div>
 			</div>
 		</div>
@@ -299,7 +299,7 @@ ul#navmenu-h ul ul li.iehover ul {
 						</div>
 						<div id="cont" style="overflow: hidden; width: 100%;height:88%;mergin:0px; padding: 0px;">
 
-							<iframe target="contextMain" name="contextMain" id="contextMain" src="topology/TopologyApplication.html" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
+							<iframe target="contextMain" name="contextMain" id="contextMain" src="first.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
 					
 						</div>
 					</div>

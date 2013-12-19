@@ -1149,6 +1149,10 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
+		if(eventRule.getSetMsg().equals("0")){
+			eventRule.setRecoverSetMsg("0");
+			eventRule.setRepeat("0");
+		}
 		eventRuleService.save(eventRule);
 		return "success";
 	}
@@ -1225,6 +1229,10 @@ public class EventAction {
 			logger.info("fetch ThresholdValue failed , ThresholdValue is ''!");
 			backUrl = "event/eventRule.jsp";
 			return "failed";
+		}
+		if(eventRule.getSetMsg().equals("0")){
+			eventRule.setRecoverSetMsg("0");
+			eventRule.setRepeat("0");
 		}
 		eventRuleService.update(eventRule);
 		return "success";

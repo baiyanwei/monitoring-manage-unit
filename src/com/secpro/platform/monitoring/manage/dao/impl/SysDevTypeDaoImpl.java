@@ -1,6 +1,7 @@
 package com.secpro.platform.monitoring.manage.dao.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -77,5 +78,56 @@ public class SysDevTypeDaoImpl extends BaseDao implements SysDevTypeDao{
 			JdbcUtil.close(con,sta,rs);
 		}
 		return typeCode+"";
+	}
+	public void deleteRelevance(String typeCode){
+		Connection con=null;
+		Statement sta=null;
+	
+		try {
+			con=dataSource.getConnection();
+			con.setAutoCommit(false);
+			sta=con.createStatement();
+			sta.execute("delete from sys_kpi_oid o where o.typeCode="+typeCode);
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from sys_command c where c.type_code="+typeCode);
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from baseline_rule b where b.type_code="+typeCode);
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from syslog_rule s where s.type_code="+typeCode);
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from syslog_rule_mapping s where s.type_code="+typeCode);
+			sta.close();
+			sta=null;
+			
+			sta=con.createStatement();
+			sta.execute("delete from telnet_ssh_dict t where t.type_code="+typeCode);
+			sta.close();
+			sta=null;
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally{
+			JdbcUtil.close( sta);
+			JdbcUtil.close( con);
+		}
 	}
 }

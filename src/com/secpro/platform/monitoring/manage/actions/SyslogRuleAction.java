@@ -216,8 +216,11 @@ public class SyslogRuleAction {
 		service.setTypeCode(typeCode1);
 		service.setCrudOper(operation);
 		boolean flag=service.ruleStorage();
+		
 		if(flag){
-			//调用WEBSERVICE
+			//发消息给调度通知删除规则
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_REMOVE);
+			//调用WEBSERVICE通知数据处理删除规则
 			int count=0;
 			String res="";
 			SyslogRuleWSClient client=new SyslogRuleWSClient();

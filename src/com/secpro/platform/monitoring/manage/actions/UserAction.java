@@ -102,8 +102,8 @@ public class UserAction {
 				sb.append("\"officeTel\":\"" + (obj[4]==null?"":obj[4])+ "\",");
 				sb.append("\"enableAccount\":\"" + (obj[5].equals("0")?"启用":"暂停") + "\",");
 				sb.append("\"userDesc\":\"" + (obj[6]==null?" ":obj[6]) + "\",");
-				sb.append("\"userName\":\"" + obj[9] + "\",");
-				sb.append("\"email\":\"" + obj[10] + "\",");
+				sb.append("\"userName\":\"" + (obj[9]==null?" ":obj[9]) + "\",");
+				sb.append("\"email\":\"" + (obj[10]==null?" ":obj[10]) + "\",");
 				sb.append("\"orgid\":" + obj[7] + ",");
 				if(i==(users.size()-1)){
 					sb.append("\"orgName\":\"" + obj[8] + "\"}");
@@ -130,13 +130,13 @@ public class UserAction {
 		if(user.getAccount()==null){
 			returnMsg = "用户账号不能为空，保存失败！";
 			logger.info("fetch account failed , account is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getAccount().trim().equals("")){
 			returnMsg = "用户账号不能为空，保存失败！";
 			logger.info("fetch account failed , account is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		
@@ -144,56 +144,68 @@ public class UserAction {
 		if(ulist!=null&&ulist.size()>0){
 			returnMsg = "账号已存在，保存失败！";
 			logger.info("账号已经存在，保存失败 !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		
 		if(user.getPassword()==null){
 			returnMsg = "密码不能为空，保存失败！";
 			logger.info("fetch password failed , password is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getPassword().trim().equals("")){
 			returnMsg = "密码不能为空，保存失败！";
 			logger.info("fetch password failed , password is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getUserName()==null){
 			returnMsg = "用户名不能为空，保存失败！";
 			logger.info("fetch username failed , username is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getUserName().trim().equals("")){
 			returnMsg = "用户名不能为空，保存失败！";
 			logger.info("fetch username failed , username is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getMobelTel()==null){
 			returnMsg = "手机号不能为空，保存失败！";
 			logger.info("fetch mobelTel failed , mobelTel is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getMobelTel().trim().equals("")){
-			returnMsg = "用户名不能为空，保存失败！";
+			returnMsg = "手机号不能为空，保存失败！";
 			logger.info("fetch mobelTel failed , mobelTel is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		if(user.getEmail()==null){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is null !");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		if(user.getEmail().trim().equals("")){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is ''!");
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getOrgId()==null){
 			returnMsg = "用户组织ID不能为空，保存失败！";
 			logger.info("fetch orgid failed , orgid is null!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getEnableAccount()==null){
 			returnMsg = "用户启停状态不能为空，保存失败！";
 			logger.info("fetch EnableAccount failed , EnableAccount is null!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		user.setCdate(sdf.format(new Date()));
@@ -239,19 +251,19 @@ public class UserAction {
 		if(passwd==null){
 			returnMsg = "系统错误，用户修改失败！";
 			logger.info("fetch passwd failed , passwd is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(passwd.trim().equals("")){
 			returnMsg = "系统错误，用户修改失败！";
 			logger.info("fetch passwd failed , passwd is '' !");
-			backUrl = "viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getId()==null){
 			returnMsg = "系统错误，用户修改失败！";
 			logger.info("fetch userid failed , userid is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		Long orgId=0L;
@@ -262,13 +274,13 @@ public class UserAction {
 			if(orgid==null){
 				returnMsg = "用户部门不能为空，保存失败！";
 				logger.info("fetch orgId failed , orgId is null !");
-				backUrl = "users/viewUserInfo.jsp";
+				backUrl = "users/viewUser.jsp";
 				return "failed";
 			}
 			if(orgid.equals("")){
 				returnMsg = "用户部门不能为空，保存失败！";
 				logger.info("fetch orgId failed , orgId is null !");
-				backUrl = "users/viewUserInfo.jsp";
+				backUrl = "users/viewUser.jsp";
 				return "failed";
 			}
 			orgId=Long.parseLong(orgid);
@@ -277,13 +289,13 @@ public class UserAction {
 		if(user.getPassword()==null){
 			returnMsg = "用户密码不能为空，保存失败！";
 			logger.info("fetch password failed , password is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getPassword().trim().equals("")){
 			returnMsg = "用户密码不能为空，保存失败！";
 			logger.info("fetch password failed , password is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(!passwd.equals(user.getPassword())){
@@ -292,29 +304,42 @@ public class UserAction {
 		if(user.getUserName()==null){
 			returnMsg = "用户名不能为空，保存失败！";
 			logger.info("fetch username failed , username is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getUserName().trim().equals("")){
 			returnMsg = "用户名不能为空，保存失败！";
 			logger.info("fetch username failed , username is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		u.setUserName(user.getUserName());
 		if(user.getMobelTel()==null){
 			returnMsg = "手机号不能为空，保存失败！";
 			logger.info("fetch mobelTel failed , mobelTel is null !");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(user.getMobelTel().trim().equals("")){
 			returnMsg = "用户名不能为空，保存失败！";
 			logger.info("fetch mobelTel failed , mobelTel is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		u.setMobelTel(user.getMobelTel());
+		if(user.getEmail()==null){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is null !");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		if(user.getEmail().trim().equals("")){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is ''!");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		u.setEmail(user.getEmail());
 		/*if(user.getOrgId()==null){
 			returnMsg = "用户组织ID不能为空，保存失败！";
 			logger.info("fetch orgid failed , orgid is null!");
@@ -325,7 +350,7 @@ public class UserAction {
 		if(user.getEnableAccount()==null){
 			returnMsg = "用户启停状态不能为空，保存失败！";
 			logger.info("fetch EnableAccount failed , EnableAccount is null!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		u.setUserDesc(user.getUserDesc());
@@ -341,13 +366,13 @@ public class UserAction {
 		if(userid==null){
 			returnMsg = "系统错误，用户删除失败！";
 			logger.info("fetch userid failed , userid is null!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		if(userid.trim().equals("")){
 			returnMsg = "系统错误，用户删除失败！";
 			logger.info("fetch userid failed , userid is ''!");
-			backUrl = "users/viewUserInfo.jsp";
+			backUrl = "users/viewUser.jsp";
 			return "failed";
 		}
 		String[] userids=userid.split(",");
@@ -369,21 +394,21 @@ public class UserAction {
 		if(userids==null){
 			returnMsg = "系统错误，用户角色映射失败！";
 			logger.info("fetch userid failed , userid is null!");
-			backUrl = "users/viewUserRoleMapping.jsp";
+			backUrl = "users/userRoleMapping.jsp";
 			return "failed";
 		}
 		
 		if(roleids==null){
 			returnMsg = "系统错误，用户角色映射失败！";
 			logger.info("fetch roleid failed , roleid is null!");
-			backUrl = "users/viewUserRoleMapping.jsp";
+			backUrl = "users/userRoleMapping.jsp";
 			return "failed";
 		}
 		boolean flag =suiService.createUserRoleMapping(userids, roleids);
 		if(!flag){
 			returnMsg = "系统错误，用户角色映射失败！";
 			logger.info("insert database error!");
-			backUrl = "users/viewUserRoleMapping.jsp";
+			backUrl = "users/userRoleMapping.jsp";
 			return "failed";
 		}
 		return "success";
@@ -488,6 +513,19 @@ public class UserAction {
 			return "failed";
 		}
 		u.setMobelTel(user.getMobelTel());
+		if(user.getEmail()==null){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is null !");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		if(user.getEmail().trim().equals("")){
+			returnMsg = "邮箱不能为空，保存失败！";
+			logger.info("fetch email failed , email is ''!");
+			backUrl = "users/viewUser.jsp";
+			return "failed";
+		}
+		u.setEmail(user.getEmail());
 		/*if(user.getOrgId()==null){
 			returnMsg = "用户组织ID不能为空，保存失败！";
 			logger.info("fetch orgid failed , orgid is null!");
