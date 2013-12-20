@@ -576,7 +576,7 @@ public class ResObjectAction extends ActionSupport {
 			SysResObj reo=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(res[1]));
 			String taskRegion=cityService.getTaskRegionByCityCode(reo.getCityCode());		
 			sysService.delete(reo);
-			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_ADD); 
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_RESOURCE_REMOVE); 
 			final String rid=res[1];
 			new Thread(){
 				public void run(){
@@ -587,7 +587,7 @@ public class ResObjectAction extends ActionSupport {
 			SysResObj reo=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(resId));
 			String taskRegion=cityService.getTaskRegionByCityCode(reo.getCityCode());	
 			sysService.delete(reo);
-			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_REMOVE);
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_RESOURCE_REMOVE);
 			final String rid=resId;
 			new Thread(){
 				public void run(){
@@ -679,7 +679,7 @@ public class ResObjectAction extends ActionSupport {
 		resAuth.setResId(res.getId());
 		resAuthService.save(resAuth);
 		String taskRegion=cityService.getTaskRegionByCityCode(resObjForm.getCityCode());
-		MsuMangementAPI.getInstance().publishMUSTaskToMSU(res.getResIp()+"#"+taskRegion+"#"+resObjForm.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_ADD);
+		MsuMangementAPI.getInstance().publishMUSTaskToMSU(res.getResIp()+"#"+taskRegion+"#"+resObjForm.getCityCode(), MsuMangementAPI.MSU_COMMAND_RESOURCE_ADD);
 		returnMsg=("资源保存成功，刷新资源树后展示！");	
 		
 		return "success";
