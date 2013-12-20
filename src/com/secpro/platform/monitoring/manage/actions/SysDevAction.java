@@ -293,7 +293,7 @@ public class SysDevAction extends ActionSupport {
 			
 			if(resList!=null&&resList.size()>0){
 				
-				returnMsg="删除厂商前，请先删除属于此厂商的防火墙资源！";
+				returnMsg="删除厂商前，请先删除属于此厂商的设备型号和防火墙资源！";
 				logger.info("delete company failed ,one of company has fwRes companyid is "+companyId[i]);
 				backUrl="devcompany/viewAllDevCompany.jsp";
 				return "failed";
@@ -510,9 +510,15 @@ public class SysDevAction extends ActionSupport {
 			}
 		}
 		for(int i=0;i<devTypeIds.length;i++){
-			SysDevType sdt=new SysDevType();
-			sdt.setId(Long.parseLong(devTypeIds[i].split("_")[0]));
+			SysDevType sdt=(SysDevType)sdts.getObj(SysDevType.class,Long.parseLong(devTypeIds[i].split("_")[0]));			
+			
+			final String typeCode=sdt.getTypeCode();
 			sdts.delete(sdt);
+			new Thread(){
+				public void run(){
+					sdts.deleteRelevance(typeCode);
+				}
+			}.start();
 		}
 		return "success";
 	}

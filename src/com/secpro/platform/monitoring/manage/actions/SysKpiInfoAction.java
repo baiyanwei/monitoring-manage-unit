@@ -27,6 +27,7 @@ import com.secpro.platform.monitoring.manage.services.SysKpiInfoService;
 import com.secpro.platform.monitoring.manage.services.SysResClassService;
 import com.secpro.platform.monitoring.manage.services.SysResObjService;
 import com.secpro.platform.monitoring.manage.util.ApplicationConfiguration;
+import com.secpro.platform.monitoring.manage.util.Assert;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 /**
@@ -178,19 +179,49 @@ public class SysKpiInfoAction {
 				
 				if (i != (kpiList.size() - 1)) {
 					if (l != null && l.size() != 0) {
-						
+						String value=((RawKpi) l.get(0)).getKpiValue();
+						StringBuilder s=new StringBuilder();
+						if(isJsonObj(value)){
+							System.out.println(value+"------------------------");
+							JSONObject valuesJson = new JSONObject(value);
+							String[] valueKey = JSONObject.getNames(valuesJson);
+							for (int j = 0; j < valueKey.length; j++) {
+								String oneValue = valuesJson.getString(valueKey[j]);
+								s.append(valueKey[j]+":"+oneValue);
+								if(j!=(valueKey.length-1)){
+									s.append("；");
+								}
+							}
 							sb.append("\"kpiValue\":\""
-									+ ((RawKpi) l.get(0)).getKpiValue() + "\"},");
+									+ s.toString() + "\"},");
+						}else{
+							sb.append("\"kpiValue\":\""+((RawKpi) l.get(0)).getKpiValue()+"\"},");
+						}
 						
 					}else{
 						sb.append("\"kpiValue\":\"\"},");
 					}
 				} else {
 					if (l != null && l.size() != 0) {
-						
-							sb.append("\"kpiValue\":\""
+							String value=((RawKpi) l.get(0)).getKpiValue();
+							StringBuilder s=new StringBuilder();
+							if(isJsonObj(value)){
+								JSONObject valuesJson = new JSONObject(value);
+								String[] valueKey = JSONObject.getNames(valuesJson);
+								for (int j = 0; j < valueKey.length; j++) {
+									String oneValue = valuesJson.getString(valueKey[j]);
+									s.append(valueKey[j]+":"+oneValue);
+									if(j!=(valueKey.length-1)){
+										s.append("；");
+									}
+								}
+								sb.append("\"kpiValue\":\""
+										+ s.toString() + "\"}");
+								
+							}else{
+								sb.append("\"kpiValue\":\""
 									+ ((RawKpi) l.get(0)).getKpiValue() + "\"}");
-						
+							}
 					}else{
 						sb.append("\"kpiValue\":\"\"}");
 					}
@@ -200,7 +231,7 @@ public class SysKpiInfoAction {
 			System.out.println(sb.toString());
 			pw.println(sb.toString());
 			pw.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -210,6 +241,16 @@ public class SysKpiInfoAction {
 		}
 		return "success";
 	}
+	private boolean isJsonObj(String value) {
+		if (Assert.isEmptyString(value)) {
+			return false;
+		}
+		if (value.startsWith("{") && value.endsWith("}")) {
+			return true;
+		}
+		return false;
+	}
+
 	public String mcaOperation(){
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String mcaid = request.getParameter("mcaid");
@@ -256,8 +297,10 @@ public class SysKpiInfoAction {
 			hc.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();		
 				returnMsg = "任务下发失败，请重新执行操作！";
+				
 				logger.info("task is null ");
 				backUrl = "resobj/viewMca.jsp";
 				return "failed";
@@ -377,7 +420,7 @@ public class SysKpiInfoAction {
 				Object obj[]=(Object[])pageKpiList.get(i);
 				sb.append("{\"kpiId\":" + obj[0] + ",");
 				sb.append("\"kpiName\":\"" + obj[1] + "\",");
-				sb.append("\"kpiDesc\":\"" + obj[2] + "\",");
+				sb.append("\"kpiDesc\":\"" + (obj[2]==null?" ":obj[2]) + "\",");
 				
 				
 				if(i==(pageKpiList.size()-1)){

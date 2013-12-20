@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.EventMsg;
 import com.secpro.platform.monitoring.manage.entity.EventType;
 import com.secpro.platform.monitoring.manage.entity.NotifyUserRule;
+import com.secpro.platform.monitoring.manage.entity.SendMsg;
 import com.secpro.platform.monitoring.manage.entity.SysEvent;
 import com.secpro.platform.monitoring.manage.entity.SysEventDealMsg;
 import com.secpro.platform.monitoring.manage.entity.SysEventHis;
@@ -29,6 +30,7 @@ import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
 import com.secpro.platform.monitoring.manage.services.EventMsgService;
 import com.secpro.platform.monitoring.manage.services.EventTypeService;
 import com.secpro.platform.monitoring.manage.services.NotifyUserRuleService;
+import com.secpro.platform.monitoring.manage.services.SendMsgService;
 import com.secpro.platform.monitoring.manage.services.SysEventDealMsgService;
 import com.secpro.platform.monitoring.manage.services.SysEventHisService;
 import com.secpro.platform.monitoring.manage.services.SysEventRuleService;
@@ -64,7 +66,15 @@ public class EventAction {
 	private SysEventDealMsgService dealMsgService;
 	private SysUserInfoService userService;
 	private NotifyUserRuleService notifyService;
+	private SendMsgService sendMsgService;
 	
+	public SendMsgService getSendMsgService() {
+		return sendMsgService;
+	}
+	@Resource(name="SendMsgServiceImpl")
+	public void setSendMsgService(SendMsgService sendMsgService) {
+		this.sendMsgService = sendMsgService;
+	}
 	public NotifyUserRuleService getNotifyService() {
 		return notifyService;
 	}
@@ -182,7 +192,7 @@ public class EventAction {
 	}
 	//告警确认
 	public String dealEvent(){
-		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		final SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String type=request.getParameter("type");//0代表确认告警，1代表清楚告警
@@ -190,20 +200,28 @@ public class EventAction {
 		Map<String,Object> requestMap=(Map)actionContext.get("request");
 		if(type==null){
 			requestMap.put("close", "1");
+			requestMap.put("msg", "系统错误，告警处理失败！");
+			logger.error("未获取到告警处理类型，处理失败！");
 			return "success";
 		}
 		if(type.trim().equals("")){
 			requestMap.put("close", "1");
+			requestMap.put("msg", "系统错误，告警处理失败！");
+			logger.error("未获取到告警处理类型，处理失败！");
 			return "success";
 		}
 		HttpSession s=request.getSession();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
 		if(user==null){
 			requestMap.put("close", "1");
+			requestMap.put("msg", "告警处理人为空,告警处理失败！");
+			logger.error("告警处理人为空,告警处理失败！");
 			return "success";
 		}
 		if(se.getId()==null){
 			requestMap.put("close", "1");
+			requestMap.put("msg", "系统错误，告警处理失败！");
+			logger.error("事件ID为空,告警处理失败！");
 			return "success";
 		}
 		
@@ -225,7 +243,7 @@ public class EventAction {
 		}else if(type.equals("1")){
 			SysEvent event=(SysEvent)sysEventService.getObj(SysEvent.class, se.getId());
 			SysEventDealMsg smsg=(SysEventDealMsg)dealMsgService.getObj(SysEventDealMsg.class, se.getId());
-			SysEventHis eventHis=new SysEventHis();
+			final SysEventHis eventHis=new SysEventHis();
 			eventHis.setId(event.getId());
 			eventHis.setEventLevel(event.getEventLevel());
 			eventHis.setEventTypeId(event.getEventTypeId());
@@ -247,11 +265,27 @@ public class EventAction {
 			}
 			sysEventService.delete(event);
 			sysEventHisService.save(eventHis);
-				
+			
+			new Thread(){
+				public void run(){
+					
+					List notifyUsers=notifyService.queryAll("select u.userName , u.mobelTel from NotifyUserRule n, SysUserInfo s , SysEventRule r  where  s.id=n.userId and r.resId="+eventHis.getResId()+" and r.eventRuleId = r.id and r.EVENT_TYPE_ID="+eventHis.getEventTypeId() );
+					if(notifyUsers!=null&&notifyUsers.size()>0){
+						for(int i=0;i<notifyUsers.size();i++){
+							Object[] u=(Object[])notifyUsers.get(i);
+							SendMsg sendMsg=new SendMsg();
+							sendMsg.setMessage("[恢复]"+eventHis.getMessage());
+							sendMsg.setMobelTel((String)u[1]);
+							sendMsg.setUserName((String)u[0]);
+							sendMsg.setCdate(sdf.format(new Date()));
+							sendMsgService.save(sendMsg);
+						}
+					}
+				}
+			}.start();
 		}
-		
-		
 		requestMap.put("close", 1);
+		requestMap.put("msg", "告警处理成功，点击确认后关闭此页面！");
 		return "success";
 	}
 	
@@ -320,7 +354,7 @@ public class EventAction {
 				sb.append("\"cdate\":\"" + sdf1.format(sdf.parse(event.getCdate())) + "\",");
 
 				
-				if(i==(eventList.size()-1)){
+				if(i==(pageEvent.size()-1)){
 					sb.append("\"status\":\"" + (event.getConfirmUser()==null?"未确认":"未清除") + "\"}");
 				}else{
 					sb.append("\"status\":\"" + (event.getConfirmUser()==null?"未确认":"未清除") + "\"},");
@@ -597,6 +631,7 @@ public class EventAction {
 		return "success";
 	}
 	public String modifyEventType(){
+	
 		if(eventType.getId()==null){
 			returnMsg = "系统错误，事件类型修改失败！";
 			logger.info("fetch EventTypeName failed , EventTypeName is null!");
@@ -627,6 +662,7 @@ public class EventAction {
 			backUrl = "event/viewEventType.jsp";
 			return "failed";
 		}
+		
 		EventType et=(EventType)eventTypeService.getObj(EventType.class, eventType.getId());
 		if(et==null){
 			returnMsg = "系统错误，事件类型修改失败！";
@@ -635,6 +671,7 @@ public class EventAction {
 			return "failed";
 		}
 		et.setEventRecover(eventType.getEventRecover());
+		
 		et.setEventTypeDesc(eventType.getEventTypeDesc());
 		et.setEventTypeName(eventType.getEventTypeName());
 		eventTypeService.update(et);
@@ -719,11 +756,17 @@ public class EventAction {
 			EventType et=new EventType();
 			et.setId(Long.parseLong(eventTypeIds[i]));
 			
-			List msgList=msgService.queryAll("from EventMsg m where m.eventTypeId="+et.getId());
+			/*List msgList=msgService.queryAll("from EventMsg m where m.eventTypeId="+et.getId());
 			if(msgList!=null&&msgList.size()>0){
 				msgService.delete(msgList.get(0));
-			}
+			}*/
+			final String eid=et.getId()+"";
 			eventTypeService.delete(et);
+			new Thread(){
+				public void run(){
+					eventTypeService.deleteRelevance(eid);
+				}
+			}.start();
 		}
 		return "success";
 	}
@@ -904,8 +947,10 @@ public class EventAction {
 			sb.append("{\"total\":" + allEventRule.size() + ",\"rows\":[");
 			for (int i = 0; i < allEventRule.size(); i++) {
 				SysEventRule rule=(SysEventRule)allEventRule.get(i);
-				List notify=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and n.eventRuleId="+rule.getId());
-				
+				List notify=null;
+				if(resId!=null&&!resId.equals("")){
+					notify=notifyService.queryAll("from NotifyUserRule n where n.resId="+resId+" and n.eventRuleId="+rule.getId());
+				}
 				sb.append("{\"ruleid\":" + rule.getId() + ",");
 				int level=rule.getEventLevel();
 				if(level==1){
@@ -980,19 +1025,7 @@ public class EventAction {
 		}
 		
 		EventType type=(EventType)eventTypeService.getObj(EventType.class, Long.parseLong(eventTypeId));
-		/*List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+type.getEventTypeName()+"'");
-		if(kpiList==null){
-			returnMsg = "请先创建KPI指标，页面跳转失败！";
-			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}
-		if(kpiList.size()==0){
-			returnMsg = "请先创建KPI指标，页面跳转失败！";
-			logger.info("fetch SysKpiInfo failed from database !");
-			backUrl = "event/eventRule.jsp";
-			return "failed";
-		}*/
+		
 		List ruleList=null;
 		if(resId!=null&&!resId.equals("")){
 			ruleList=eventTypeService.queryAll("from SysEventRule s where s.resId="+resId+" and s.eventTypeId="+eventTypeId);
@@ -1012,7 +1045,7 @@ public class EventAction {
 		requestMap.put("resId", resId);
 		requestMap.put("type", type);
 		requestMap.put("levels", levels);
-		//requestMap.put("kpi", kpiList.get(0));
+		requestMap.put("eventName", type.getEventTypeName());
 		return "success";
 	}
 	public String toModifyEventRule(){
@@ -1119,6 +1152,10 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
+		if(eventRule.getSetMsg().equals("0")){
+			eventRule.setRecoverSetMsg("0");
+			eventRule.setRepeat("0");
+		}
 		eventRuleService.save(eventRule);
 		return "success";
 	}
@@ -1196,6 +1233,10 @@ public class EventAction {
 			backUrl = "event/eventRule.jsp";
 			return "failed";
 		}
+		if(eventRule.getSetMsg().equals("0")){
+			eventRule.setRecoverSetMsg("0");
+			eventRule.setRepeat("0");
+		}
 		eventRuleService.update(eventRule);
 		return "success";
 	}
@@ -1219,6 +1260,12 @@ public class EventAction {
 			SysEventRule r=new SysEventRule();
 			r.setId(Long.parseLong(ruleIds[i]));
 			eventRuleService.delete(r);
+			final String rid=r.getId()+"";
+			new Thread(){
+				public void run(){
+					notifyService.deleteRelevance(rid);
+				}
+			}.start();
 		}
 		return "success";
 	}
@@ -1461,14 +1508,14 @@ public class EventAction {
 			String receiveDispaly="";
 			for(int i=0;i<userList.size();i++){
 				SysUserInfo value = (SysUserInfo)userList.get(i);
-				userDisplay+=value.getId()+"|"+value.getUserName();
+				userDisplay+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 				if(i<userList.size()-1){
 					userDisplay+=";";
 				}
 			}
 			for(int i=0;i<notifyUser.size();i++){
 				SysUserInfo value = (SysUserInfo)notifyUser.get(i);
-				receiveDispaly+=value.getId()+"|"+value.getUserName();
+				receiveDispaly+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 				if(i<userList.size()-1){
 					receiveDispaly+=";";
 				}

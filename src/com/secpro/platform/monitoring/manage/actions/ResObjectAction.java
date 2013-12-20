@@ -37,6 +37,7 @@ import com.secpro.platform.monitoring.manage.services.SysResClassService;
 import com.secpro.platform.monitoring.manage.services.SysResObjService;
 import com.secpro.platform.monitoring.manage.services.TelnetSshDictService;
 import com.secpro.platform.monitoring.manage.util.FWVersionMatch;
+import com.secpro.platform.monitoring.manage.util.LocalEncrypt;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 /**
  * 
@@ -524,7 +525,7 @@ public class ResObjectAction extends ActionSupport {
 			logger.info("query password failed from db");
 			return "failed";
 		}
-		auth.setPassword(resObjForm.getPassword());
+		auth.setPassword(LocalEncrypt.Encode(resObjForm.getPassword()));
 		if(resObjForm.getUsername()==null){
 			returnMsg=("修改失败，修改值获取失败！");
 			if(flag){
@@ -561,7 +562,6 @@ public class ResObjectAction extends ActionSupport {
 	public String removeResObj(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String resId = request.getParameter("resId");
-		
 		String res[]=null;
 		if(resId==null){
 			returnMsg=("删除失败！！");
@@ -574,11 +574,24 @@ public class ResObjectAction extends ActionSupport {
 		if(res!=null){
 			reo.setId(Long.parseLong(res[1]));
 			sysService.delete(reo);
+			final String rid=res[1];
+			new Thread(){
+				public void run(){
+					sysService.deleteRelevance(rid);
+				}
+			}.start();
 		}else{
 			reo.setId(Long.parseLong(resId));
 			sysService.delete(reo);
+			final String rid=resId;
+			new Thread(){
+				public void run(){
+					sysService.deleteRelevance(rid);
+				}
+			}.start();
 		}
-		List authlist=resAuthService.queryAll("from SysResAuth s where s.resId="+reo.getId());
+		
+		/*List authlist=resAuthService.queryAll("from SysResAuth s where s.resId="+reo.getId());
 		
 		if(authlist!=null&&authlist.size()!=0){
 			for(int i=0;i<authlist.size();i++){
@@ -593,7 +606,7 @@ public class ResObjectAction extends ActionSupport {
 			for(int i=0;i<eventlist.size();i++){
 				eventService.delete(eventlist.get(i));
 			}
-		}
+		}*/
 		
 		return "success";
 	}
@@ -664,7 +677,7 @@ public class ResObjectAction extends ActionSupport {
 		}	
 		resAuth.setCommunity(resObjForm.getCommuinty());
 		
-		resAuth.setPassword(resObjForm.getPassword());
+		resAuth.setPassword(LocalEncrypt.Encode(resObjForm.getPassword()));
 		
 		resAuth.setSnmpv3Auth(resObjForm.getSnmpau());
 		resAuth.setSnmpv3Authpass(resObjForm.getSnmpaups());
@@ -1002,6 +1015,12 @@ public class ResObjectAction extends ActionSupport {
 				SysResObj mca =new SysResObj();
 				mca.setId(Long.parseLong(mcaIds[i]));
 				sysService.delete(mca);
+				final String rid=mcaIds[i];
+				new Thread(){
+					public void run(){
+						sysService.deleteRelevance(rid);
+					}
+				}.start();
 			}
 			
 		}

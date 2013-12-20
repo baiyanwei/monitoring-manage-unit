@@ -25,7 +25,9 @@
 			<div id="form_box">
 				<form id="loginForm" action="login.action" method="post">
 					<div id="mess">
+					
 					<font color="red">${loginError}</font>
+					
 					</div>
 					<div id="user">
 						<label>

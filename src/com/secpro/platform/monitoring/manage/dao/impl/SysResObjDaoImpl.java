@@ -5,14 +5,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
 import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Repository;
 
 import com.secpro.platform.monitoring.manage.actions.forms.ResObjForm;
 import com.secpro.platform.monitoring.manage.common.dao.impl.BaseDao;
 import com.secpro.platform.monitoring.manage.dao.SysResObjDao;
+import com.secpro.platform.monitoring.manage.util.JdbcUtil;
+import com.secpro.platform.monitoring.manage.util.LocalEncrypt;
 @Repository("SysResObjDaoImpl")
 public class SysResObjDaoImpl extends BaseDao implements SysResObjDao{
+	private DataSource dataSource;
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+	@Resource(name="dataSource")
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 	public String getOuterParentCityCode(final String cityCode){
 		final StringBuilder sb=new StringBuilder();
 		getSessionFactory().getCurrentSession().doWork(new Work(){
@@ -73,7 +86,7 @@ public class SysResObjDaoImpl extends BaseDao implements SysResObjDao{
 						resObjForm.setTypeName(rs.getString(13));
 						resObjForm.setAuthId(rs.getString(14));
 						resObjForm.setUsername(rs.getString(15));
-						resObjForm.setPassword(rs.getString(16));
+						resObjForm.setPassword(LocalEncrypt.Decode(rs.getString(16)));
 						resObjForm.setCommuinty(rs.getString(17));
 						resObjForm.setSnmpuser(rs.getString(18));
 						resObjForm.setSnmpau(rs.getString(19));
@@ -107,5 +120,54 @@ public class SysResObjDaoImpl extends BaseDao implements SysResObjDao{
 				}
 			}
 		});
+	}
+	public void deleteRelevance(String resId){
+		Connection con=null;
+		Statement sta=null;
+		
+		try {
+			con=dataSource.getConnection();
+			con.setAutoCommit(false);
+			sta=con.createStatement();
+			//删除资源参数表中的相关资源数据
+			sta.execute("delete from sys_res_auth a where a.res_id="+resId);
+			sta.close();
+			sta=null;
+			//删除这个资源的告警信息
+			sta=con.createStatement();
+			sta.execute("delete from sys_event e where e.RES_ID="+resId);
+			sta.close();
+			sta=null;
+			//删除私有告警规则
+			sta=con.createStatement();
+			sta.execute("delete from sys_event_rule e where e.RES_ID="+resId);
+			sta.close();
+			sta=null;
+			//删除告警接受人
+			sta=con.createStatement();
+			sta.execute("delete from notify_user_rule n where n.RES_ID="+resId);
+			sta.close();
+			sta=null;
+			//删除任务
+			sta=con.createStatement();
+			sta.execute("delete from msu_task m where m.RES_ID="+resId);
+			sta.close();
+			sta=null;
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally{
+			JdbcUtil.close( sta);
+			JdbcUtil.close( con);
+		}
+		
+	
 	}
 }

@@ -111,7 +111,7 @@
 						text : '添加任务',
 						iconCls : 'icon-add',
 						handler : function() {
-							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=new&&resId=<%=resId%>";
+							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=new&resId=<%=resId%>";
 						}
 					}, '-', {
 						text : '删除任务',
@@ -131,7 +131,7 @@
 										removeIds = removeIds + rows[i].tid + ",";
 									}
 								}
-								window.location.href = "removeTaskScheduleAction.action?tids="+removeIds;
+								window.location.href = "removeTaskScheduleAction.action?tids="+removeIds+"&resId=<%=resId%>";
 							}
 
 						}

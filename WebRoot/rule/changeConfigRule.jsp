@@ -46,7 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				          <td><lable>请选择防火墙配置标准化脚本：</lable></td>
 				          <td><label>
 				            
-				           	<input class="easyui-validatebox" type="file" missingMessage="请选择文件" name="file" data-options="required:true"></input>
+				           	<input id="ff" class="easyui-validatebox" type="file" missingMessage="请选择文件" name="file" data-options="required:true"></input>
 				          </label></td>
        				 </tr>
        				 <tr>

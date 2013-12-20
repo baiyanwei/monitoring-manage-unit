@@ -1,7 +1,11 @@
 package com.secpro.platform.monitoring.manage.actions;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +20,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.secpro.platform.monitoring.manage.entity.ConfigPolicyRule;
 import com.secpro.platform.monitoring.manage.services.ConfigPolicyRuleService;
 import com.secpro.platform.monitoring.manage.util.ApplicationConfiguration;
+import com.secpro.platform.monitoring.manage.util.Assert;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 
 @Controller("ConfigPolicyRuleAction")
@@ -122,8 +127,10 @@ public class ConfigPolicyRuleAction {
 		return "success";
 	}
 	public String configRule(){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
 		if(file != null){
-	        String fullFileName=  ApplicationConfiguration.CONFIGRULEPATH+File.separator+typeCode+fileFileName;
+			System.out.println("---------------------------1-----------");
+	        String fullFileName=  ApplicationConfiguration.CONFIGRULEPATH+File.separator+typeCode+"_"+sdf.format(new Date());
 			File savefile = new File(fullFileName);
 			if (!savefile.getParentFile().exists()) {
 				savefile.getParentFile().mkdirs();
@@ -133,23 +140,32 @@ public class ConfigPolicyRuleAction {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				returnMsg="规则上传失败，请重新上传！";
+				backUrl = "rule/viewAllDevType.jsp";
 				return "failed";
 			}
 			List ruleList=ruleService.queryAll("from ConfigPolicyRule c where c.typeCode='"+typeCode+"'");
 			if(ruleList!=null&&ruleList.size()>0){
 				for(Object o:ruleList){
-					ConfigPolicyRule rule=(ConfigPolicyRule)o;
-					File f=new File(rule.getRulePath());
-					f.delete();
-					ruleService.delete(o);
+					ConfigPolicyRule rule=(ConfigPolicyRule)o;				
+					ruleService.delete(rule);
 				}
 			}
+			System.out.println("---------------------------2-----------");
+			String rule=readRule(fullFileName);
+			System.out.println(rule+"--------------------------------------");
 			ConfigPolicyRule config=new ConfigPolicyRule();
-			config.setRulePath(fullFileName);
+			config.setStandardRule(rule);
 			config.setTypeCode(typeCode);
 			
 			config.setContainConflictRule(containConflictRule);
 			ruleService.save(config);
+			savefile.delete();
+			
+		}else{
+			returnMsg="规则不能为空，请重新上传！";
+			backUrl = "rule/viewAllDevType.jsp";
+			return "failed";
 		}
 		return "success";
 	}
@@ -170,11 +186,50 @@ public class ConfigPolicyRuleAction {
 		if(ruleList!=null&&ruleList.size()>0){
 			for(Object o:ruleList){
 				ConfigPolicyRule rule=(ConfigPolicyRule)o;
-				File f=new File(rule.getRulePath());
-				f.delete();
-				ruleService.delete(o);
+				ruleService.delete(rule);
 			}
 		}
 		return "success";
+	}
+
+	public String readRule(String rulePath) {
+		if (Assert.isEmptyString(rulePath)) {
+			return null;
+		}
+		FileReader fileRead = null;
+		BufferedReader buffRead = null;
+		try {
+			fileRead = new FileReader(new File(rulePath));
+			buffRead = new BufferedReader(fileRead);
+			StringBuilder result = new StringBuilder();
+			String ss;
+			while ((ss = buffRead.readLine()) != null) {
+				result.append(ss + "%%");
+			}
+			return result.toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			logger.exception(e);
+		} finally {
+			if (fileRead != null) {
+				try {
+					fileRead.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (buffRead != null) {
+				try {
+					buffRead.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+
 	}
 }

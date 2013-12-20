@@ -12,7 +12,10 @@ Map app=user.getApp();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>拓扑图</title>
-
+<script>
+		var adiv= window.parent.document.getElementById("operation");
+		adiv.innerText="首页>拓扑图";
+</script>
 </head>
 <body>
 	 <% if(app.get("拓扑图")!=null){ %>

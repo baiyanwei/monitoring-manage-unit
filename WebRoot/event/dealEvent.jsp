@@ -27,6 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
 	<script>
 		if('${close}'=='1'){
+			alert("${msg}");
 			window.close();
 		}
 	</script>

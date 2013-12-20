@@ -19,5 +19,7 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 	public void setDao(EventTypeDao dao) {
 		this.dao = dao;
 	}
-	
+	public void deleteRelevance(String eventId){
+		dao.deleteRelevance(eventId);
+	}
 }

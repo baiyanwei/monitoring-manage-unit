@@ -53,11 +53,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		<tr>
 	    			<td><label>基线类型：</label></td>
 	    			<td>
-	    				<c:if test="${ sbl.baselineType eq '0'}">
+	    				<c:if test="${ baseLine.baselineType eq '0'}">
 	    				<input type="radio" name="sbl.baselineType" value="0" checked="true">配置基线</input>
 	    				<input type="radio" name="sbl.baselineType" value="1">策略基线</input>
 	    			</c:if>
-	    			<c:if test="${ sbl.baselineType eq '1'}">
+	    			<c:if test="${ baseLine.baselineType eq '1'}">
 	    				<input type="radio" name="sbl.baselineType" value="0" >配置基线</input>
 	    				<input type="radio" name="sbl.baselineType" value="1" checked="true">策略基线</input>
 	    			</c:if>
@@ -65,7 +65,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		<tr>
 	    			<td><label>基线描述：</label></td>
-	    			<td><textarea class="datagrid-editable-input" name="sbl.baselineDesc" style="resize:none;">${ sbl.baselineDesc}</textarea></td>
+	    			<td><textarea id="ccr" class="datagrid-editable-input" name="sbl.baselineDesc" style="resize:none;">${ baseLine.baselineDesc}</textarea></td>
 	    		</tr>
 	    		<tr>
 	    			<td>
@@ -83,6 +83,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  		<script>
  
 		function submitForm(){
+			var t=document.getElementById("ccr");
+			if(t.value==""){
+				$.messager.alert('错误提示','请输入包含比对规则','error');
+				return false;
+			}
 			return $('#ff').form('validate');
 		}
 	</script>

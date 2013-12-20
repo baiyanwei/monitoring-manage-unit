@@ -84,12 +84,13 @@
      		var count=0;
      		for(var i=0;i<users.length;i++){
      			userid+=users[i].value;
-     			if(!count==(users.length-1)){
+     			if(i!=(users.length-1)){
      				userid+=",";
      			}
-     			count++;
+     			
      		}
      		var userIds=document.getElementById("userIds");
+     		
      		userIds.value=userid;
      		return true;
      	}

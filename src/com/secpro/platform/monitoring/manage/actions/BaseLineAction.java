@@ -251,44 +251,44 @@ public class BaseLineAction {
 		if(typeCode==null){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch typeCode failed ,typeCode is null");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(typeCode.trim().equals("")){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch typeCode failed ,typeCode is ''");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baselineRule==null){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch baselineRule failed ,baselineRule is null");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baselineRule.trim().equals("")){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch baselineRule failed ,baselineRule is ''");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baselineId==null){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch baselineId failed ,baselineId is null");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		if(baselineId.trim().equals("")){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("fetch baselineId failed ,baselineId is ''");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		boolean flag=sbService.createBaseLineRule(typeCode, baselineId, baselineRule);
 		if(!flag){
 			returnMsg = "系统错误，基线规则保存失败！";
 			logger.info("insert rule failed");
-			backUrl = "/rule/viewAllDevType.jsp";
+			backUrl = "/baseline/viewBaseLine.jsp";
 			return "failed";
 		}
 		return "success";

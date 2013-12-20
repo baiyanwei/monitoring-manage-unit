@@ -320,77 +320,74 @@ $('#eventtabs').tabs({
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getEventList()',60000);
+			var marquee2 = new Marquee("textnomouse");
+			marquee2.Direction="top";
+			marquee2.Step=3;
+			marquee2.Width=1000;
+			marquee2.Height=300;
+			marquee2.Timer=300;
+			marquee2.Start();
+						
 		}else if(title=="基线告警"){
 			getOneTypeEventListByLevel("baseline");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("baseline")',60000);
+			var baseline = new Marquee("baselinemouse");
+			baseline.Direction="top";
+			baseline.Step=3;
+			baseline.Width=1000;
+			baseline.Height=300;
+			baseline.Timer=300;
+			baseline.Start();
 		}else if(title=="防火墙状态告警"){
 			getOneTypeEventListByLevel("fw");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("fw")',60000);
+			//防火墙状态告警
+			var fw = new Marquee("fwmouse");
+			fw.Direction="top";
+			fw.Step=3;
+			fw.Width=1000;
+			fw.Height=300;
+			fw.Timer=300;
+			fw.Start();
 		}else if(title=="采集机状态告警"){
 			getOneTypeEventListByLevel("mca");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("mca")',60000);
+			//采集机状态告警
+			var mca = new Marquee("mcamouse");
+			mca.Direction="top";
+			mca.Step=3;
+			mca.Width=1000;
+			mca.Height=300;
+			mca.Timer=300;
+			mca.Start();
 		}else if(title=="策略告警"){
 			getOneTypeEventListByLevel("policy");
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("ploy")',60000);
+			//策略告警
+			var ploy = new Marquee("ploymouse");
+			ploy.Direction="top";
+			ploy.Step=3;
+			ploy.Width=1000;
+			ploy.Height=300;
+			ploy.Timer=300;
+			ploy.Start();
 		}
 
 	} 
 
 }); 
-
-
-//全部告警
-var marquee2 = new Marquee("textnomouse");
-marquee2.Direction="top";
-marquee2.Step=1;
-marquee2.Width=1000;
-marquee2.Height=300;
-marquee2.Timer=300;
-marquee2.Start();
-//基线告警
-var baseline = new Marquee("baselinemouse");
-baseline.Direction="top";
-baseline.Step=1;
-baseline.Width=1000;
-baseline.Height=300;
-baseline.Timer=300;
-baseline.Start();
-//防火墙状态告警
-var fw = new Marquee("fwmouse");
-fw.Direction="top";
-fw.Step=1;
-fw.Width=1000;
-fw.Height=300;
-fw.Timer=300;
-fw.Start();
-//采集机状态告警
-var mca = new Marquee("mcamouse");
-mca.Direction="top";
-mca.Step=1;
-mca.Width=1000;
-mca.Height=300;
-mca.Timer=300;
-mca.Start();
-//策略告警
-var ploy = new Marquee("ploymouse");
-ploy.Direction="top";
-ploy.Step=1;
-ploy.Width=1000;
-ploy.Height=300;
-ploy.Timer=300;
-ploy.Start();
 
 </script>
 <%} %>

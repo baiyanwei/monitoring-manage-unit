@@ -10,7 +10,7 @@
 		for(int i=0; i<userList.size(); i++)
 		{
 			SysUserInfo value = (SysUserInfo)userList.get(i);
-			userDisplay+=value.getId()+"|"+value.getUserName();
+			userDisplay+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
 			if(i<userList.size()-1){
 				userDisplay+=";";
 			}
@@ -97,10 +97,9 @@
      		var count=0;
      		for(var i=0;i<users.length;i++){
      			userid+=users[i].value;
-     			if(!count==(users.length-1)){
+     			if(i!=(users.length-1)){
      				userid+=",";
      			}
-     			count++;
      		}
      		var userIds=document.getElementById("userIds");
      		userIds.value=userid;

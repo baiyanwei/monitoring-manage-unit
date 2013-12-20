@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  <div class="easyui-panel" title="" style="width:400px">
+  <div class="easyui-panel" title="事件类型名称:${eventName }" style="width:800px">
 		<div style="padding:10px 0 10px 60px">
 		    <form id="ff" action="saveEventRule.action" method="post" onsubmit="return submitForm();">
 		    	<input type="hidden" name="eventRule.resId" value="${resId }"/>
@@ -73,7 +73,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    				 <select class="easyui-combobox" name="eventRule.repeat" missingMessage="请选择" data-options="required:true">
 	    				 	<option value="0" selected>否</option>
 	    				 	<option value="1" >是</option>
-	    				 </select>
+	    				 </select><font color="red">如选择不生成告警短信，此选项选择重复告警无效！</font>
 	    			</td>
 	    		</tr>
 	    		<tr>
@@ -82,7 +82,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    				 <select class="easyui-combobox" name="eventRule.recoverSetMsg" missingMessage="请选择" data-options="required:true">
 	    				 	<option value="0" selected>否</option>
 	    				 	<option value="1">是</option>
-	    				 </select>
+	    				 </select><font color="red">如选择不生成告警短信，此选项选择生成恢复告警无效！</font>
 	    			</td>
 	    		</tr>
 	    		<tr>
