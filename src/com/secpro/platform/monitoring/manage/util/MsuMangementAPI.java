@@ -21,7 +21,10 @@ public class MsuMangementAPI {
 	final public static String MSU_COMMAND_SYSLOG_RULE_ADD = "TOPIC-SYSLOG-STANDARD-RULE-ADD";
 	final public static String MSU_COMMAND_SYSLOG_RULE_UPDATE = "TOPIC-SYSLOG-STANDARD-RULE-UPDATE";
 	final public static String MSU_COMMAND_SYSLOG_RULE_REMOVE = "TOPIC-SYSLOG-STANDARD-RULE-REMOVE";
-
+	final public static String MSU_COMMAND_FW_REMOVE = "TOPIC-FW-REMOVE";
+	final public static String MSU_COMMAND_FW_ADD = "TOPIC-FW-ADD";
+	
+	
 	private static MsuMangementAPI msuMangementAPI = null;
 
 	private URI targetURI = null;

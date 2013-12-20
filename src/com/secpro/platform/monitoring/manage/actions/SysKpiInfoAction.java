@@ -182,7 +182,7 @@ public class SysKpiInfoAction {
 						String value=((RawKpi) l.get(0)).getKpiValue();
 						StringBuilder s=new StringBuilder();
 						if(isJsonObj(value)){
-							System.out.println(value+"------------------------");
+							
 							JSONObject valuesJson = new JSONObject(value);
 							String[] valueKey = JSONObject.getNames(valuesJson);
 							for (int j = 0; j < valueKey.length; j++) {

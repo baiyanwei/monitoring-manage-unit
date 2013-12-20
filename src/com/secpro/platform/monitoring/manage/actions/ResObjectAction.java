@@ -38,6 +38,7 @@ import com.secpro.platform.monitoring.manage.services.SysResObjService;
 import com.secpro.platform.monitoring.manage.services.TelnetSshDictService;
 import com.secpro.platform.monitoring.manage.util.FWVersionMatch;
 import com.secpro.platform.monitoring.manage.util.LocalEncrypt;
+import com.secpro.platform.monitoring.manage.util.MsuMangementAPI;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 /**
  * 
@@ -570,10 +571,12 @@ public class ResObjectAction extends ActionSupport {
 		if(resId.contains("_")){
 			res=resId.split("_");
 		}
-		SysResObj reo=new SysResObj();
+		
 		if(res!=null){
-			reo.setId(Long.parseLong(res[1]));
+			SysResObj reo=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(res[1]));
+			String taskRegion=cityService.getTaskRegionByCityCode(reo.getCityCode());		
 			sysService.delete(reo);
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_ADD); 
 			final String rid=res[1];
 			new Thread(){
 				public void run(){
@@ -581,8 +584,10 @@ public class ResObjectAction extends ActionSupport {
 				}
 			}.start();
 		}else{
-			reo.setId(Long.parseLong(resId));
+			SysResObj reo=(SysResObj)sysService.getObj(SysResObj.class, Long.parseLong(resId));
+			String taskRegion=cityService.getTaskRegionByCityCode(reo.getCityCode());	
 			sysService.delete(reo);
+			MsuMangementAPI.getInstance().publishMUSTaskToMSU(reo.getResIp()+"#"+taskRegion+"#"+reo.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_REMOVE);
 			final String rid=resId;
 			new Thread(){
 				public void run(){
@@ -591,22 +596,7 @@ public class ResObjectAction extends ActionSupport {
 			}.start();
 		}
 		
-		/*List authlist=resAuthService.queryAll("from SysResAuth s where s.resId="+reo.getId());
 		
-		if(authlist!=null&&authlist.size()!=0){
-			for(int i=0;i<authlist.size();i++){
-				resAuthService.delete(authlist.get(i));
-			}
-		}
-		List eventlist=eventService.queryAll("from SysEvent s where s.resId="+reo.getId());
-		
-		
-		if(eventlist!=null&&eventlist.size()!=0){
-			
-			for(int i=0;i<eventlist.size();i++){
-				eventService.delete(eventlist.get(i));
-			}
-		}*/
 		
 		return "success";
 	}
@@ -688,7 +678,8 @@ public class ResObjectAction extends ActionSupport {
 		
 		resAuth.setResId(res.getId());
 		resAuthService.save(resAuth);
-		
+		String taskRegion=cityService.getTaskRegionByCityCode(resObjForm.getCityCode());
+		MsuMangementAPI.getInstance().publishMUSTaskToMSU(res.getResIp()+"#"+taskRegion+"#"+resObjForm.getCityCode(), MsuMangementAPI.MSU_COMMAND_FW_ADD);
 		returnMsg=("资源保存成功，刷新资源树后展示！");	
 		
 		return "success";

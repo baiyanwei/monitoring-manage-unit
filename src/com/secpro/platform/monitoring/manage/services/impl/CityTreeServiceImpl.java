@@ -18,5 +18,8 @@ public class CityTreeServiceImpl extends BaseService implements CityTreeService{
 	public void setScdao(SysCityDao scdao) {
 		this.scdao = scdao;
 	}
+	public String getTaskRegionByCityCode(String cityCode){
+		return scdao.getTaskRegionByCityCode(cityCode);
+	}
 	
 }
