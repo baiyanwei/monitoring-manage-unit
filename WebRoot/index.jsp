@@ -224,7 +224,7 @@ ul#navmenu-h ul ul li.iehover ul {
 										<% if(app.get("首页查看")!=null){ %>
 											<li><a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a></li>
 										<% }if(app.get("基线规则管理")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线与规则管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线与规则管理</a>
 											<ul>
 												<% if(app.get("基线模板查看")!=null){ %>		
 													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a></li>
@@ -235,8 +235,9 @@ ul#navmenu-h ul ul li.iehover ul {
 												
 												<%} %>	
 											</ul>
+											</li>
 										<% }if(app.get("资源数据管理菜单")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源与数据管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源与数据管理</a>
 											<ul>
 												<% if(app.get("采集端查看")!=null){ %>	
 													<li><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></li>
@@ -250,9 +251,9 @@ ul#navmenu-h ul ul li.iehover ul {
 													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>	
 													<li><a href="javascript:taskmanager();" class="easyui-linkbutton" data-options="plain:true">任务查询</a></li>		
 											</ul>
-										
+											</li>
 										<% }if(app.get("系统管理菜单")!=null) {%>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
 												<ul>
 														<% if(app.get("查看厂商")!=null){ %>		
 														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
@@ -260,8 +261,9 @@ ul#navmenu-h ul ul li.iehover ul {
 														<li><a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">操作日志</a></li>
 														<%} %>
 												</ul>
+												</li>
 										<% }if(app.get("事件告警管理菜单")!=null) {%>		
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">事件告警管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">事件告警管理</a>
 												<ul>
 													<% if(app.get("查看事件类型")!=null) {%>		
 														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件类型管理</a></li>
@@ -271,9 +273,9 @@ ul#navmenu-h ul ul li.iehover ul {
 														<li><a href="javascript:kpimanager();" class="easyui-linkbutton" data-options="plain:true">指标管理</a></li>
 													<%} %>
 												</ul>
-										
+												</li>
 										<% }if(app.get("用户管理菜单")!=null||user.getAccount().equals("admin")){ %>		
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">用户管理</a></li>
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">用户管理</a>
 											<ul>
 												<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
 													<li><a href="javascript:orgmanager();" class="easyui-linkbutton" data-options="plain:true">部门管理</a></li>
@@ -283,7 +285,7 @@ ul#navmenu-h ul ul li.iehover ul {
 													<li><a href="javascript:rolemanager();" class="easyui-linkbutton" data-options="plain:true">角色管理</a></li>
 												<%} %>	
 											</ul>
-										
+											</li>
 										<%} %>
 																		
 										</ul>								
