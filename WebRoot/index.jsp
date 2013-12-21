@@ -224,7 +224,7 @@ ul#navmenu-h ul ul li.iehover ul {
 										<% }if(app.get("设备管理菜单")!=null){ %>	
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">设备管理</a>
 											<ul>
-												<% if(app.get("采集端查看")!=null){ %>	
+												<% if(app.get("采集机查看")!=null){ %>	
 													<li><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></li>
 												<% }if(app.get("查看厂商")!=null){ %>		
 														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
