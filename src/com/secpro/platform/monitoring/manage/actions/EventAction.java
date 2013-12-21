@@ -1516,7 +1516,7 @@ public class EventAction {
 			for(int i=0;i<notifyUser.size();i++){
 				SysUserInfo value = (SysUserInfo)notifyUser.get(i);
 				receiveDispaly+=value.getId()+"|"+value.getAccount()+":"+value.getUserName();
-				if(i<userList.size()-1){
+				if(i<notifyUser.size()-1){
 					receiveDispaly+=";";
 				}
 			}
