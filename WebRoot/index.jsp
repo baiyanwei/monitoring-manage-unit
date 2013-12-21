@@ -285,7 +285,7 @@ ul#navmenu-h ul ul li.iehover ul {
 													<%} %>
 												</ul>
 												</li>
-										<% }if(app.get("系统管理菜单")!=null) {%>	
+										<% }if(app.get("系统管理菜单")!=null||user.getAccount().equals("admin")) {%>	
 											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
 												<ul>
 													<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
