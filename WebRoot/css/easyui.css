@@ -361,7 +361,7 @@
 }
 .layout-panel {
   position: absolute;
-  overflow: hidden;
+  overflow: visible;
 }
 .layout-panel-east,
 .layout-panel-west {
