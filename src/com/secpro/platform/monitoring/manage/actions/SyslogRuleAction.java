@@ -135,7 +135,13 @@ public class SyslogRuleAction {
 	                  e.printStackTrace();
 	                  return "failed";
 	           }
-	         //调用任务模块，重新洗发规则
+	         
+	            service.setRulePath(fullFileName);
+				service.setTypeCode(typeCode);
+				service.setCrudOper(oper);
+				
+				boolean flag=service.ruleStorage();
+				//调用任务模块，重新洗发规则
 		   		if(oper.equals("0")){//增加规则
 		   			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_ADD);
 		   		}else if(oper.equals("1")){//删除规则
@@ -143,12 +149,6 @@ public class SyslogRuleAction {
 		   		}else if(oper.equals("2")){//删除规则
 		   			MsuMangementAPI.getInstance().publishMUSTaskToMSU(typeCode, MsuMangementAPI.MSU_COMMAND_SYSLOG_RULE_REMOVE);
 		   		}
-	            service.setRulePath(fullFileName);
-				service.setTypeCode(typeCode);
-				service.setCrudOper(oper);
-				
-				boolean flag=service.ruleStorage();
-				
 				if(flag){
 					//调用WEBSERVICE通知核心处理重新加载规则
 					int count=0;

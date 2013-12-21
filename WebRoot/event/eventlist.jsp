@@ -282,16 +282,16 @@
 							0
 						</div>
 						条] &nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="checkbox" id="minor" name="ploy" value="1" checked
+						<input type="checkbox" id="minor" name="policy" value="1" checked
 							onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#C8FF00'>通知</font>
-						<input type="checkbox" id="warning" name="ploy" value="2"
+						<input type="checkbox" id="warning" name="policy" value="2"
 							checked onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FFD200'>轻微</font>
-						<input type="checkbox" id="major" name="ploy" value="3" checked
+						<input type="checkbox" id="major" name="policy" value="3" checked
 							onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FF9200'>重要</font>
-						<input type="checkbox" id="critical" name="ploy" value="4"
+						<input type="checkbox" id="critical" name="policy" value="4"
 							checked onclick="getOneTypeNewEventByClass('policy');">
 						<font color='#FF1042'>紧急</font>
 					</th>
@@ -299,7 +299,7 @@
 				<tr>
 					<td colspan="5" id="textTd">
 					
-						<div id="ploymouse">
+						<div id="policymouse">
 						</div>
 					
 					</td>
@@ -374,7 +374,7 @@ $('#eventtabs').tabs({
 			if(timer1!=null){
 				clearInterval( timer1 );
 			}
-			timer1=setInterval('getOneTypeEventListByLevel("ploy")',60000);
+			timer1=setInterval('getOneTypeEventListByLevel("policy")',60000);
 			//策略告警
 			var ploy = new Marquee("ploymouse");
 			ploy.Direction="top";

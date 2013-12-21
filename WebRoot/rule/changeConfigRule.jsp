@@ -79,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function submitForm(){
 			var t=document.getElementById("ccr");
 			if(t.value==""){
-				$.messager.alert('错误提示','请输入包含比对规则','error');
+				$.messager.alert('错误提示','请输入包含与冲突比对规则！','error');
 				return false;
 			}
 			return true;
