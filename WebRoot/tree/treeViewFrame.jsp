@@ -39,7 +39,50 @@
 //	extendElementModel();
 //	emulateAttachEvent();
 //}
+function _clickEvent( currID ) {
+	
+	_currTr = eval( "document.all( \"_~tr_" + trim(currID) + "\" )" );
+    _currTd = eval( "document.all( \"_~td_" + trim(currID) + "\" )" );
+    _currImg = eval( "document.all( \"_~img_" + trim(currID) + "\" )" );
+    
+    //alert( "currID::" + currID );
+    
+    var parentLinkList = new Array();
+    var i=0;    
+    var tempNodeID = currID;
+    parentLink = _getParent( tempNodeID );
+    while( parentLink!=null && parentLink != _initValue ) {
+        //alert("parentLink============::"+parentLink);
+        tempNodeID=parentLink;
+        parentLinkList[i++] = parentLink;
+        parentLink = _getParent( tempNodeID );
+    }
+    parentLinkList[i++]=currID;
+    
+    
+    for( i=0; i<parentLinkList.length; i++ ) {
+    
+        _currTr = eval( "document.all( \"_~tr_" + trim(parentLinkList[i]) + "\" )" );
+        _currTd = eval( "document.all( \"_~td_" + trim(parentLinkList[i]) + "\" )" );
+        _currImg = eval( "document.all( \"_~img_" + trim(parentLinkList[i]) + "\" )" );
 
+	    if ( _currTr.style.display == "none" ) {
+		    _doOpenFolder( parentLinkList[i] );
+	    } else {
+            if( parentLinkList[i]==currID){
+            //alert("close");
+            _doCloseFolder( currID );
+            break;
+            }
+	        
+	        
+	    }
+        
+    }
+    
+	changeTreeNodeStatus();
+	
+}
 function addCover() {
     _treeViewCover.style.display = "block";
 }

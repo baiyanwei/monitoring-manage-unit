@@ -1,10 +1,13 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import = "com.secpro.platform.monitoring.manage.entity.SysUserInfo" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String _contexPath = request.getContextPath().equals("/")? "": request.getContextPath();
+	SysUserInfo user=(SysUserInfo)session.getAttribute("user");
+	Map app=user.getApp();
 	String oldResId=request.getParameter("resId");
 	String resId="";
 	if(oldResId!=null&&!oldResId.trim().equals("")){
@@ -107,13 +110,17 @@
 						width : 100,
 						editor : 'text'
 					}]],
-					toolbar : [{
+					toolbar : [
+					<% if(app.get("添加任务")!=null){ %>
+					{
 						text : '添加任务',
 						iconCls : 'icon-add',
 						handler : function() {
 							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=new&resId=<%=resId%>";
 						}
-					}, '-', {
+					}, '-', 
+					<% }if(app.get("删除任务")!=null){ %>
+					{
 						text : '删除任务',
 						iconCls : 'icon-remove',
 						handler : function() {
@@ -135,7 +142,9 @@
 							}
 
 						}
-					}, '-', {
+					}, '-', 
+					<% }if(app.get("修改任务")!=null){ %>
+					{
 						text : '修改任务',
 						iconCls : 'icon-edit',
 						handler : function() {
@@ -150,19 +159,16 @@
 							}
 							window.location.href = "<%=_contexPath%>/task/taskSave.jsp?operationType=update&tid="+rows[0].tid;
 						}
-					},  '-', {
+					},  '-', 
+					<%}%>
+					{
 						text : '刷新',
 						iconCls : 'icon-reload',
 						handler : function() {
 							$('#listDetail').datagrid('reload');
 						}
-					}],
+					}]
 
-					onDblClickRow : function(index, row) {
-						//  $('#listDetail').datagrid('expandRow', index);
-						//  $('#listDetail').datagrid('fitColumns',index);
-						window.location.href = "toViewMcaRaw.action?resid=" + row.mcaid;
-					}
 				});
 				$('#listDetail').datagrid("getPager").pagination({
 					displayMsg : '当前显示从{from}到{to}共{total}记录',
@@ -185,15 +191,7 @@
 
 					displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录'
 
-					/*onBeforeRefresh:function(){
-
-					 $(this).pagination('loading');
-
-					 alert('before refresh');
-
-					 $(this).pagination('loaded');
-
-					 }*/
+					
 
 				});
 			});

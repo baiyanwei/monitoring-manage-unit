@@ -202,9 +202,7 @@ ul#navmenu-h ul ul li.iehover ul {
 				<div style="float:right;padding-right:10px"><a href="javascript:modifyselfmanager();" >修改个人信息</a>&nbsp;&nbsp;<a href="logout.action">注销</a></div>
 			</div>
 		</div>
-		<div class="about_title" >防火墙策略核查系统</div>
-		
-			
+		<div class="about_title" >防火墙策略核查系统</div>	
 		</div>
 		
 	<div data-options="region:'west',split:true,title:'资源树'" style="width:200px;padding:10px;">
@@ -223,47 +221,48 @@ ul#navmenu-h ul ul li.iehover ul {
 										<ul id="navmenu-h">
 										<% if(app.get("首页查看")!=null){ %>
 											<li><a href="javascript:shouye();" class="easyui-linkbutton" data-options="plain:true">首页</a></li>
-										<% }if(app.get("基线规则管理")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线与规则管理</a>
-											<ul>
-												<% if(app.get("基线模板查看")!=null){ %>		
-													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a></li>
-												<% }if(app.get("基线查看")!=null){ %>	
-													<li><a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线管理</a></li>
-												<% }if(app.get("查看规则")!=null) {%>	
-													<li><a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">规则管理</a></li>
-												
-												<%} %>	
-											</ul>
-											</li>
-										<% }if(app.get("资源数据管理菜单")!=null){ %>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">资源与数据管理</a>
+										<% }if(app.get("设备管理菜单")!=null){ %>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">设备管理</a>
 											<ul>
 												<% if(app.get("采集端查看")!=null){ %>	
 													<li><a href="javascript:mcamanager();" class="easyui-linkbutton" data-options="plain:true">采集机管理</a></li>
-												<% }if(app.get("防火墙配置查看")!=null){ %>		
-													<li><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">防火墙配置文件</a></li>
-												<% }if(app.get("SYSLOG命中查看")!=null){ %>	
-													<li><a href="javascript:hitmanager();" class="easyui-linkbutton" data-options="plain:true">SYSLOG命中</a></li>
-												<% }if(app.get("基线比对查看")!=null){ %>		
-													<li><a href="javascript:matchscoremanager();" class="easyui-linkbutton" data-options="plain:true">基线比对结果</a></li>
-												<%} %>
-													<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>	
-													<li><a href="javascript:taskmanager();" class="easyui-linkbutton" data-options="plain:true">任务查询</a></li>		
+												<% }if(app.get("查看厂商")!=null){ %>		
+														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
+												<%} %>	
 											</ul>
 											</li>
-										<% }if(app.get("系统管理菜单")!=null) {%>	
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
+										<% }if(app.get("规则配置管理菜单")!=null){ %>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">规则配置管理</a>
+											<ul>
+												<% if(app.get("查看规则")!=null) {%>	
+													<li><a href="javascript:rulemanager();" class="easyui-linkbutton" data-options="plain:true">标准化规则配置</a></li>																								
+												<%} %>
+														
+											</ul>
+											</li>
+										<% }if(app.get("任务管理菜单")!=null) {%>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">任务管理</a>
 												<ul>
-														<% if(app.get("查看厂商")!=null){ %>		
-														<li><a href="javascript:companymanager();" class="easyui-linkbutton" data-options="plain:true">厂商配置</a></li>
-														<% }if(app.get("操作日志")!=null) {%>	
-														<li><a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">操作日志</a></li>
+														<% if(app.get("任务展示")!=null){ %>		
+														<li><a href="javascript:taskmanager();" class="easyui-linkbutton" data-options="plain:true">任务展示</a></li>
 														<%} %>
 												</ul>
 												</li>
-										<% }if(app.get("事件告警管理菜单")!=null) {%>		
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">事件告警管理</a>
+										<% }if(app.get("基线管理菜单")!=null){ %>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">基线管理</a>
+											<ul>
+												<% if(app.get("基线查看")!=null){ %>	
+													<li><a href="javascript:baselinemanager();" class="easyui-linkbutton" data-options="plain:true">基线管理</a></li>
+												<%} if(app.get("基线模板查看")!=null){ %>		
+													<li><a href="javascript:baselinetemplatemanager();" class="easyui-linkbutton" data-options="plain:true">基线模板管理</a></li>
+												
+												<% }if(app.get("基线比对查看")!=null){ %>		
+													<li><a href="javascript:matchscoremanager();" class="easyui-linkbutton" data-options="plain:true">基线比对结果</a></li>
+												<%} %>
+											</ul>
+											</li>
+										<% }if(app.get("告警配置管理菜单")!=null) {%>		
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">告警配置管理</a>
 												<ul>
 													<% if(app.get("查看事件类型")!=null) {%>		
 														<li><a href="javascript:eventmanager();" class="easyui-linkbutton" data-options="plain:true">事件类型管理</a></li>
@@ -274,18 +273,32 @@ ul#navmenu-h ul ul li.iehover ul {
 													<%} %>
 												</ul>
 												</li>
-										<% }if(app.get("用户管理菜单")!=null||user.getAccount().equals("admin")){ %>		
-											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">用户管理</a>
-											<ul>
-												<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
+										<% }if(app.get("数据展示菜单")!=null) {%>		
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">数据展示</a>
+												<ul>
+													<% if(app.get("防火墙配置查看")!=null){ %>		
+														<li><a href="javascript:filemanager();" class="easyui-linkbutton" data-options="plain:true">防火墙配置文件</a></li>
+													<% }if(app.get("配置文件比对")!=null){ %>	
+														<li><a href="javascript:configmatchmanager();" class="easyui-linkbutton" data-options="plain:true">配置文件比对</a></li>	
+													<% }if(app.get("SYSLOG命中查看")!=null){ %>	
+													<li><a href="javascript:hitmanager();" class="easyui-linkbutton" data-options="plain:true">SYSLOG命中</a></li>	
+													<%} %>
+												</ul>
+												</li>
+										<% }if(app.get("系统管理菜单")!=null) {%>	
+											<li><a href="#" class="easyui-linkbutton" data-options="plain:true">系统管理</a>
+												<ul>
+													<% if(app.get("查看部门")!=null||user.getAccount().equals("admin")){ %>		
 													<li><a href="javascript:orgmanager();" class="easyui-linkbutton" data-options="plain:true">部门管理</a></li>
-												<% }if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
+													<% }if(app.get("查看用户")!=null||user.getAccount().equals("admin")){ %>		
 													<li><a href="javascript:usermanager();" class="easyui-linkbutton" data-options="plain:true">用户管理</a></li>
-												<% }if(app.get("查看角色")!=null||user.getAccount().equals("admin")){ %>		
+													<% }if(app.get("查看角色")!=null||user.getAccount().equals("admin")){ %>		
 													<li><a href="javascript:rolemanager();" class="easyui-linkbutton" data-options="plain:true">角色管理</a></li>
-												<%} %>	
-											</ul>
-											</li>
+													<% }if(app.get("系统日志")!=null) {%>	
+														<li><a href="javascript:systemmanager();" class="easyui-linkbutton" data-options="plain:true">系统日志</a></li>
+													<%} %>
+												</ul>
+												</li>
 										<%} %>
 																		
 										</ul>								
@@ -322,7 +335,7 @@ ul#navmenu-h ul ul li.iehover ul {
 			if(title=="告警视图"){
 				window.frames.eventl.location.reload();
 			}
-			//alert(title);
+			
 		}
 		function shouye(){
 			window.frames.contextMain.location.href="first.jsp";
