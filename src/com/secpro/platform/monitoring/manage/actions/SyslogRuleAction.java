@@ -133,6 +133,8 @@ public class SyslogRuleAction {
 	           } catch (IOException e) {
 	                  // TODO Auto-generated catch block
 	                  e.printStackTrace();
+	                  returnMsg = "系统错误，规则添加失败，请重新添加！";
+	      			logger.info("fetch operation failed ,operation is '' ");
 	                  return "failed";
 	           }
 	         
@@ -178,12 +180,16 @@ public class SyslogRuleAction {
 					}
 				}
 		}else{
+			returnMsg = "文件为空，规则添加失败，请重新添加！";
+			logger.info("fetch file failed ,file is null ");
 			return "failed";
 		}
 		
 		if(f){
 			return "success";
 		}else{
+			returnMsg = "下发规则错误，规则添加失败，请重新添加！";
+			logger.info("调用远程方法失败，规则添加失败！");
 			return "failed";
 		}
 	}
