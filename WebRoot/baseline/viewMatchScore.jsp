@@ -213,9 +213,9 @@ Map app=user.getApp();
             handler: function () {     
                	 var rows = $('#listScoreByRes').datagrid('getSelections'); 
                	
-				    var urll="toDealEvent.action?eventId="+rows[0].eventid;  
+				    var urll="toQueryMatchDatil.action?resId_taskCode="+rows[0].resId_taskCode;  
 				   
-				 	window.open(urll,'','width=900px,height=900px,left=10, top=10,toolbar=no, status=no, menubar=no, resizable=yes, scrollbars=yes');
+				 	window.location.href=urll;
 				}  
 
                

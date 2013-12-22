@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -312,16 +313,17 @@ public class BaseLineAction {
 			return ;
 		}
 		
-		String rule=sbService.getRule(baselineId, typeCode);
-		String json="{\"rule\":\""+rule+"\"}";
+		String rule=sbService.getRule(baselineId, typeCode);	
 		PrintWriter pw = null;
 		HttpServletResponse resp = ServletActionContext.getResponse();
 		resp.setContentType("text/json");
 		try {
+			JSONObject json=new JSONObject();
+			json.put("rule", rule);
 			pw = resp.getWriter();
-			pw.println(json);
+			pw.println(json.toString());
 			pw.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -541,14 +543,14 @@ public class BaseLineAction {
 			sb.append("{\"total\":" + matchDatil.size() + ",\"rows\":[");
 			for (int i = 0; i < matchDatil.size(); i++) {
 				RawBaselineMatch datil=(RawBaselineMatch)matchDatil.get(i);
-				sb.append("{\"mcatchResult\":\"" + (datil.getMatchResult().equals("0")?"比对成功":"比对失败") + "\",");
+				sb.append("{\"mcatchResult\":\"" + (datil.getMatchResult().equals("0")?"比对失败":"比对成功") + "\",");
 				sb.append("\"baselineDesc\":\"" + datil.getBaseLineDesc() + "\",");
 				sb.append("\"cdate\":\"" + sdf1.format(sdf.parse(datil.getCdate())) + "\",");
 				sb.append("\"baselineId\":" + datil.getBaselineId() + ",");
 				if(i==(matchDatil.size()-1)){
-					sb.append("\"result\":\"" + datil.getResult() + "\"}");
+					sb.append("\"result\":\"" + (datil.getResult()==null?" ":datil.getResult()) + "\"}");
 				}else{
-					sb.append("\"result\":\"" + datil.getResult() + "\"},");
+					sb.append("\"result\":\"" + (datil.getResult()==null?" ":datil.getResult()) + "\"},");
 				}
 			}
 			sb.append("]}");

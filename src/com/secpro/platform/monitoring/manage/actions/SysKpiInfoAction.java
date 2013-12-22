@@ -159,7 +159,7 @@ public class SysKpiInfoAction {
 
 		StringBuilder sb = new StringBuilder();
 		PrintWriter pw = null;
-		try {
+		try { 
 			HttpServletResponse resp = ServletActionContext.getResponse();
 			resp.setContentType("text/json");
 			pw = resp.getWriter();
@@ -313,22 +313,32 @@ public class SysKpiInfoAction {
 			returnMsg = "指标名称不能为空，指标保存失败！";
 			logger.info("fetch kpiName failed , kpiName is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiInfo.getKpiName().equals("")){
 			returnMsg = "指标名称不能为空，指标保存失败！";
 			logger.info("fetch kpiName failed , kpiName is ''!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
-		
+		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+kpiInfo.getKpiName()+"'");
+		if(kpiList!=null&&kpiList.size()>0){
+			returnMsg = "此指标已存在！";
+			logger.info("此指标已存在！");
+			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
+		}
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiInfo.getClassId()==0){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is 0!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		kpiService.save(kpiInfo);
 		return "success";
@@ -338,27 +348,38 @@ public class SysKpiInfoAction {
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiId failed , kpiId is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiInfo.getKpiName()==null){
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiName failed , kpiName is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiInfo.getKpiName().equals("")){
 			returnMsg = "指标名称不能为空，指标修改失败！";
 			logger.info("fetch kpiName failed , kpiName is ''!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
-		
+		List kpiList=kpiService.queryAll("from SysKpiInfo k where k.kpiName='"+kpiInfo.getKpiName()+"'");
+		if(kpiList!=null&&kpiList.size()>0){
+			returnMsg = "此指标已存在！";
+			logger.info("此指标已存在！");
+			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
+		}
 		if(kpiInfo.getClassId()==null){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiInfo.getClassId()==0){
 			returnMsg = "资源类型不能为空，指标保存失败！";
 			logger.info("fetch classId failed , classId is 0!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		SysKpiInfo kpi=(SysKpiInfo)kpiService.getObj(SysKpiInfo.class, kpiInfo.getId());
 		kpi.setKpiName(kpiInfo.getKpiName());
@@ -375,11 +396,13 @@ public class SysKpiInfoAction {
 			returnMsg = "系统错误，指标删除改失败！";
 			logger.info("fetch kpiId failed , kpiId is null!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		if(kpiId.equals("")){
 			returnMsg = "系统错误，指标删除改失败！";
 			logger.info("fetch kpiId failed , kpiId is ''!");
 			backUrl = "resobj/viewKpiInfo.jsp";
+			return "failed";
 		}
 		String[] kpiIds=kpiId.split(",");
 		for(int i=0;i<kpiIds.length;i++){

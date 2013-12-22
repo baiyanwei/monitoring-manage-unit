@@ -312,7 +312,7 @@ function _onMouseDown(obj,e){
     		     
     		    });
     	}else{
-    		if(obj.id!="1"){
+    		if(obj.id!="1"&&(obj.id).charAt((obj.id).length-1)!="0"){
     		$('#'+obj.id).contextMenu('citymenu', {
   		      //菜单样式
   		      menuStyle: {
