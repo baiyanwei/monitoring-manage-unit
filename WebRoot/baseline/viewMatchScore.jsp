@@ -15,7 +15,7 @@ Map app=user.getApp();
     <%
 	String _contexPath=request.getContextPath().equals("/")?"":request.getContextPath();
 %>
-    <title>事件查看</title>
+    <title>基线比对</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -29,7 +29,7 @@ Map app=user.getApp();
 	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="数据展示>基线比对";
+		adiv.innerText="基线管理>基线比对";
 	</script>
   </head>
   <body>

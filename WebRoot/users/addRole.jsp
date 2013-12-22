@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="用户管理>创建角色";
+		adiv.innerText="角色管理>创建角色";
 	</script>
   </head>
   

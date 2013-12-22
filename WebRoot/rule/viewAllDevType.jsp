@@ -28,7 +28,7 @@ Map app=user.getApp();
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="基线管理>规则管理";
+		adiv.innerText="规则配置管理>标准化规则配置";
 		function mcapaused(url){
 			alert(url);
 			window.location.href=url;

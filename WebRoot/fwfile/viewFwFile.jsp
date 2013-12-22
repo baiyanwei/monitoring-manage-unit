@@ -27,7 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="防火墙配置文件>配置文件展示";
+		adiv.innerText="数据展示>配置文件展示";
 	</script>
   </head>
     <body>

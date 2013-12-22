@@ -27,7 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="告警规则管理>告警规则设置";
+		adiv.innerText="告警配置管理>告警规则设置";
 	</script>
   </head>
   <body>

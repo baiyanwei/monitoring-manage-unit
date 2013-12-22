@@ -27,7 +27,7 @@
 	
     <script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="告警规则管理>添加告警接收人";
+		adiv.innerText="告警配置管理>添加告警接收人";
 		
 		function fillSelect(selectElement, datastr){
 			if (datastr == null || datastr.length==0)

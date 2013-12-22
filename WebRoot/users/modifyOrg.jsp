@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="用户管理>部门信息修改";
+		adiv.innerText="部门管理>部门信息修改";
 	</script>
 </head>
 <body>

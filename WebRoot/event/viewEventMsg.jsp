@@ -35,7 +35,7 @@ Map app=user.getApp();
 	<link rel="stylesheet" type="text/css" href="<%=_contexPath%>/style/app/css/app_main.css" />
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="告警规则管理>查看事件消息格式";
+		adiv.innerText="告警配置管理>查看事件消息格式";
 	</script>
 	<script>
 		function deitable(){

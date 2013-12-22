@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="告警规则管理>创建事件类型";
+		adiv.innerText="告警配置管理>创建事件类型";
 	</script>
   </head>
   

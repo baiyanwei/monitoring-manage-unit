@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="采集管理>采集机指标";
+		adiv.innerText="采集机管理>采集机指标";
 	</script>
   </head>
     <body>
@@ -61,28 +61,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listDetail').datagrid('reload'); }
-        },'-', {   
-            text: '采集程序启动',   
-            iconCls: 'icon-remove',   
-            handler: function () {   
-                if (confirm("请确认采集程序处于宕机状态？")) {   
-				    var urll="mcaOperation.action?mcaid=${resid}&operation=start";  
-				 	window.location.href=urll;
-				}  
-
-            }   
-               
-        },'-', {   
-            text: '采集程序停止',   
-            iconCls: 'icon-remove',   
-            handler: function () {   
-                if (confirm("确定停止采集程序吗？")) {   
-				    var urll="mcaOperation.action?mcaid=${resid}&operation=start";  
-				 	window.location.href=urll;
-				}  
-
-            }   
-               
         },'-', {   
             text: '采集程序重启',   
             iconCls: 'icon-remove',   

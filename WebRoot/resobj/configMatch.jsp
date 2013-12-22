@@ -77,7 +77,7 @@ Map app=user.getApp();
 			<tr>
 			<td>请选择版本： <input id="cc4" class="easyui-combobox" name="configv1" data-options="valueField:'id',textField:'text'"/></td>
 			<td>请选择比对版本: <input id="cc5" class="easyui-combobox" name="configv2" data-options="valueField:'id',textField:'text'"/></td>
-			<td><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="ss1()">查询</a></td>
+			<td><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="ss1()">比对</a></td>
 			</tr>
 		</table>
 		<table>

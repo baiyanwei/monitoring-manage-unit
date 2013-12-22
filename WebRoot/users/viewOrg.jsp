@@ -28,7 +28,7 @@ Map app=user.getApp();
 	<script type="text/javascript" src="js/jquery/autoMergeCells.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="用户管理>部门列表";
+		adiv.innerText="部门管理>部门列表";
 	</script>
   </head>
     <body>

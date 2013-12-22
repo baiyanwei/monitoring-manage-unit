@@ -28,7 +28,7 @@ Map app=user.getApp();
 	<script type="text/javascript" src="js/jquery/easyui-lang-zh_CN.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="告警规则管理>告警规则设置";
+		adiv.innerText="告警配置管理>告警规则设置";
 		function clearData(){
 			$('#cc1').combobox('clear');
 			$('#cc2').combobox('clear');

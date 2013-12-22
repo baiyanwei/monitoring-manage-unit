@@ -27,7 +27,7 @@ Map app=user.getApp();
 	<script type="text/javascript" src="js/jquery/jquery.easyui.min.js"></script>
 	<script>
 		var adiv= window.parent.document.getElementById("operation");
-		adiv.innerText="采集管理>采集端列表";
+		adiv.innerText="采集机管理>采集机列表";
 		function mcapaused(url){
 			window.location.href=url;
 		}

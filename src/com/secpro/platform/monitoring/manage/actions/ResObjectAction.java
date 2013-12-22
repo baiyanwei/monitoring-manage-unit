@@ -1217,7 +1217,7 @@ public class ResObjectAction extends ActionSupport {
 			RawConfigPolicy config1 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId1));
 			RawConfigPolicy config2 = (RawConfigPolicy)configService.getObj(RawConfigPolicy.class, Long.parseLong(configId2));
 			
-			String containRegex="#configuration#(.*?)#configuration#";
+			String containRegex="#configuration#([\\s\\S]*)#configuration#";
 			Pattern pattern = Pattern.compile(containRegex);
 			String conf1="";
 			String conf2="";
