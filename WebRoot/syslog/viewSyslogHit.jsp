@@ -95,10 +95,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         loadMsg:'数据加载中,请稍后……',  
         pagination:true ,
         columns:[[   
-            {field:'startDate',title:'开始时间',width:100,editor:'text',sortable:true},     
-            {field:'endDate',title:'结束时间',width:200,editor:'text'} ,
-            {field:'hit',title:'命中次数',width:100,editor:'textarea'}, 
-            {field:'policyInfo',title:'命中规则',width:200,editor:'text'}
+            {field:'startDate',title:'开始时间',width:150,editor:'text',sortable:true},     
+            {field:'endDate',title:'结束时间',width:150,editor:'text'} ,
+            {field:'hit',title:'命中次数',width:60,editor:'textarea'}, 
+            {field:'policyInfo',title:'命中规则',width:300,editor:'text'}
             
         ]],   
        toolbar: [{   

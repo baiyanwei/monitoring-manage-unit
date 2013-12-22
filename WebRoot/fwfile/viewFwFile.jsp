@@ -96,10 +96,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         loadMsg:'数据加载中,请稍后……',  
         pagination:true ,
         columns:[[   
-            {field:'fileName',title:'文件名称',width:100,editor:'text',sortable:true},     
-            {field:'cdate',title:'采集日期',width:200,editor:'text'} ,
-            {field:'fileSize',title:'文件大小',width:100,editor:'textarea'}, 
-            {field:'filePath',title:'文件路径',width:200,editor:'text'}
+            {field:'fileName',title:'文件名称',width:150,editor:'text',sortable:true},     
+            {field:'cdate',title:'采集日期',width:150,editor:'text'} ,
+            {field:'fileSize',title:'文件大小',width:50,editor:'textarea'}, 
+            {field:'filePath',title:'文件路径',width:300,editor:'text'}
             
         ]],   
        toolbar: [{   

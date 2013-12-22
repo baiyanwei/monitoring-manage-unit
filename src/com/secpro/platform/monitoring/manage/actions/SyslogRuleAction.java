@@ -267,7 +267,7 @@ public class SyslogRuleAction {
 	}
 	public void querySyslogHitByRes(){
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
-		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd" );
+		SimpleDateFormat sdf1 =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	//	SimpleDateFormat sdf2 =   new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
 		ActionContext actionContext = ActionContext.getContext(); 
 		HttpServletRequest request=ServletActionContext.getRequest();
@@ -320,8 +320,10 @@ public class SyslogRuleAction {
 			
 				to=sdf.format(new Date());
 			}
+			System.out.println(from+"-------"+to+"-----------"+maxPage+"--------------"+pageNum); 
 			int count=service.getRawSyslogHitCount(Long.parseLong(resId), from, to);
 			List hitPage=service.getRawSyslogHitPage(Long.parseLong(resId), from, to, maxPage, pageNum);
+			System.out.println(hitPage.size()+"=============================="+count);
 			if(count==0){
 				sb.append("{\"total\":0,\"rows\":[]}");
 				pw.println(sb.toString());

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -90,24 +92,23 @@ public class RawFwFileAction {
 				pw.flush();
 				return;
 			}
-			sb.append("{\"total\":" + fileList.size() + ",\"rows\":[");
+			JSONObject json =new JSONObject();
+			JSONArray arr=new JSONArray();
+			json.put("total", fileList.size());
+			json.put("rows", arr);
 			for (int i = 0; i < filePage.size(); i++) {
+				JSONObject j=new JSONObject();
 				RawFwFile file=(RawFwFile)filePage.get(i);
-				sb.append("{\"fileId\":" + file.getId() + ",");
-				sb.append("\"fileName\":\"" + file.getFileName() + "\",");
-				
-				sb.append("\"cdate\":\"" + sdf1.format(sdf.parse(file.getCdate())) + "\",");
-				sb.append("\"fileSize\":\"" + file.getFileSize() + "\",");
-				
-				if(i==(filePage.size()-1)){
-					sb.append("\"filePath\":\"" + file.getFilePath()+ "\"}");
-				}else{
-					sb.append("\"filePath\":\"" +file.getFilePath()+ "\"},");
-				}
+				j.put("fileId", file.getId());
+				j.put("fileName", file.getFileName());
+				j.put("cdate", sdf1.format(sdf.parse(file.getCdate())));
+				j.put("fileSize", file.getFileSize());
+				j.put("filePath", file.getFilePath());
+				arr.put(j);
 			}
-			sb.append("]}");
-			System.out.println(sb.toString());
-			pw.println(sb.toString());
+			
+			System.out.println(arr.toString());
+			pw.println(arr.toString());
 			pw.flush();
 		} catch (Exception e) {
 		// TODO Auto-generated catch block
