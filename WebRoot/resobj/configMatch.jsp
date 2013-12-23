@@ -94,8 +94,8 @@ Map app=user.getApp();
 				<td>比对版本内容：</td>
 			</tr>
 			<tr>
-				<td><textarea id="conf1" class="datagrid-editable-input" name="conf1" style="resize:none;width=470;height=300" disabled=true></textarea></td>
-				<td><textarea id="conf2" class="datagrid-editable-input" name="conf2" style="resize:none;width=470;height=300" disabled=true></textarea></td>
+				<td><textarea id="conf1" class="datagrid-editable-input" name="conf1" style="resize:none;width=470;height=300"></textarea></td>
+				<td><textarea id="conf2" class="datagrid-editable-input" name="conf2" style="resize:none;width=470;height=300"></textarea></td>
 			</tr>
 			
 		</table>

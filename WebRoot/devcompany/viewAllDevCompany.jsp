@@ -111,7 +111,7 @@ Map app=user.getApp();
         <% }if(app.get("添加防火墙型号")!=null){ %>
         {   
             text: '添加防火墙型号',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-add',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  
@@ -132,7 +132,7 @@ Map app=user.getApp();
         <% }if(app.get("查看防火墙型号")!=null){ %>
         {   
             text: '查看防火墙型号',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-search',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  

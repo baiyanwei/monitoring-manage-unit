@@ -59,7 +59,7 @@ Map app=user.getApp();
        <% if(app.get("创建角色")!=null||user.getAccount().equals("admin")){ %>
        {   
             text: '创建角色',   
-            iconCls: 'icon-add',   
+            iconCls: 'icon-addrole',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/users/addRole.jsp";
             }   
@@ -67,7 +67,7 @@ Map app=user.getApp();
         <% }if(app.get("删除角色")!=null||user.getAccount().equals("admin")){ %>
         {   
             text: '删除角色',   
-            iconCls: 'icon-remove',   
+            iconCls: 'icon-removerole',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -91,7 +91,7 @@ Map app=user.getApp();
         <% }if(app.get("修改角色")!=null||user.getAccount().equals("admin")){ %>
         {   
             text: '修改角色',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-editrole',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  
@@ -112,7 +112,7 @@ Map app=user.getApp();
          <% }if(app.get("角色权限关联")!=null||user.getAccount().equals("admin")){ %>
         {   
             text: '角色权限关联',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-rolemapping',   
             handler: function () {     
                	 
 				    

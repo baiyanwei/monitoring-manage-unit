@@ -21,8 +21,7 @@
 
 <meta http-equiv='content-type' content='text/html; charset=GBK'>
 <meta http-equiv='Content-Style-Type' content='text/css'>
-<link rel='stylesheet' type='text/css' href='<%=_contexPath%>/style/tree/css/default_css.jsp'>
-
+<link rel="stylesheet" media="all" type="text/css" href="<%=_contexPath%>/style/tree/css/restree.css" />
 <script type='text/javascript'
 			src='<%=_contexPath%>/dwr/interface/TreeAjax.js'></script>
 		<script type='text/javascript' src='<%=_contexPath%>/dwr/engine.js'></script>

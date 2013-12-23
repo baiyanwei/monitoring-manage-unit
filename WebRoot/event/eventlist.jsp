@@ -278,7 +278,7 @@
 				<tr>
 					<th class="th_w">
 						未处理事件列表&nbsp;[共
-						<div id="ployDiv" style="display: inline; color: red;">
+						<div id="policyDiv" style="display: inline; color: red;">
 							0
 						</div>
 						条] &nbsp;&nbsp;&nbsp;&nbsp;
@@ -376,7 +376,7 @@ $('#eventtabs').tabs({
 			}
 			timer1=setInterval('getOneTypeEventListByLevel("policy")',60000);
 			//策略告警
-			var ploy = new Marquee("ploymouse");
+			var ploy = new Marquee("policymouse");
 			ploy.Direction="top";
 			ploy.Step=3;
 			ploy.Width=1000;

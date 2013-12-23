@@ -60,7 +60,7 @@ Map app=user.getApp();
         <% if(app.get("创建部门")!=null||user.getAccount().equals("admin")){ %>
        {   
             text: '创建部门',   
-            iconCls: 'icon-add',   
+            iconCls: 'icon-addorg',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/users/addOrg.jsp";
             }   
@@ -68,7 +68,7 @@ Map app=user.getApp();
          <% }if(app.get("删除部门")!=null||user.getAccount().equals("admin")){ %>
         {   
             text: '删除部门',   
-            iconCls: 'icon-remove',   
+            iconCls: 'icon-removeorg',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -92,7 +92,7 @@ Map app=user.getApp();
         <% }if(app.get("修改部门")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '修改部门',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-editorg',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  

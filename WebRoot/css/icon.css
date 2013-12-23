@@ -10,6 +10,39 @@
 .icon-remove{
 	background:url('../style/app/images/edit_remove.png') no-repeat center center;
 }
+.icon-adduser{
+	background:url('../style/app/images/user_add.png') no-repeat center center;
+}
+.icon-edituser{
+	background:url('../style/app/images/user_mod.png') no-repeat center center;
+}
+.icon-removeuser{
+	background:url('../style/app/images/user_del.png') no-repeat center center;
+}
+.icon-usermapping{
+	background:url('../style/app/images/usergroup.png') no-repeat center center;
+}
+.icon-addrole{
+	background:url('../style/app/images/usergroup_add.png') no-repeat center center;
+}
+.icon-editrole{
+	background:url('../style/app/images/usergroup_mod.png') no-repeat center center;
+}
+.icon-removerole{
+	background:url('../style/app/images/usergroup_del.png') no-repeat center center;
+}
+.icon-addorg{
+	background:url('../style/app/images/organise_add.png') no-repeat center center;
+}
+.icon-editorg{
+	background:url('../style/app/images/organise_mod.png') no-repeat center center;
+}
+.icon-removeorg{
+	background:url('../style/app/images/organise_del.png') no-repeat center center;
+}
+.icon-rolemapping{
+	background:url('../style/app/images/usrclass.png') no-repeat center center;
+}
 .icon-save{
 	background:url('../style/app/images/filesave.png') no-repeat center center;
 }
@@ -31,6 +64,12 @@
 .icon-search{
 	background:url('../style/app/images/search.png') no-repeat center center;
 }
+.icon-restart{
+	background:url('../style/app/images/circlelayout.png') no-repeat center center;
+}
+.icon-mapping{
+	background:url('../style/app/images/computemodel.png') no-repeat center center;
+}
 .icon-print{
 	background:url('../style/app/images/print.png') no-repeat center center;
 }
@@ -51,6 +90,10 @@
 }
 .icon-tip{
 	background:url('../style/app/images/tip.png') no-repeat center center;
+}
+
+.icon-findfw{
+	background:url('../style/app/images/correlate.png') no-repeat center center;
 }
 
 .icon-mini-add{

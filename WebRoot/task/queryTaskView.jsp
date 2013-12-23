@@ -135,16 +135,6 @@
 						title : '调度规则',
 						width : 80,
 						editor : 'text'
-					},{
-						field : 'rid',
-						title : 'rid',
-						width : 100,
-						editor : 'text'
-					},{
-						field : 'isrt',
-						title : 'isrt',
-						width : 100,
-						editor : 'text'
 					}]],
 					toolbar : [{
 						text : '刷新',
