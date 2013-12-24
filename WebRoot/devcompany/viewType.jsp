@@ -54,7 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         ]],   
        toolbar: [{   
             text: '添加防火墙型号',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-add',   
             handler: function () {     
                	 	    
 				    var urll="toAddType.action?companyCode=<%=request.getParameter("companyCode")%>";  
@@ -107,7 +107,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                
         }, '-', {   
             text: '添加采集命令',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-add',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  
@@ -125,7 +125,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                
         }, '-', {   
             text: '查看采集命令',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-search',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  

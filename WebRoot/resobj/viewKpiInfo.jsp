@@ -112,7 +112,7 @@ Map app=user.getApp();
          <% }if(app.get("创建指标解析规则")!=null){ %>
         {   
             text: '创建指标解析规则',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-add',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  

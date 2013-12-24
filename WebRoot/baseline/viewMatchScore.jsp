@@ -82,7 +82,7 @@ Map app=user.getApp();
        	<% if(app.get("查看分数明细")!=null){ %>
        {   
             text: '查看明细',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-search',   
             handler: function () {     
                	 var rows = $('#listScore').datagrid('getSelections'); 
                	
@@ -209,7 +209,7 @@ Map app=user.getApp();
        <% if(app.get("查看分数明细")!=null){ %>
        {   
             text: '查看明细',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-search',   
             handler: function () {     
                	 var rows = $('#listScoreByRes').datagrid('getSelections'); 
                	

@@ -63,7 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			handler:function(){$('#listDetail').datagrid('reload'); }
         },'-', {   
             text: '采集程序重启',   
-            iconCls: 'icon-remove',   
+            iconCls: 'icon-restart',   
             handler: function () {   
                 if (confirm("确定重启采集程序吗？")) {   
 				    var urll="mcaOperation.action?mcaid=${resid}&operation=restart";  

@@ -65,7 +65,7 @@ Map app=user.getApp();
        <% if(app.get("创建用户")!=null||user.getAccount().equals("admin")){ %>
        {   
             text: '创建用户',   
-            iconCls: 'icon-add',   
+            iconCls: 'icon-adduser',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/users/addUser.jsp";
             }   
@@ -74,7 +74,7 @@ Map app=user.getApp();
          <% }if(app.get("删除用户")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '删除用户',   
-            iconCls: 'icon-remove',   
+            iconCls: 'icon-removeuser',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -98,7 +98,7 @@ Map app=user.getApp();
         <% }if(app.get("修改用户")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '修改用户',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-edituser',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
 				     if (null == rows || rows.length == 0) {  
@@ -119,7 +119,7 @@ Map app=user.getApp();
          <% }if(app.get("用户角色关联")!=null||user.getAccount().equals("admin")){ %>
          {   
             text: '用户角色关联',   
-            iconCls: 'icon-edit',   
+            iconCls: 'icon-usermapping',   
             handler: function () {     
                	 
 				   window.location.href="<%=_contexPath%>/users/userRoleMapping.jsp";

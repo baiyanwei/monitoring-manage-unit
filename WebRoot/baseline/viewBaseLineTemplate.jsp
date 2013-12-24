@@ -117,7 +117,7 @@ Map app=user.getApp();
         <% }if(app.get("模板资源映射")!=null){ %>
         {   
             text: '模板资源映射',   
-            iconCls: 'icon-add',   
+            iconCls: 'icon-mapping',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/baseline/templateResMapping.jsp";
             }   
