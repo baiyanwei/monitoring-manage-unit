@@ -247,13 +247,14 @@
 
 /*********************************about css*************************************/
 .about_title{
-	background: url(../images/gwlogo.png) no-repeat 10px top;
-	font-size: 14px;
+	background: url(../images/logoS.png) no-repeat 10px top;
+	font-size: 24px;
 	font-weight: bold;
-	color: #003366;
-	height:60px;
-	padding-left: 79px;
-	border-bottom: 1px solid #6F9DD9;
+	color: #565656;
+	height:70px;
+	padding-left: 220px;
+	/*border-bottom: 1px solid #6F9DD9;*/
+	font-family:Microsoft YaHei;
 	line-height:60px;
    }
 .about_main{

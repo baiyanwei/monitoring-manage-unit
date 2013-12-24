@@ -49,7 +49,7 @@
 <body class="easyui-layout">
 
 		<div data-options="region:'north',border:false"
-			style="height: 119px; width: 1270px;overflow:visible;">
+			style="height: 131px; width: 1270px;overflow:visible;">
 			<div class="content_title_bg">
 				<div class="content_title">
 					<div style="float: left">
@@ -326,7 +326,7 @@
 								
 							</div>
 						</div>
-						<div id="cont" style="overflow: hidden; width: 100%;height:88%;">
+						<div id="cont" style="overflow: hidden; width: 100%;height:93%;">
 
 							<iframe target="contextMain" name="contextMain" id="contextMain" src="first.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
 					

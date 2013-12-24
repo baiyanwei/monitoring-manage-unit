@@ -436,6 +436,7 @@
 }
 .layout-split-west {
   border-right: 5px solid #E6EEF8;
+  border-left: 2px solid #E6EEF8;
 }
 .layout-expand {
   background-color: #E0ECFF;
