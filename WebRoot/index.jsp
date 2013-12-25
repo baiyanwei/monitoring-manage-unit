@@ -326,7 +326,7 @@
 								
 							</div>
 						</div>
-						<div id="cont" style="overflow: hidden; width: 100%;height:93%;">
+						<div id="cont" style="overflow-x: hidden;overflow-y:auto; width: 100%;height:100%;">
 
 							<iframe target="contextMain" name="contextMain" id="contextMain" src="first.jsp" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>	
 					

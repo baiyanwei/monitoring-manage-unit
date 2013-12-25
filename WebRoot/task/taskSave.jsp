@@ -395,7 +395,7 @@
 												</tr>
 												<tr>
 													<td valign="top" width="20%"><div align="right">
-															<span class="input_redstar ">*</span>翻页命令提示符：
+															<span class="input_redstar ">*</span>编码方式：
 														</div>
 													</td>
 													<td valign="top" width="80%"><div align="left">

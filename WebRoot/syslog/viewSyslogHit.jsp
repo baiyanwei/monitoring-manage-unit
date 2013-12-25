@@ -55,7 +55,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					}" />
 				</td>
 				<td>
-				<lable>&nbsp;防火墙：</lable>
+				<lable>&nbsp;&nbsp;防火墙：</lable>
 				<input id="cc3" class="easyui-combobox" name="resId" data-options="valueField:'id',textField:'text',
 						onSelect: function(rec){ 
 							var resobj=document.getElementById('resobj');

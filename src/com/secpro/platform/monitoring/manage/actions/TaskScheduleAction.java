@@ -2,6 +2,7 @@ package com.secpro.platform.monitoring.manage.actions;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -221,7 +222,7 @@ public class TaskScheduleAction {
 		String rows = request.getParameter("rows");
 		String page = request.getParameter("page");
 		String resId=request.getParameter("resId");
-		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int pageNo = 1;
 		int pageSize = 10;
 		if (Assert.isEmptyString(rows) == false) {
@@ -297,7 +298,7 @@ public class TaskScheduleAction {
 							messageObj.put("id", (String) rowObj[0]);
 							messageObj.put(ID_TITLE, (String) rowObj[0]);
 							messageObj.put(REGION_TITLE, (String) rowObj[1]);
-							messageObj.put(CREATE_AT_TITLE, StringFormat.FormatDate(new Date(((Number) rowObj[2]).longValue())));
+							messageObj.put(CREATE_AT_TITLE, fmt.format(new Date(((Number) rowObj[2]).longValue())));
 							messageObj.put(SCHEDULE_TITLE, (String) rowObj[3]);
 							messageObj.put(OPERATION_TITLE, (String) rowObj[4]);
 							messageObj.put(TARGET_IP_TITLE, (String) rowObj[5]);

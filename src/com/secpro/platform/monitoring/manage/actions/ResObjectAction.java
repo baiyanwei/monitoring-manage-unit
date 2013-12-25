@@ -496,7 +496,7 @@ public class ResObjectAction extends ActionSupport {
 			if(dicts!=null&&dicts.size()>0){
 				TelnetSshDict tsd=(TelnetSshDict)dicts.get(0);
 				auth.setExecPrompt(tsd.getExecPrompt());
-				auth.setNextPrompt(tsd.getExecPrompt());
+				auth.setNextPrompt(tsd.getNextPrompt());
 				auth.setPassPrompt(tsd.getPassPrompt());
 				auth.setPrompt(tsd.getPrompt());
 				auth.setSepaWord(tsd.getSepaWord());
