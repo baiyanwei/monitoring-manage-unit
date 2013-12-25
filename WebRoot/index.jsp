@@ -111,7 +111,7 @@
 									%>
 									<li>
 										<a href="#" class="easyui-linkbutton"
-											data-options="plain:true">规则配置管理</a>
+											data-options="plain:true">规则管理</a>
 										<ul>
 											<%
 												if (app.get("查看规则") != null) {
@@ -189,7 +189,7 @@
 									%>
 									<li>
 										<a href="#" class="easyui-linkbutton"
-											data-options="plain:true">告警配置管理</a>
+											data-options="plain:true">告警管理</a>
 										<ul>
 											<%
 												if (app.get("查看事件类型") != null) {

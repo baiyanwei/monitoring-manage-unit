@@ -16,6 +16,8 @@ ul#navmenu-h li {
   list-style: none;
   position: relative;
   height: 24px;
+  width: 86px;
+  text-align: center;
 }
 
 ul#navmenu-h ul {
