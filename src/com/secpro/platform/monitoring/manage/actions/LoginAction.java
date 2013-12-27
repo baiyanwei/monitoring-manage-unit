@@ -66,11 +66,11 @@ public class LoginAction {
 		List userList=suiService.queryAll("from SysUserInfo u where u.account='"+account+"' and u.password='"+passwd+"' and u.deleted is null");
 		
 		if(userList==null){
-			requestMap.put("loginError", "登录失败用户名或密码不存在，请重新登录！");
+			requestMap.put("loginError", "用户名不存在或密码错误，请重新登录！");
 			return "loginError";
 		}
 		if(userList.size()==0){
-			requestMap.put("loginError", "登录失败用户名或密码不存在，请重新登录！");
+			requestMap.put("loginError", "用户名不存在或密码错误，请重新登录！");
 			return "loginError";
 		}
 		SysUserInfo user=(SysUserInfo)userList.get(0);

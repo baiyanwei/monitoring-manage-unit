@@ -1,5 +1,7 @@
 package com.secpro.platform.monitoring.manage.services.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -21,5 +23,8 @@ public class SysAppServiceImpl extends BaseService implements SysAppService{
 	}
 	public String queryAppByRoleid(String roleid){
 		return dao.queryAppByRoleid(roleid);
+	}
+	public List getAppTree(){
+		return dao.getAppTree();
 	}
 }

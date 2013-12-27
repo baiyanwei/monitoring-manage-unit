@@ -70,7 +70,7 @@ public class LogAction {
 				to=sdf.format(new Date());
 			}
 			long count=logService.getLogCount(from,to);
-			List logPage=logService.queryByPage("from com.secpro.platform.monitoring.manage.entity.Log r where r.handleDate>='"+from+"' and r.handleDate <='"+to+"'",pageNum,maxPage);
+			List logPage=logService.queryByPage("from com.secpro.platform.monitoring.manage.entity.Log r where r.handleDate>='"+from+"' and r.handleDate <='"+to+"' order by r.handleDate desc",pageNum,maxPage);
 			if (count == 0) {
 				sb.append("{\"total\":0,\"rows\":[]}");
 				pw.println(sb.toString());

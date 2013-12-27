@@ -23,7 +23,7 @@ public class SysApp {
 	@Column(name="app_desc")
 	private String appDesc;
 	@Column(name="parent_id")
-	private String parentId;
+	private Long parentId;
 	@Column(name="hasLeaf")
 	private String hasLeaf;
 	
@@ -57,11 +57,12 @@ public class SysApp {
 	public void setAppDesc(String appDesc) {
 		this.appDesc = appDesc;
 	}
-	public String getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
-	public void setParentId(String parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
+	
 	
 }

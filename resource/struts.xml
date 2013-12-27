@@ -482,6 +482,9 @@
 			<result name="success">/task/taskView.jsp</result>
 			<result name="toView">/task/taskView.jsp</result>
 		</action>
+		<!-- 任务执行情况 -->
+		<action name="viewTaskExecute" class="MsuSchedUuleAction" method="viewTaskExecute">	
+		</action>
 	</package>
 	<constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />
 </struts>    

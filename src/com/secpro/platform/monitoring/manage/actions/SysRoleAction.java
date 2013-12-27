@@ -248,54 +248,7 @@ public class SysRoleAction {
 		List roleList=roleService.getAppByRole(Long.parseLong(roleId));
 		//创建JSON
 	}
-	public void getAppTree(){
-		HttpServletRequest request=ServletActionContext.getRequest();
-		String id=request.getParameter("id");
-		
-		String hql="";
-		if(id==null){
-			hql="from SysApp a where a.parentId=0";
-		}else if(id.trim().equals("")){
-			hql="from SysApp a where a.parentId=0";
-		}else{
-			hql="from SysApp a where a.parentId="+id;
-		}
-		List appList=appService.queryAll(hql);
-		if(appList==null){
-			return ;
-		}
-		if(appList.size()==0){
-			return ;
-		}
-		JSONArray jsonArrayIn = new JSONArray();
-		try {
-			for(Object o:appList){
-				SysApp app=(SysApp)o;
-				JSONObject json = new JSONObject();
-				json.put("id", app.getId());
-				json.put("text", app.getAppName());
-				if(app.getHasLeaf().equals("1")){
-					json.put("state", "closed");
-				}
-				jsonArrayIn.put(json);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return ;
-		}
-		PrintWriter pw = null;
-		HttpServletResponse resp = ServletActionContext.getResponse();
-		resp.setContentType("text/json");
-		try {
-			pw = resp.getWriter();
-			pw.println(jsonArrayIn.toString());
-			pw.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	public void getAppByRole(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String roleid=request.getParameter("roleid");
@@ -317,6 +270,76 @@ public class SysRoleAction {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	public void getAppTree(){
+		List treeApp=appService.getAppTree();
+		PrintWriter pw = null;
+		HttpServletResponse resp = ServletActionContext.getResponse();
+		resp.setContentType("text/json");
+		JSONArray treeArray=new JSONArray();
+		try {
+			pw = resp.getWriter();
+			if(treeApp.size()==0){
+				pw.println(treeArray.toString());
+				pw.flush();
+				return;
+			}
+			JSONObject first=new JSONObject();
+			JSONArray firstChild=new JSONArray();
+			treeArray.put(first);
+			JSONObject appJson=null;
+			JSONArray children=null;
+			for(int i=0;i<treeApp.size();i++){	
+				SysApp app=(SysApp)treeApp.get(i);
+				if(app.getId()==1){
+					first.put("id", app.getId());
+					first.put("text", app.getAppName());
+					if(app.getHasLeaf().equals("1")){
+						first.put("children", firstChild);
+					}else{
+						pw.println(treeArray.toString());
+						pw.flush();
+						return;
+					}
+				}else if(app.getHasLeaf().equals("1")&&app.getParentId()==1){
+					appJson=new JSONObject();
+					appJson.put("id", app.getId());
+					appJson.put("text", app.getAppName());
+					appJson.put("state", "closed");
+					children=new JSONArray();
+					appJson.put("children", children);
+					firstChild.put(appJson);
+				}else if(app.getHasLeaf().equals("0")&&app.getParentId()==1){
+					appJson=new JSONObject();
+					appJson.put("id", app.getId());
+					appJson.put("text", app.getAppName());
+					firstChild.put(appJson);
+				}else{
+					appJson=new JSONObject();
+					appJson.put("id", app.getId());
+					appJson.put("text", app.getAppName());
+					if(children!=null){
+						children.put(appJson);
+					}
+				}
+				
+			}
+			
+			System.out.println(treeArray.toString());
+			pw.println(treeArray.toString());		
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if (pw != null) {
+				pw.close();
+			}
 		}
 	}
 }

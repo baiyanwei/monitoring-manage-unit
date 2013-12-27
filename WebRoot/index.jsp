@@ -144,6 +144,10 @@
 											<%
 												}
 											%>
+											<li>
+												<a href="javascript:taskexecmanager();"
+													class="easyui-linkbutton" data-options="plain:true">任务执行展示</a>
+											</li>
 										</ul>
 									</li>
 									<%
@@ -317,7 +321,7 @@
 	</div>
 	
 	<div data-options="region:'center',title:''">
-		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref">
+		<div id="aa" class="easyui-accordion" scrolling="false" data-options="fit:true,border:false,onSelect:ref" >
 			
 					<div class="content" title="主视图" data-options="selected:true">
 						
@@ -407,6 +411,9 @@
 		}
 		function taskmanager(){
 			window.frames.contextMain.location.href="task/queryTaskView.jsp";
+		}
+		function taskexecmanager(){
+			window.frames.contextMain.location.href="task/viewTaskExec.jsp";
 		}
 	</script>
 </body>

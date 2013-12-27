@@ -28,6 +28,7 @@ public class FWVersionMatch {
 		String[] first=verFirst.split(newline);
 		String[] second=verSecond.split(newline);
 		
+		
 		for(int i=0;i<first.length;i++){
 			if(first[i].trim().length()==0){
 				continue;
@@ -37,6 +38,27 @@ public class FWVersionMatch {
 					continue;
 				}
 				if(first[i].equals(second[j])){
+					if (first[i].indexOf("*") != -1) {
+						first[i]= first[i].replaceAll("\\*", "[*]");
+					}
+					if (first[i].indexOf("+") != -1) {
+						first[i]= first[i].replaceAll("\\+", "[+]");
+					}
+					if (first[i].indexOf("\\") != -1) {
+						first[i] = first[i].replaceAll("\\\\", "\\\\\\\\");
+					}
+					if (second[j].indexOf("*") != -1) {
+						second[j] = second[j].replaceAll("\\*", "[*]");
+					}
+					if (second[j].indexOf("+") != -1) {
+						second[j]= second[j].replaceAll("\\+", "[+]");
+					}
+					if (second[j].indexOf("\\") != -1) {
+						second[j] = second[j].replaceAll("\\\\", "\\\\\\\\");
+					}
+					System.out.println(first[i]);
+					System.out.println("------------------------------------+++++++++++++++++++++++++++++++++++--------------");
+					System.out.println(second[j]);
 					verFirst=verFirst.replaceFirst(first[i]+newline,"");
 					verSecond=verSecond.replaceFirst(second[j]+newline,"");
 					break;

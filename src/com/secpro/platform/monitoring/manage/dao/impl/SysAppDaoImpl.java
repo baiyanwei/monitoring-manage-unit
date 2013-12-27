@@ -1,10 +1,11 @@
 package com.secpro.platform.monitoring.manage.dao.impl;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.secpro.platform.monitoring.manage.common.dao.impl.BaseDao;
 import com.secpro.platform.monitoring.manage.dao.SysAppDao;
+import com.secpro.platform.monitoring.manage.entity.SysApp;
 import com.secpro.platform.monitoring.manage.util.JdbcUtil;
 
 @Repository("SysAppDaoImpl")
@@ -51,5 +53,30 @@ public class SysAppDaoImpl extends BaseDao implements SysAppDao{
 			JdbcUtil.close(con, sta, rs);
 		}
 		return appids;
+	}
+	public List getAppTree(){
+		Connection con=null;
+		Statement sta=null;
+		ResultSet rs=null;
+		List appTree=new ArrayList();
+		try {
+			con=dataSource.getConnection();
+			sta=con.createStatement();
+			rs=sta.executeQuery("SELECT ID,APP_NAME,PARENT_ID,HASLEAF FROM sys_app START WITH ID = 1 CONNECT BY PARENT_ID = PRIOR ID");
+			while(rs.next()){
+				SysApp app=new SysApp();
+				app.setId(rs.getLong(1));
+				app.setAppName(rs.getString(2));
+				app.setParentId(rs.getLong(3));
+				app.setHasLeaf(rs.getString(4));
+				appTree.add(app);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			JdbcUtil.close(con, sta, rs);
+		}
+		return appTree;
 	}
 }
