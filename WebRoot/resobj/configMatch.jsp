@@ -34,7 +34,7 @@ Map app=user.getApp();
   	<div class="easyui-tabs" style="width:1000px;height:800px">
   		
   		<!-- 防火墙告警设置 -->
-		<div title="历史配置文件比较" style="padding:10px">
+		<div title="历史配置文件比对" style="padding:10px">
 		
 		<table>
 			<tr>

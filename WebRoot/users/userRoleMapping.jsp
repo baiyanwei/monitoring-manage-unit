@@ -64,7 +64,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             text:'刷新',
 			iconCls:'icon-reload',
 			handler:function(){$('#listuser').datagrid('reload'); }
-        }]
+        }],
+        onClickRow:function(index,row){  
+        	$.post("getRoleByUser.action", {userid:row.userid},function(data){
+        		var str=data.roleid;
+		 		var strs= new Array();
+		 		strs=str.split(",");
+		 		$('#listrole').datagrid('clearChecked');
+				var rows = $("#listrole").datagrid("getRows"); 
+				for(var i=0;i<rows.length;i++){
+					for(var j=0;j<strs.length;j++){
+						if(rows[i].roleid==strs[j]){
+							$('#listrole').datagrid('selectRow', i);
+						}
+					}
+				}
+        	
+        	});
+        }
     }); 
 		$('#listuser').datagrid("getPager").pagination({
 		    		displayMsg:'当前显示从{from}到{to}共{total}记录',
@@ -87,15 +104,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'  
 		
-		        /*onBeforeRefresh:function(){ 
-		
-		            $(this).pagination('loading'); 
-		
-		            alert('before refresh'); 
-		
-		            $(this).pagination('loaded'); 
-		
-		        }*/ 
+		        
 		
 		    });
 	});  
@@ -111,8 +120,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	width:350,
         heigth:700,     
         idField:'roleid',  
-         pageSize:10,
-   	 pageList:[10,20,50,100],
+         pageSize:50,
+   	 pageList:[50,100],
         url:'viewRole.action',  
        // queryParams:{'viewType':'RK','RKD_ID':_rkdId},  
         singleSelect:false,  
@@ -144,9 +153,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		    $('#listrole').datagrid("getPager").pagination({  
 		
-		        pageSize: 10,//每页显示的记录条数，默认为10  
+		        pageSize: 50,//每页显示的记录条数，默认为10  
 		
-		        pageList: [10,20,50,100],//可以设置每页记录条数的列表  
+		        pageList: [50,100],//可以设置每页记录条数的列表  
 		
 		        beforePageText: '第',//页数文本框前显示的汉字  
 		
@@ -154,15 +163,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'  
 		
-		        /*onBeforeRefresh:function(){ 
-		
-		            $(this).pagination('loading'); 
-		
-		            alert('before refresh'); 
-		
-		            $(this).pagination('loaded'); 
-		
-		        }*/ 
+		        
 		
 		    });
 	});  

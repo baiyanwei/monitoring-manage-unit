@@ -122,7 +122,7 @@ Map app=user.getApp();
        toolbar: [
        <% if(app.get("添加采集端")!=null){ %>
        {   
-            text: '添加采集端',   
+            text: '添加采集机',   
             iconCls: 'icon-add',   
             handler: function () {   
                window.location.href="<%=_contexPath%>/resobj/addMca.jsp";
@@ -130,7 +130,7 @@ Map app=user.getApp();
         }, '-', 
          <% }if(app.get("删除采集端")!=null){ %>
         {   
-            text: '删除采集端',   
+            text: '删除采集机',   
             iconCls: 'icon-remove',   
             handler: function () {   
                 if (confirm("确定删除吗？")) {   
@@ -154,7 +154,7 @@ Map app=user.getApp();
         }, '-',
         <% }if(app.get("修改采集端")!=null){ %>
          {   
-            text: '修改采集端',   
+            text: '修改采集机',   
             iconCls: 'icon-edit',   
             handler: function () {     
                	 var rows = $('#listDetail').datagrid('getSelections');  
@@ -163,7 +163,7 @@ Map app=user.getApp();
 				        return;  
 				     }  
 				     if (rows.length>1){
-				     	alert('修改采集端只能选择一个条目');
+				     	alert('修改采集机只能选择一个条目');
 				     	return;
 				     }
 				    var urll="toModifyMca.action?mcaid="+rows[0].mcaid;  

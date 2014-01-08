@@ -78,20 +78,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	     						$('#tt').tree('uncheck',children[j].target);
 	     			} 
    				}	
-		 		//根据当前角色选择的APPID，对应用树选中状态进行设置
-		 		for (y=0;y<strs.length ;y++ )    
-  				{    
-   					for(i=0;i<roots.length;i++){    
-    				 children=$('#tt').tree('getChildren',roots[i].target);  
-    				
-     				for(j=0;j<children.length;j++){
-     						if(children[j].id==strs[y]){
-     							$('#tt').tree('check',children[j].target);
-     						}
-     					
-     				}
-  				 }  
-    			} 
+		 		
+    			for (y=0;y<strs.length ;y++ ){
+    				if(strs[y]!=""){
+	    				var node=$('#tt').tree('find',strs[y]);
+	    				$('#tt').tree('check',node.target);
+    				}
+    			}
+    			
 			});
            
         }  

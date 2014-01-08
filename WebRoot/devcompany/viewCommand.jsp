@@ -58,7 +58,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		
 	    		<tr>
-	    			<td><label>登录用户：</label></td>
+	    			<td><label>采集命令：</label></td>
 	    			<td><input id="command" class="easyui-validatebox" type="text" missingMessage="如需多个采集命令请使用^号将命令隔开" name="sc.command" value="${ ssc.command}" data-options="required:true" disabled=true></input></td>
 	    		</tr>
 	    		

@@ -97,9 +97,6 @@
 					pagination : true,
 					rownumbers : true,
 					columns : [[{
-						field : 'id',
-						checkbox : true
-					}, {
 						field : 'tid',
 						title : '任务标识',
 						width : 200,
@@ -142,13 +139,7 @@
 						handler : function() {
 							$('#listDetail').datagrid('reload');
 						}
-					}],
-
-					onDblClickRow : function(index, row) {
-						//  $('#listDetail').datagrid('expandRow', index);
-						//  $('#listDetail').datagrid('fitColumns',index);
-						window.location.href = "toViewMcaRaw.action?resid=" + row.mcaid;
-					}
+					}]
 				});
 				$('#listDetail').datagrid("getPager").pagination({
 					displayMsg : '当前显示从{from}到{to}共{total}记录',

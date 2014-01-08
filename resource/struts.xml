@@ -307,6 +307,9 @@
 			<result name="failed">/error.jsp</result>
 			<result name="success">/users/viewUser.jsp</result>
 		</action>
+		<action name="getRoleByUser" class="UserAction" method="getRoleByUser">
+			
+		</action>
 		<!-- 组织部门 -->
 		<action name="viewAllOrg" class="OrgAction" method="viewAllOrg">
 		</action>
@@ -485,6 +488,7 @@
 		<!-- 任务执行情况 -->
 		<action name="viewTaskExecute" class="MsuSchedUuleAction" method="viewTaskExecute">	
 		</action>
+		
 	</package>
 	<constant name="struts.action.excludePattern" value="/dwr/.*,/dwr/test/.*" />
 </struts>    

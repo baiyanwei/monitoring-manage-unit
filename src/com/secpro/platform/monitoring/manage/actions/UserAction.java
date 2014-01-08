@@ -1,5 +1,6 @@
 package com.secpro.platform.monitoring.manage.actions;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -416,6 +417,7 @@ public class UserAction {
 	public void getRoleByUser(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String userid=request.getParameter("userid");
+		System.out.println(userid+"----------------------");
 		if(userid==null){
 			return ;
 		}
@@ -424,7 +426,31 @@ public class UserAction {
 		}
 		orgService.queryAll("from SysOrg o where o.parent_id=1");
 		List roleList=suiService.getRoleByUser(Long.parseLong(userid));
-		//创建JSON
+		String roleids="";
+		for(int i=0;i<roleList.size();i++){
+			if(i!=roleList.size()-1){
+				roleids=roleids+roleList.get(i)+",";
+			}else{
+				roleids=roleids+roleList.get(i);
+			}
+		}
+		String json="{\"roleid\":\""+roleids+"\"}";
+		PrintWriter pw = null;
+		HttpServletResponse resp = ServletActionContext.getResponse();
+		resp.setContentType("text/json");
+		try {
+			pw = resp.getWriter();
+			pw.println(json);
+			pw.flush();
+			System.out.println(json);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
 	}
 	public String modifySelf(){
 		
