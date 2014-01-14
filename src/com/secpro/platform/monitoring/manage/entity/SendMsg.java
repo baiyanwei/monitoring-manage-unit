@@ -24,7 +24,7 @@ public class SendMsg {
 	private String mobelTel;
 	@Column(name="message")
 	private String message;
-	@Column(name="send_mes_status")
+	@Column(name="send_msg_status")
 	private String sendMesStatus;
 	public Long getId() {
 		return id;

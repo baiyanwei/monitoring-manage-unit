@@ -307,16 +307,18 @@ public class EventAction {
 			new Thread() {
 				public void run() {
 					
-					List notifyUsers = notifyService
-							.queryAll("select u.userName , u.mobelTel from NotifyUserRule n, SysUserInfo u , SysEventRule r  where  u.id=n.userId and r.resId="
+					List notifyUsers = notifyService 
+							.queryAll("select u.userName , u.mobelTel from NotifyUserRule n, SysUserInfo u , SysEventRule r  where  u.id=n.userId and n.resId="
 									+ eventHis.getResId()
 									+ " and n.eventRuleId = r.id and r.eventTypeId="
 									+ eventHis.getEventTypeId());
+					
 					if (notifyUsers != null && notifyUsers.size() > 0) {
 						for (int i = 0; i < notifyUsers.size(); i++) {
 							Object[] u = (Object[]) notifyUsers.get(i);
 							SendMsg sendMsg = new SendMsg();
 							sendMsg.setMessage("[恢复]" + eventHis.getMessage());
+							
 							sendMsg.setMobelTel((String) u[1]);
 							sendMsg.setUserName((String) u[0]);
 							sendMsg.setCdate(sdf.format(new Date()));
