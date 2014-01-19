@@ -274,6 +274,7 @@ public class EventAction {
 				dealMsgService.update(smsg);
 			}
 		} else if (type.equals("1")) {
+			
 			SysEvent event = (SysEvent) sysEventService.getObj(SysEvent.class,
 					se.getId());
 			SysEventDealMsg smsg = (SysEventDealMsg) dealMsgService.getObj(
@@ -305,11 +306,11 @@ public class EventAction {
 
 			new Thread() {
 				public void run() {
-
+					
 					List notifyUsers = notifyService
-							.queryAll("select u.userName , u.mobelTel from NotifyUserRule n, SysUserInfo s , SysEventRule r  where  s.id=n.userId and r.resId="
+							.queryAll("select u.userName , u.mobelTel from NotifyUserRule n, SysUserInfo u , SysEventRule r  where  u.id=n.userId and r.resId="
 									+ eventHis.getResId()
-									+ " and r.eventRuleId = r.id and r.EVENT_TYPE_ID="
+									+ " and n.eventRuleId = r.id and r.eventTypeId="
 									+ eventHis.getEventTypeId());
 					if (notifyUsers != null && notifyUsers.size() > 0) {
 						for (int i = 0; i < notifyUsers.size(); i++) {
