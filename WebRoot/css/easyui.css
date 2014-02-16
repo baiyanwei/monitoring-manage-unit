@@ -1736,7 +1736,7 @@ a:hover.l-btn-disabled {
   left: 23px;
 }
 .slider-handle {
-  background: url('images/slider_handle.png') no-repeat;
+  background: url('../style/app/images/slider_handle.png') no-repeat;
 }
 .slider-inner {
   border-color: #95B8E7;

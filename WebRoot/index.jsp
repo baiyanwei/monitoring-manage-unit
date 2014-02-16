@@ -295,6 +295,15 @@
 											</li>
 											<%
 												}
+													if (app.get("密码策略") != null
+															|| user.getAccount().equals("admin")) {
+											%>
+											<li>
+												<a href="javascript:passwdrulemanager();"
+													class="easyui-linkbutton" data-options="plain:true">密码策略</a>
+											</li>
+											<%
+												}
 													if (app.get("系统日志") != null) {
 											%>
 											<li>
@@ -414,6 +423,9 @@
 		}
 		function taskexecmanager(){
 			window.frames.contextMain.location.href="task/viewTaskExec.jsp";
+		}
+		function passwdrulemanager(){
+			window.frames.contextMain.location.href="toModifyPasswdRule.action";
 		}
 	</script>
 </body>

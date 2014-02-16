@@ -13,14 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.secpro.platform.monitoring.manage.entity.Log;
 import com.secpro.platform.monitoring.manage.entity.SysOrg;
 import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
+import com.secpro.platform.monitoring.manage.services.SysLogService;
 import com.secpro.platform.monitoring.manage.services.SysOrgService;
 import com.secpro.platform.monitoring.manage.services.SysUserInfoService;
 import com.secpro.platform.monitoring.manage.util.MD5Builder;
+import com.secpro.platform.monitoring.manage.util.PasswdRuleUtil;
 import com.secpro.platform.monitoring.manage.util.log.PlatformLogger;
 @Controller("UserAction")
 public class UserAction {
@@ -30,7 +34,11 @@ public class UserAction {
 	private SysUserInfoService suiService;
 	private SysUserInfo user;
 	private SysOrgService orgService;
-	
+	private SysLogService logService;
+	@Resource(name = "SysLogServiceImpl")
+	public void setLogService(SysLogService logService) {
+		this.logService = logService;
+	}
 	public SysOrgService getOrgService() {
 		return orgService;
 	}
@@ -574,4 +582,192 @@ public class UserAction {
 		return "success";
 		
 	}
+	public String resetPasswd(){
+		
+		HttpServletRequest request=ServletActionContext.getRequest();
+		 SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMddHHmmss" );
+		String uaccount=request.getParameter("uaccount");
+		String oldpasswd=request.getParameter("oldpasswd");
+		String newpaswd=request.getParameter("newpasswd");
+		
+		ActionContext ctx = ActionContext.getContext();
+		Map<String,Object> requestMap=(Map)ctx.get("request");
+		requestMap.put("uaccount", uaccount);
+		if (uaccount == null||oldpasswd==null||newpaswd==null) {
+			logger.info("account or oldpassword or rnewpassword is null!");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "用户名或密码不能为空，修改失败!");
+			return "resetError";
+		}
+		
+		if (uaccount.trim().equals("")||oldpasswd.trim().equals("")||newpaswd.trim().equals("")) {
+			logger.info("account or oldpassword or rnewpassword is ''!");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "用户名或密码不能为空，修改失败!");
+			return "resetError";
+		}
+		if(oldpasswd.trim().equals(newpaswd.toString())){
+			logger.info("oldpassword the same as newpassword !");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "新旧密码不能相同，修改失败！");
+			return "resetError";
+		}
+		if(!isDigit(newpaswd)){
+			logger.info("new passwd must contain num !");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "新密码必须有一个数字，修改失败！");
+			return "resetError";
+		}
+		if(!isYing(newpaswd)){
+			logger.info("new passwd must contain zimu !");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "新密码必须有一个字母，修改失败！");
+			return "resetError";
+		}
+		if(!isConSpeCharacters(newpaswd)){
+			logger.info("new passwd must contain zimu !");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "新密码必须有一个特殊字符，修改失败！");
+			return "resetError";
+		}
+		String passwd=MD5Builder.getMD5(oldpasswd);	
+		List userList=suiService.queryAll("from SysUserInfo u where u.account='"+uaccount+"' and u.password='"+passwd+"' and u.deleted is null ");
+		if(userList!=null&&userList.size()>0){
+			SysUserInfo u=(SysUserInfo)userList.get(0);
+			String npaswd=MD5Builder.getMD5(newpaswd);
+			u.setPassword(npaswd);
+			u.setMdate(sdf.format(new Date()));
+			suiService.update(u);
+			suiService.updateLastLoginDate(sdf.format(new Date()), uaccount);
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码成功");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "密码修改成功！");
+			return "success";
+		}else{
+			logger.info("account is not exist!");
+			Log log=new Log();
+		 	log.setAccount(uaccount);
+		 	log.setHandleDate(sdf.format(new Date()));
+		 	log.setUserIp(request.getRemoteAddr());
+		 	log.setHandleContent("修改密码失败");
+		 	logService.save(log);
+		 	requestMap.put("loginError", "用户不存在，修改失败！");
+			return "resetError";
+		}
+	}
+	public void checkPasswd(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		
+		String newpasswd = request.getParameter("newpasswd");
+		
+		PrintWriter pw = null;
+		try {
+			HttpServletResponse resp = ServletActionContext.getResponse();
+			resp.setContentType("text/json");
+			pw = resp.getWriter();
+			JSONObject json=new JSONObject();
+			if (newpasswd == null) {
+				json.put("checkok", "0");	
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			if(newpasswd.trim().length()<PasswdRuleUtil.passwdLong){
+				json.put("checkok", "1");	
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			if(!isDigit(newpasswd)){
+				json.put("checkok", "2");	
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			if(!isYing(newpasswd)){
+				json.put("checkok", "3");	
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			if(!isConSpeCharacters(newpasswd)){
+				json.put("checkok", "4");
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			if(newpasswd.trim().length()>PasswdRuleUtil.maxPwdLong){
+				json.put("checkok", "5");	
+				System.out.println(json.toString());
+				pw.println(json.toString());
+				pw.flush();
+				return;
+			}
+			json.put("checkok", "ok");
+			System.out.println(json.toString());
+			pw.println(json.toString());
+			pw.flush();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+			
+	}
+	public boolean isDigit(String strNum) {  
+		 return strNum.matches(".+?\\d.+?"); 
+	}
+	public boolean isYing(String str) {  
+		 return str.matches(".*\\p{Alpha}.*"); 
+	}
+	private boolean isConSpeCharacters(String string) {
+		  // TODO Auto-generated method stub
+		  if(string.replaceAll("[\u4e00-\u9fa5]*[a-z]*[A-Z]*\\d*\\s*", "").length()==0){
+		   //如果不包含特殊字符
+		   return  false;
+		  }
+		  return true;
+	 }
 }

@@ -466,12 +466,32 @@
 
 			<result name="loginError">/login.jsp</result>
 			<result name="success" type="redirect">/index.jsp</result>
+			<result name="toResetPasswd">/users/resetPasswd.jsp</result>
 		</action>
 		<action name="logout" class="LoginAction" method="logout">	
 			<result name="success">/login.jsp</result>
 		</action>
+		<action name="checkOldPasswd" class="LoginAction" method="checkOldPasswd">
+		</action>
+		<action name="checkNewPasswd" class="LoginAction" method="checkNewPasswd">
+		</action>
 		<action name="modifySelf" class="UserAction" method="modifySelf">	
 			<result name="success">/first.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="resetPasswd" class="UserAction" method="resetPasswd">	
+			<result name="success">/login.jsp</result>
+			<result name="resetError">/users/resetPasswd.jsp</result>
+		</action>
+		<action name="checkPasswd" class="UserAction" method="checkPasswd">	
+		</action>
+		<!-- 密码策略 -->
+		<action name="toModifyPasswdRule" class="SysPasswdRuleAction" method="toModifyPasswdRule">	
+			<result name="success">/users/modifyPasswdRule.jsp</result>
+			<result name="failed">/error.jsp</result>
+		</action>
+		<action name="modifyPasswdRule" class="SysPasswdRuleAction" method="modifyPasswdRule">	
+			<result type="redirectAction" name="success">toModifyPasswdRule</result>
 			<result name="failed">/error.jsp</result>
 		</action>
 		<!-- 系统日志 -->

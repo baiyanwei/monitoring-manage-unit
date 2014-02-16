@@ -117,4 +117,51 @@ public class SysUserInfoDaoImpl extends BaseDao implements SysUserInfoDao{
 		}
 		return map;
 	}
+	public String getLastLoginDate(String account){
+		Connection con=null;
+		PreparedStatement sta=null;
+		ResultSet rs=null;
+		String lastLoginDate=null;
+		try {
+			con=dataSource.getConnection();
+			con.setAutoCommit(false);
+			sta=con.prepareStatement("select lastlogin from sys_user_info where account=? and DELETED is null");
+			sta.setString(1, account);
+			rs=sta.executeQuery();
+			while(rs.next()){
+				lastLoginDate=rs.getString(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			JdbcUtil.close(con,sta,rs);
+		}
+		return lastLoginDate;
+	}
+	public void updateLastLoginDate(String lastLoginDate,String account){
+		Connection con=null;
+		PreparedStatement sta=null;
+		try {
+			con=dataSource.getConnection();
+			con.setAutoCommit(false);
+			sta=con.prepareStatement("update sys_user_info set lastlogin = ? where account=? and DELETED is null");
+			sta.setString(1, lastLoginDate);
+			sta.setString(2, account);
+			sta.execute();
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally{
+			JdbcUtil.close(sta);
+			JdbcUtil.close(con);
+		}
+	}
 }

@@ -32,5 +32,10 @@ public class SysUserInfoServiceImpl extends BaseService implements SysUserInfoSe
 	public Map getAllApp(SysUserInfo user){
 		return dao.getAllApp(user);
 	}
-
+	public String getLastLoginDate(String account){
+		return dao.getLastLoginDate(account);
+	}
+	public void updateLastLoginDate(String lastLoginDate,String account){
+		dao.updateLastLoginDate(lastLoginDate, account);
+	}
 }

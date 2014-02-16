@@ -128,4 +128,7 @@
 		<servlet-name>TopologyServlet</servlet-name>
 		<url-pattern>/topology/topologyservlet</url-pattern>
 	</servlet-mapping>
+	<session-config>
+        <session-timeout>2</session-timeout>
+    </session-config>
 </web-app>

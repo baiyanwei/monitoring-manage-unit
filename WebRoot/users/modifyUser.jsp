@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="com.secpro.platform.monitoring.manage.util.PasswdRuleUtil" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
 String path = request.getContextPath();
@@ -46,7 +47,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		</tr>
 	    		<tr>
 	    			<td><label>密码：</label></td>
-	    			<td><input class="easyui-validatebox" type="password" missingMessage="请输入密码" name="user.password" data-options="required:true" value="${ muser.password}"></input></td>
+	    			<td><input id="newpasswd" class="easyui-validatebox" type="password" missingMessage="请输入新密码,长度要大于<%=PasswdRuleUtil.passwdLong%>,至少包括1个数字，1个字母，1个特殊字符" name="user.password" data-options="required:true" value="${ muser.password}" onblur="checkPasswd();"></input></td>
 	    		</tr>
 	    		
 	    		<tr>
@@ -101,6 +102,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function submitForm(){
 		
 			return $('#ff').form('validate');
+		}
+		function checkPasswd(){
+			var newpasswd=document.getElementById("newpasswd");
+			
+			
+			$.post('checkPasswd.action', {newpasswd:newpasswd.value},function(data){
+								 													 						
+								 						if(data.checkok=="1"){
+ 															alert("密码错误长度不够，请重新填写！");
+ 															newpasswd.focus();
+ 														}else if(data.checkok=="2"){
+ 															alert("密码中最少需要一个数字，请重新填写！");
+ 															newpasswd.focus();
+ 														}else if(data.checkok=="0"){
+ 															alert("新密码不能为空！");
+ 															newpasswd.focus();
+ 														}else if(data.checkok=="3"){
+ 															alert("密码中最少需要一个英文字母，请重新填写");
+ 															newpasswd.focus();
+ 														}else if(data.checkok=="4"){
+ 															alert("密码中最少需要一个特殊字符，请重新填写");
+ 															newpasswd.focus();
+ 														}else if(data.checkok=="5"){
+ 															alert("密码不能超过16位，请重新填写");
+ 															newpasswd.focus();
+ 														}else{
+ 															
+ 														}
+ 														
+													});
 		}
 	</script>
 </body>

@@ -10,4 +10,6 @@ public interface SysUserInfoDao extends IBaseDao{
 	public boolean createUserRoleMapping(String[] userIds,String[] roleIds);
 	public List getRoleByUser(Long userId);
 	public Map getAllApp(SysUserInfo user);
+	public String getLastLoginDate(String account);
+	public void updateLastLoginDate(String lastLoginDate,String account);
 }
