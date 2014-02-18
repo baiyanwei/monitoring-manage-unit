@@ -30,7 +30,7 @@ public class ApplicationConfiguration {
 	public static String HMAC_SHA256_ALGORITHM="HmacSHA256";
 
 	public static String MSU_MANAGE_TASK_BEACON_INTERFACE;
-	
+	public static long TIMEOUT;
 
 	static{
 		
@@ -48,7 +48,7 @@ public class ApplicationConfiguration {
             DEFAULT_CHARSET = Charset.forName(DEFAULT_ENCODING);
 
             MSU_MANAGE_TASK_BEACON_INTERFACE=configuration.getProperty("msu.manageTaskBeaconInterface");
-
+            TIMEOUT=Long.parseLong(configuration.getProperty("usertimeout"));
         } catch (Exception e) {
             e.printStackTrace();
            

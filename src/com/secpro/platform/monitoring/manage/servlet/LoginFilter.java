@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.secpro.platform.monitoring.manage.entity.SysUserInfo;
+import com.secpro.platform.monitoring.manage.util.ApplicationConfiguration;
 
 public class LoginFilter implements Filter{
 	private FilterConfig config;
@@ -27,8 +28,23 @@ public class LoginFilter implements Filter{
 		String nexturl=((HttpServletRequest)request).getServletPath();
 		SysUserInfo user=(SysUserInfo)s.getAttribute("user");
 		
-		if(user!=null){
+		if(nexturl.equals("/dwr")||nexturl.equals("/topology/topologyservlet")){
 			chain.doFilter(request,response);
+			return;
+		}
+		
+		if(user!=null){
+			long lastLoginTime=(Long)s.getAttribute("lastLoginTime");
+			long currentTime=System.currentTimeMillis();
+			
+			if((currentTime-lastLoginTime)/1000/60>ApplicationConfiguration.TIMEOUT){
+				s.removeAttribute("user");
+				s.removeAttribute("lastLoginTime");
+				request.getRequestDispatcher("login.jsp").forward(request,response);
+			}else{
+				s.setAttribute("lastLoginTime", System.currentTimeMillis());
+				chain.doFilter(request,response);
+			}
 		}else{
 			
 			if("/login.action".equals(nexturl)||"/checkOldPasswd.action".equals(nexturl)||"/checkNewPasswd.action".equals(nexturl)||"/resetPasswd.action".equals(nexturl)){

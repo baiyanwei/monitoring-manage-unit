@@ -230,6 +230,8 @@ public class LoginAction {
 	 	log.setUserIp(request.getRemoteAddr());
 	 	log.setHandleContent("登录系统");
 	 	logService.save(log);
+	 	//增加用户登录的当前时间
+	 	request.getSession().setAttribute("lastLoginTime", System.currentTimeMillis());
 	 	if(request.getSession().getAttribute(account)!=null){
 	 		request.getSession().removeAttribute(account);
 	 	}
@@ -238,6 +240,7 @@ public class LoginAction {
 	public String logout(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		request.getSession().removeAttribute("user");
+		request.getSession().removeAttribute("lastLoginTime");
 		return "success";
 	}
 	private int diffDate(Date date, Date date1) {
